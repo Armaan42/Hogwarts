@@ -49,7 +49,7 @@ Each submodule document should include:
 ## Module Coverage
 
 - **Module 01 (Student Management):** 16 submodules documented
-- ⏳ **Remaining Modules:** To be documented
+- **Remaining Modules:** To be documented
 
 ---
 
