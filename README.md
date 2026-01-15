@@ -8,11 +8,11 @@ This repository contains comprehensive documentation for all 50 modules of **Hog
 
 ```
 Hogwarts/
-├── docs/
-│   ├── modules/           # All 50 module documentation files (1-50)
-│   ├── templates/         # Module documentation template
-│   └── dependencies/      # Module dependency mapping
-└── README.md             # This file
+ docs/
+ modules/ # All 50 module documentation files (1-50)
+ templates/ # Module documentation template
+ dependencies/ # Module dependency mapping
+ README.md # This file
 ```
 
 ## Module Categories
