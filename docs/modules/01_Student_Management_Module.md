@@ -1,11 +1,11 @@
 # STUDENT MANAGEMENT MODULE - COMPLETE DEPENDENCY ANALYSIS
 
-## 🎯 MODULE OVERVIEW
+## MODULE OVERVIEW
 
-**Name:** Student Management Module  
-**Role:** Central Master Repository - The Heart of School ERP  
-**Type:** Core Foundation Module  
-**Dependencies:** 35+ modules directly depend on this  
+**Name:** Student Management Module 
+**Role:** Central Master Repository - The Heart of School ERP 
+**Type:** Core Foundation Module 
+**Dependencies:** 35+ modules directly depend on this 
 
 **Primary Functions:**
 - Student Registration & Admission
@@ -18,7 +18,7 @@
 
 ---
 
-## 📤 OUTBOUND CONNECTIONS (Student Management → Other Modules)
+## OUTBOUND CONNECTIONS (Student Management → Other Modules)
 
 ### 1. TO ADMISSIONS & CRM MODULE
 
@@ -54,11 +54,11 @@ The admissions process converts prospective students (leads) into enrolled stude
 **BUSINESS LOGIC:**
 ```
 IF admission_confirmed AND fees_paid >= minimum_admission_fee THEN
-  CREATE student_record
-  GENERATE student_id
-  MARK prospect.status = "ENROLLED"
-  SEND welcome_email(parent)
-  ACTIVATE parent_portal_access
+ CREATE student_record
+ GENERATE student_id
+ MARK prospect.status = "ENROLLED"
+ SEND welcome_email(parent)
+ ACTIVATE parent_portal_access
 END IF
 ```
 
@@ -77,13 +77,13 @@ Timetable generation requires knowing exactly how many students are in each sect
 - Section Assignments (Student → Section mapping)
 - Student Count per Section (for room capacity planning)
 - Elective Subject Choices:
-  - Language Options (Hindi/Sanskrit/French)
-  - Optional Subjects (Computer Science/Physical Education)
-  - Stream Selection (Science/Commerce/Arts for Grades 11-12)
+ - Language Options (Hindi/Sanskrit/French)
+ - Optional Subjects (Computer Science/Physical Education)
+ - Stream Selection (Science/Commerce/Arts for Grades 11-12)
 - Special Needs Requirements:
-  - IEP Students needing modified schedules
-  - Resource room time allocation
-  - Therapy session slots
+ - IEP Students needing modified schedules
+ - Resource room time allocation
+ - Therapy session slots
 - New Admissions During Academic Year (mid-year transfers)
 
 **TRIGGER EVENT:**
@@ -95,24 +95,24 @@ Timetable generation requires knowing exactly how many students are in each sect
 
 **IMPACT:**
 - Determines Number of Parallel Sections Needed
-  - Example: 180 students in Grade 6 → Need 6 sections (30 students each)
+ - Example: 180 students in Grade 6 → Need 6 sections (30 students each)
 - Room Capacity Requirements
-  - Example: Section with 35 students needs minimum 40-seater classroom
+ - Example: Section with 35 students needs minimum 40-seater classroom
 - Elective Subject Groups Created
-  - Example: 45 students chose French → Need 2 French periods simultaneously
+ - Example: 45 students chose French → Need 2 French periods simultaneously
 - Teacher Workload Calculated
-  - Example: 6 sections × 5 periods = 30 periods of Math needed per week
+ - Example: 6 sections × 5 periods = 30 periods of Math needed per week
 
 **BUSINESS LOGIC:**
 ```
 FOR each grade IN [1 to 12]:
-  total_students = COUNT(students WHERE grade = grade AND status = "ACTIVE")
-  sections_needed = CEILING(total_students / max_section_strength)
-  
-  FOR each subject WITH electives:
-    group_students_by_choice()
-    calculate_periods_needed()
-  END FOR
+ total_students = COUNT(students WHERE grade = grade AND status = "ACTIVE")
+ sections_needed = CEILING(total_students / max_section_strength)
+ 
+ FOR each subject WITH electives:
+ group_students_by_choice()
+ calculate_periods_needed()
+ END FOR
 END FOR
 ```
 
@@ -134,14 +134,14 @@ Attendance can only be marked for currently enrolled, active students. The syste
 - Section-wise Student Mapping
 - Subject-wise Enrollment (especially for electives)
 - Enrollment Status:
-  - ACTIVE (regular attendance required)
-  - SUSPENDED (temporary, no attendance)
-  - WITHDRAWN (removed from rosters)
-  - ON_LEAVE (medical/family emergency, extended absence)
+ - ACTIVE (regular attendance required)
+ - SUSPENDED (temporary, no attendance)
+ - WITHDRAWN (removed from rosters)
+ - ON_LEAVE (medical/family emergency, extended absence)
 - Leave Requests (Planned Absences):
-  - Medical Leave with doctor's certificate
-  - Family emergency leave
-  - Sports event participation (school-sanctioned)
+ - Medical Leave with doctor's certificate
+ - Family emergency leave
+ - Sports event participation (school-sanctioned)
 - Student Photos (for biometric face recognition)
 
 **TRIGGER EVENT:**
@@ -153,31 +153,31 @@ Attendance can only be marked for currently enrolled, active students. The syste
 
 **IMPACT:**
 - **Attendance Rosters Auto-Generated:**
-  - Class teacher gets Section A student list for day-wise attendance
-  - Subject teachers get period-wise lists based on timetable
+ - Class teacher gets Section A student list for day-wise attendance
+ - Subject teachers get period-wise lists based on timetable
 - **Withdrawn Students Automatically Removed:**
-  - If student withdrew on March 15, attendance rosters from March 16 exclude them
+ - If student withdrew on March 15, attendance rosters from March 16 exclude them
 - **Authorized Absences Pre-Marked:**
-  - Student on approved medical leave March 10-20 shows as "AL" (Authorized Leave) instead of requiring daily marking
+ - Student on approved medical leave March 10-20 shows as "AL" (Authorized Leave) instead of requiring daily marking
 - **Biometric System Updated:**
-  - Face recognition database synced with active student photos
-  - Withdrawn student faces removed from recognition
+ - Face recognition database synced with active student photos
+ - Withdrawn student faces removed from recognition
 
 **BUSINESS LOGIC:**
 ```
 FUNCTION generate_attendance_roster(date, section, period):
-  roster = []
-  students = GET students WHERE section = section AND status = "ACTIVE"
-  
-  FOR each student IN students:
-    IF has_approved_leave(student, date):
-      roster.add(student, status="AUTHORIZED_LEAVE")
-    ELSE:
-      roster.add(student, status="UNMARKED")
-    END IF
-  END FOR
-  
-  RETURN roster
+ roster = []
+ students = GET students WHERE section = section AND status = "ACTIVE"
+ 
+ FOR each student IN students:
+ IF has_approved_leave(student, date):
+ roster.add(student, status="AUTHORIZED_LEAVE")
+ ELSE:
+ roster.add(student, status="UNMARKED")
+ END IF
+ END FOR
+ 
+ RETURN roster
 END FUNCTION
 ```
 
@@ -196,25 +196,25 @@ Medical emergencies require instant access to student health history, allergies,
 
 **DATA FLOW:**
 - **Medical History:**
-  - Chronic Conditions (Asthma, Diabetes, Epilepsy, Heart Conditions)
-  - Past Surgeries and Hospitalizations
-  - Known Allergies (Medications, Food, Environmental)
-  - Blood Group and Rh Factor
-  - Vaccination Records (MMR, Hepatitis B, COVID-19)
+ - Chronic Conditions (Asthma, Diabetes, Epilepsy, Heart Conditions)
+ - Past Surgeries and Hospitalizations
+ - Known Allergies (Medications, Food, Environmental)
+ - Blood Group and Rh Factor
+ - Vaccination Records (MMR, Hepatitis B, COVID-19)
 - **Emergency Contacts:**
-  - Primary: Father's mobile, Mother's mobile
-  - Secondary: Guardian, Grandparent
-  - Hospital Preference (nearest hospital, family doctor)
+ - Primary: Father's mobile, Mother's mobile
+ - Secondary: Guardian, Grandparent
+ - Hospital Preference (nearest hospital, family doctor)
 - **Ongoing Treatments:**
-  - Regular Medications (Insulin, Inhalers, Ritalin)
-  - Dietary Restrictions (Diabetic, Celiac, Lactose Intolerant)
-  - Physical Limitations (No running due to heart condition)
+ - Regular Medications (Insulin, Inhalers, Ritalin)
+ - Dietary Restrictions (Diabetic, Celiac, Lactose Intolerant)
+ - Physical Limitations (No running due to heart condition)
 - **Insurance Information:**
-  - Policy Number, Provider, Coverage Amount
-  - Cashless Hospital Network
+ - Policy Number, Provider, Coverage Amount
+ - Cashless Hospital Network
 - **Current Health Status:**
-  - Recent Illnesses (COVID-19 positive, recovering from surgery)
-  - Medical Clearance for Sports
+ - Recent Illnesses (COVID-19 positive, recovering from surgery)
+ - Medical Clearance for Sports
 
 **TRIGGER EVENT:**
 - **Infirmary Visit:** Student reports sick during school hours
@@ -225,49 +225,49 @@ Medical emergencies require instant access to student health history, allergies,
 
 **IMPACT:**
 - **Immediate Access to Critical Information:**
-  - Student complains of breathing difficulty → System shows "Asthma patient, has inhaler in bag, Father: 98765xxxxx"
+ - Student complains of breathing difficulty → System shows "Asthma patient, has inhaler in bag, Father: 98765xxxxx"
 - **Allergy Alerts:**
-  - Before administering any medication, system shows red alert if student allergic
+ - Before administering any medication, system shows red alert if student allergic
 - **Emergency Contact Auto-Dial:**
-  - Serious injury → System displays emergency contacts in priority order
+ - Serious injury → System displays emergency contacts in priority order
 - **Medical History for Treatment Decisions:**
-  - Student has seizure → Medical history shows epilepsy diagnosis, medication details
+ - Student has seizure → Medical history shows epilepsy diagnosis, medication details
 - **Insurance Claims:**
-  - Hospitalization required → Insurance details readily available
+ - Hospitalization required → Insurance details readily available
 
 **BUSINESS LOGIC:**
 ```
 FUNCTION handle_medical_incident(student_id, symptoms):
-  profile = GET student_medical_profile(student_id)
-  
-  // Display critical alerts
-  IF profile.allergies NOT EMPTY:
-    SHOW ALERT("ALLERGIES: " + profile.allergies)
-  END IF
-  
-  IF profile.chronic_conditions NOT EMPTY:
-    SHOW WARNING("CHRONIC: " + profile.chronic_conditions)
-  END IF
-  
-  // Check medication interactions
-  IF administering_medication:
-    CHECK profile.current_medications FOR interactions
-  END IF
-  
-  // Emergency contact
-  IF severity = "HIGH":
-    DISPLAY profile.emergency_contacts
-    SEND SMS to parents("Your child in infirmary: " + symptoms)
-  END IF
+ profile = GET student_medical_profile(student_id)
+ 
+ // Display critical alerts
+ IF profile.allergies NOT EMPTY:
+ SHOW ALERT("ALLERGIES: " + profile.allergies)
+ END IF
+ 
+ IF profile.chronic_conditions NOT EMPTY:
+ SHOW WARNING("CHRONIC: " + profile.chronic_conditions)
+ END IF
+ 
+ // Check medication interactions
+ IF administering_medication:
+ CHECK profile.current_medications FOR interactions
+ END IF
+ 
+ // Emergency contact
+ IF severity = "HIGH":
+ DISPLAY profile.emergency_contacts
+ SEND SMS to parents("Your child in infirmary: " + symptoms)
+ END IF
 END FUNCTION
 ```
 
 **EXAMPLE:**
 - Student Ananya (Grade 4) falls in playground, complains of severe headache
 - Nurse accesses health profile:
-  - Shows: No chronic conditions, No allergies, Blood Group: B+
-  - Emergency Contacts: Mother 98xxx (primary), Father 97xxx (secondary)
-  - Recent History: No recent illnesses
+ - Shows: No chronic conditions, No allergies, Blood Group: B+
+ - Emergency Contacts: Mother 98xxx (primary), Father 97xxx (secondary)
+ - Recent History: No recent illnesses
 - Nurse gives paracetamol (safe, no allergies), calls mother, monitors for 30 minutes
 
 ---
@@ -279,24 +279,24 @@ Bus routes need to be optimized based on where students live. Pickup/drop schedu
 
 **DATA FLOW:**
 - **Residential Address:**
-  - Complete Address (House No., Street, Locality, Pincode)
-  - GPS Coordinates (Latitude, Longitude for route optimization)
-  - Landmark (Near XYZ Temple, Opposite ABC Mall)
+ - Complete Address (House No., Street, Locality, Pincode)
+ - GPS Coordinates (Latitude, Longitude for route optimization)
+ - Landmark (Near XYZ Temple, Opposite ABC Mall)
 - **Transport Enrollment Status:**
-  - ENROLLED (using school transport)
-  - NOT_ENROLLED (self-transport)
-  - TEMPORARY (occasional bus usage)
+ - ENROLLED (using school transport)
+ - NOT_ENROLLED (self-transport)
+ - TEMPORARY (occasional bus usage)
 - **Route Preferences:**
-  - Preferred Pickup Point (if not home, then nearby safe location)
-  - Preferred Pickup Time (early/regular/late bus)
-  - Drop Point (home or alternate location like grandparent's house)
+ - Preferred Pickup Point (if not home, then nearby safe location)
+ - Preferred Pickup Time (early/regular/late bus)
+ - Drop Point (home or alternate location like grandparent's house)
 - **Parent Emergency Contact:**
-  - Mobile number for GPS tracking alerts
-  - WhatsApp number for bus notifications
+ - Mobile number for GPS tracking alerts
+ - WhatsApp number for bus notifications
 - **Special Requirements:**
-  - Wheelchair accessibility needed
-  - Motion sickness (needs front seat)
-  - Younger sibling also on same bus
+ - Wheelchair accessibility needed
+ - Motion sickness (needs front seat)
+ - Younger sibling also on same bus
 
 **TRIGGER EVENT:**
 - **New Admission with Transport:** During admission, parent opts for transport
@@ -306,50 +306,50 @@ Bus routes need to be optimized based on where students live. Pickup/drop schedu
 
 **IMPACT:**
 - **Route Optimization:**
-  - Algorithm clusters students by geographic proximity
-  - Creates efficient routes minimizing travel time
-  - Example: 40 students in Sector 15-18 → Bus Route 5 created
+ - Algorithm clusters students by geographic proximity
+ - Creates efficient routes minimizing travel time
+ - Example: 40 students in Sector 15-18 → Bus Route 5 created
 - **Bus Capacity Planning:**
-  - Bus Route 5 has 48 students enrolled → Need 52-seater bus (buffer for new admissions)
+ - Bus Route 5 has 48 students enrolled → Need 52-seater bus (buffer for new admissions)
 - **Pickup/Drop Schedule:**
-  - Student Rohan at Address A (7:15 AM pickup) → Parent gets notification "Bus 10 mins away"
+ - Student Rohan at Address A (7:15 AM pickup) → Parent gets notification "Bus 10 mins away"
 - **Parent GPS Tracking Access:**
-  - Parent app shows live bus location only for their child's bus
+ - Parent app shows live bus location only for their child's bus
 - **Boarding/Deboarding Alerts:**
-  - RFID scan when student boards → SMS to parent "Aarav boarded Bus 5 at 7:20 AM"
-  - RFID scan when student deboards → SMS "Aarav reached school at 8:05 AM"
+ - RFID scan when student boards → SMS to parent "Aarav boarded Bus 5 at 7:20 AM"
+ - RFID scan when student deboards → SMS "Aarav reached school at 8:05 AM"
 
 **BUSINESS LOGIC:**
 ```
 FUNCTION optimize_bus_routes():
-  transport_students = GET students WHERE transport_enrolled = TRUE
-  
-  // Cluster by geographic location
-  clusters = geographic_clustering(transport_students.addresses)
-  
-  FOR each cluster:
-    students_in_cluster = filter_students(cluster)
-    IF students_in_cluster.count > 40:
-      split_into_multiple_routes()
-    ELSE:
-      route = create_route(students_in_cluster)
-      assign_bus(route, capacity_needed)
-      calculate_pickup_times(route)
-    END IF
-  END FOR
-  
-  // Notify parents of route assignment
-  SEND route_details_to_parents()
+ transport_students = GET students WHERE transport_enrolled = TRUE
+ 
+ // Cluster by geographic location
+ clusters = geographic_clustering(transport_students.addresses)
+ 
+ FOR each cluster:
+ students_in_cluster = filter_students(cluster)
+ IF students_in_cluster.count > 40:
+ split_into_multiple_routes()
+ ELSE:
+ route = create_route(students_in_cluster)
+ assign_bus(route, capacity_needed)
+ calculate_pickup_times(route)
+ END IF
+ END FOR
+ 
+ // Notify parents of route assignment
+ SEND route_details_to_parents()
 END FUNCTION
 ```
 
 **EXAMPLE:**
 - 150 students enrolled for transport from Dwarka area
 - System clusters into 4 geographic groups:
-  - Sector 10-12: 38 students → Bus Route A
-  - Sector 13-15: 42 students → Bus Route B
-  - Sector 16-18: 35 students → Bus Route C
-  - Sector 19-21: 35 students → Bus Route D
+ - Sector 10-12: 38 students → Bus Route A
+ - Sector 13-15: 42 students → Bus Route B
+ - Sector 16-18: 35 students → Bus Route C
+ - Sector 19-21: 35 students → Bus Route D
 - Student Kavya lives in Sector 14, Pocket 2
 - Assigned to Bus Route B
 - Pickup Time: 7:25 AM (calculated based on distance to school)
@@ -364,23 +364,23 @@ Only boarding students need hostel room allocation and mess services. The system
 
 **DATA FLOW:**
 - **Boarding Status:**
-  - DAY_SCHOLAR (no hostel required)
-  - BOARDER (full-time resident)
-  - WEEKLY_BOARDER (Monday-Friday only)
+ - DAY_SCHOLAR (no hostel required)
+ - BOARDER (full-time resident)
+ - WEEKLY_BOARDER (Monday-Friday only)
 - **Hostel Enrollment Date:** When student became boarder
 - **Room Preferences:**
-  - Single Room / Shared Room
-  - Roommate Requests (wants to share with specific friend/sibling)
-  - Floor Preference (ground floor for medical reasons)
+ - Single Room / Shared Room
+ - Roommate Requests (wants to share with specific friend/sibling)
+ - Floor Preference (ground floor for medical reasons)
 - **Dietary Information:**
-  - Food Preferences (Vegetarian/Non-Vegetarian/Vegan/Jain)
-  - Allergies (Nuts, Seafood, Gluten, Dairy)
-  - Religious Restrictions (Halal, No Pork, No Beef)
-  - Medical Diet (Diabetic, Low-Salt, Fat-Free)
+ - Food Preferences (Vegetarian/Non-Vegetarian/Vegan/Jain)
+ - Allergies (Nuts, Seafood, Gluten, Dairy)
+ - Religious Restrictions (Halal, No Pork, No Beef)
+ - Medical Diet (Diabetic, Low-Salt, Fat-Free)
 - **Parent Consent:**
-  - Permission for overnight stays
-  - Approval for weekend outings
-  - Leave authorization rules
+ - Permission for overnight stays
+ - Approval for weekend outings
+ - Leave authorization rules
 - **Guardian in City:** Local guardian details if parents in different city
 
 **TRIGGER EVENT:**
@@ -392,46 +392,46 @@ Only boarding students need hostel room allocation and mess services. The system
 
 **IMPACT:**
 - **Room Allocation:**
-  - Grade 6-8 boys: Allocated to Boys Hostel Block A, Floors 1-2
-  - Grade 9-10 boys: Block A, Floor 3
-  - Grade 11-12 boys: Block B (senior wing)
-  - Similar allocation for girls in separate hostel
-  - Example: Arjun (Grade 7, boarder) → Room 102, Bed 3, Roommates: Rohan, Karan
+ - Grade 6-8 boys: Allocated to Boys Hostel Block A, Floors 1-2
+ - Grade 9-10 boys: Block A, Floor 3
+ - Grade 11-12 boys: Block B (senior wing)
+ - Similar allocation for girls in separate hostel
+ - Example: Arjun (Grade 7, boarder) → Room 102, Bed 3, Roommates: Rohan, Karan
 - **Mess Enrollment:**
-  - All boarders auto-enrolled in mess
-  - Dietary preferences tagged: "Vegetarian, No Onion-Garlic (Jain), Lactose Intolerant"
+ - All boarders auto-enrolled in mess
+ - Dietary preferences tagged: "Vegetarian, No Onion-Garlic (Jain), Lactose Intolerant"
 - **Warden Assignment:**
-  - Each floor has warden, students know their warden contact
+ - Each floor has warden, students know their warden contact
 - **Access Control:**
-  - Hostel entry/exit tracked, day scholars can't enter hostel blocks
+ - Hostel entry/exit tracked, day scholars can't enter hostel blocks
 - **Parent Notifications:**
-  - Student requests weekend home leave → Warden approves → Parent gets notification
+ - Student requests weekend home leave → Warden approves → Parent gets notification
 
 **BUSINESS LOGIC:**
 ```
 FUNCTION allocate_hostel_room(student):
-  IF student.boarding_status != "BOARDER":
-    RETURN "Not eligible for hostel"
-  END IF
-  
-  // Find appropriate block based on grade and gender
-  block = get_hostel_block(student.grade, student.gender)
-  
-  // Find available room matching preferences
-  available_rooms = GET rooms WHERE block = block 
-                    AND vacancy = TRUE
-                    AND capacity >= (current_occupants + 1)
-  
-  IF student.has_roommate_preference:
-    room = find_room_with_preferred_roommate()
-  ELSE:
-    room = available_rooms[0]  // First available
-  END IF
-  
-  ASSIGN student TO room
-  ENROLL student IN mess WITH dietary_preferences
-  NOTIFY warden(new_student_assigned)
-  SEND welcome_kit(student)
+ IF student.boarding_status != "BOARDER":
+ RETURN "Not eligible for hostel"
+ END IF
+ 
+ // Find appropriate block based on grade and gender
+ block = get_hostel_block(student.grade, student.gender)
+ 
+ // Find available room matching preferences
+ available_rooms = GET rooms WHERE block = block 
+ AND vacancy = TRUE
+ AND capacity >= (current_occupants + 1)
+ 
+ IF student.has_roommate_preference:
+ room = find_room_with_preferred_roommate()
+ ELSE:
+ room = available_rooms[0] // First available
+ END IF
+ 
+ ASSIGN student TO room
+ ENROLL student IN mess WITH dietary_preferences
+ NOTIFY warden(new_student_assigned)
+ SEND welcome_kit(student)
 END FUNCTION
 ```
 
@@ -439,10 +439,10 @@ END FUNCTION
 - Student Priya (Grade 9, Girl) joins as boarder in July
 - Preferences: Vegetarian, Allergic to peanuts, wants to room with friend Sneha
 - System allocates:
-  - Girls Hostel, Block C, Room 305 (Sneha already in this room, has 1 vacant bed)
-  - Bed 2 assigned to Priya
-  - Mess Enrollment: Vegetarian meals, Peanut allergy flagged in kitchen
-  - Warden: Ms. Sharma (Floor 3 warden), Contact: 98xxx
+ - Girls Hostel, Block C, Room 305 (Sneha already in this room, has 1 vacant bed)
+ - Bed 2 assigned to Priya
+ - Mess Enrollment: Vegetarian meals, Peanut allergy flagged in kitchen
+ - Warden: Ms. Sharma (Floor 3 warden), Contact: 98xxx
 - Parent receives: "Priya allocated Room 305, Roommates: Sneha, Divya. Warden: Ms. Sharma (98xxx)"
 
 ---
@@ -455,22 +455,22 @@ Fee structure varies by student category (grade, scholarship status, sibling in 
 **DATA FLOW:**
 - **Grade/Class:** Determines base fee structure (Grade 1 fees ≠ Grade 12 fees)
 - **Fee Category:**
-  - REGULAR (full fees)
-  - SCHOLARSHIP (merit-based discount %)
-  - STAFF_WARD (teacher's child, 50-100% discount)
-  - SIBLING_DISCOUNT (2nd child gets 10%, 3rd child gets 15%)
-  - EWS (Economically Weaker Section, government quota, reduced fees)
-  - NRI (higher fees for NRI students)
-  - SPORTS_QUOTA (athletic scholarship)
+ - REGULAR (full fees)
+ - SCHOLARSHIP (merit-based discount %)
+ - STAFF_WARD (teacher's child, 50-100% discount)
+ - SIBLING_DISCOUNT (2nd child gets 10%, 3rd child gets 15%)
+ - EWS (Economically Weaker Section, government quota, reduced fees)
+ - NRI (higher fees for NRI students)
+ - SPORTS_QUOTA (athletic scholarship)
 - **Sibling Mapping:**
-  - Student A and Student B are siblings → Both get sibling discount
-  - Eldest child pays full, subsequent children get incremental discounts
+ - Student A and Student B are siblings → Both get sibling discount
+ - Eldest child pays full, subsequent children get incremental discounts
 - **Scholarship Percentage:** 25%, 50%, 75%, 100% fee waiver
 - **Concession Approvals:** Principal-approved special cases (financial hardship)
 - **Enrollment Date:** Pro-rata fee calculation if admitted mid-term
 - **Status Changes:** 
-  - Grade promotion → Fee structure changes
-  - Scholarship awarded → Discount applied from specific month
+ - Grade promotion → Fee structure changes
+ - Scholarship awarded → Discount applied from specific month
 
 **TRIGGER EVENT:**
 - **Admission:** First fee invoice generated
@@ -482,65 +482,65 @@ Fee structure varies by student category (grade, scholarship status, sibling in 
 
 **IMPACT:**
 - **Individualized Fee Structure:**
-  - Student A: Grade 6, Regular, No siblings → ₹1,20,000/year
-  - Student B: Grade 6, Regular, 2nd sibling → ₹1,08,000/year (10% off)
-  - Student C: Grade 6, 50% scholarship → ₹60,000/year
-  - Student D: Grade 6, Staff ward (100% waiver) → ₹0/year
+ - Student A: Grade 6, Regular, No siblings → ₹1,20,000/year
+ - Student B: Grade 6, Regular, 2nd sibling → ₹1,08,000/year (10% off)
+ - Student C: Grade 6, 50% scholarship → ₹60,000/year
+ - Student D: Grade 6, Staff ward (100% waiver) → ₹0/year
 - **Invoice Generation:**
-  - Quarterly invoices auto-generated based on payment plan
-  - Late fees added if payment overdue
+ - Quarterly invoices auto-generated based on payment plan
+ - Late fees added if payment overdue
 - **Payment History Tracking:**
-  - All payments linked to student, visible in fee ledger
+ - All payments linked to student, visible in fee ledger
 - **Outstanding Dues:**
-  - Defaulters list generated, filtered by grade/section
+ - Defaulters list generated, filtered by grade/section
 - **Scholarship Compliance:**
-  - System ensures scholarship students maintain required attendance/grades
-  - Auto-revokes scholarship if criteria not met (needs manual approval)
+ - System ensures scholarship students maintain required attendance/grades
+ - Auto-revokes scholarship if criteria not met (needs manual approval)
 
 **BUSINESS LOGIC:**
 ```
 FUNCTION calculate_student_fees(student):
-  // Get base fee for grade
-  base_fee = get_base_fee(student.grade)
-  
-  // Apply scholarship discount
-  IF student.scholarship_percentage > 0:
-    base_fee = base_fee * (1 - student.scholarship_percentage/100)
-  END IF
-  
-  // Apply sibling discount
-  sibling_count = COUNT(siblings WHERE status = "ACTIVE")
-  IF sibling_count = 1:  // Student is 2nd child
-    base_fee = base_fee * 0.90  // 10% discount
-  ELSE IF sibling_count = 2:  // Student is 3rd child
-    base_fee = base_fee * 0.85  // 15% discount
-  END IF
-  
-  // Apply category-specific rules
-  IF student.category = "STAFF_WARD":
-    base_fee = base_fee * 0.5  // 50% discount
-  ELSE IF student.category = "NRI":
-    base_fee = base_fee * 1.5  // 50% premium
-  END IF
-  
-  // Pro-rata for mid-year admission
-  IF student.admission_month > 4:  // Admitted after April
-    months_remaining = 12 - student.admission_month
-    base_fee = (base_fee / 12) * months_remaining
-  END IF
-  
-  RETURN base_fee
+ // Get base fee for grade
+ base_fee = get_base_fee(student.grade)
+ 
+ // Apply scholarship discount
+ IF student.scholarship_percentage > 0:
+ base_fee = base_fee * (1 - student.scholarship_percentage/100)
+ END IF
+ 
+ // Apply sibling discount
+ sibling_count = COUNT(siblings WHERE status = "ACTIVE")
+ IF sibling_count = 1: // Student is 2nd child
+ base_fee = base_fee * 0.90 // 10% discount
+ ELSE IF sibling_count = 2: // Student is 3rd child
+ base_fee = base_fee * 0.85 // 15% discount
+ END IF
+ 
+ // Apply category-specific rules
+ IF student.category = "STAFF_WARD":
+ base_fee = base_fee * 0.5 // 50% discount
+ ELSE IF student.category = "NRI":
+ base_fee = base_fee * 1.5 // 50% premium
+ END IF
+ 
+ // Pro-rata for mid-year admission
+ IF student.admission_month > 4: // Admitted after April
+ months_remaining = 12 - student.admission_month
+ base_fee = (base_fee / 12) * months_remaining
+ END IF
+ 
+ RETURN base_fee
 END FUNCTION
 ```
 
 **EXAMPLE:**
 - Sharma family has 3 children:
-  - Child 1: Aarav, Grade 10, Regular → ₹1,50,000/year (full)
-  - Child 2: Ananya, Grade 7, Regular → ₹1,08,000/year (10% sibling discount)
-  - Child 3: Arnav, Grade 4, Regular → ₹85,000/year (15% sibling discount)
+ - Child 1: Aarav, Grade 10, Regular → ₹1,50,000/year (full)
+ - Child 2: Ananya, Grade 7, Regular → ₹1,08,000/year (10% sibling discount)
+ - Child 3: Arnav, Grade 4, Regular → ₹85,000/year (15% sibling discount)
 - Total family fee: ₹3,43,000/year instead of ₹3,70,000 (saved ₹27,000)
 - If Ananya wins 50% scholarship in next academic year:
-  - Her fee: ₹1,20,000 (Grade 8 base) * 50% scholarship = ₹60,000 * 90% (sibling discount) = ₹54,000/year
+ - Her fee: ₹1,20,000 (Grade 8 base) * 50% scholarship = ₹60,000 * 90% (sibling discount) = ₹54,000/year
 
 ---
 
@@ -552,12 +552,12 @@ Students need access to online courses based on their grade, section, and subjec
 **DATA FLOW:**
 - **Section Assignment:** Determines which courses student can access
 - **Enrolled Subjects:**
-  - Core Subjects (Math, Science, English, Social Studies)
-  - Elective Subjects (Hindi/Sanskrit/French, Computer/Physical Ed)
-  - Stream-specific (Physics/Chemistry/Biology for Science students)
+ - Core Subjects (Math, Science, English, Social Studies)
+ - Elective Subjects (Hindi/Sanskrit/French, Computer/Physical Ed)
+ - Stream-specific (Physics/Chemistry/Biology for Science students)
 - **Student Performance Level:**
-  - Advanced learners get enrichment modules
-  - Struggling students get remedial content
+ - Advanced learners get enrichment modules
+ - Struggling students get remedial content
 - **Learning Style Preferences:** Visual/Auditory/Kinesthetic (for personalized content)
 - **Previous Academic Performance:** To customize AI Co-pilot recommendations
 
@@ -569,49 +569,49 @@ Students need access to online courses based on their grade, section, and subjec
 
 **IMPACT:**
 - **Personalized Course Dashboard:**
-  - Student logs in, sees only their 8-10 enrolled courses
-  - Grade 9 Science student sees: Math, Physics, Chemistry, Biology, English, Hindi, Social Studies, Computer Science
-  - Grade 9 Commerce student sees: Math, Accountancy, Business Studies, Economics, English, Hindi
+ - Student logs in, sees only their 8-10 enrolled courses
+ - Grade 9 Science student sees: Math, Physics, Chemistry, Biology, English, Hindi, Social Studies, Computer Science
+ - Grade 9 Commerce student sees: Math, Accountancy, Business Studies, Economics, English, Hindi
 - **AI Co-Pilot Customization:**
-  - Analyzes student's past performance
-  - Student weak in Algebra → Co-pilot suggests extra Algebra practice modules
+ - Analyzes student's past performance
+ - Student weak in Algebra → Co-pilot suggests extra Algebra practice modules
 - **Assignment Deadlines:**
-  - Aligned with student's timetable
-  - Math homework due next Math period, not random date
+ - Aligned with student's timetable
+ - Math homework due next Math period, not random date
 - **Progress Tracking:**
-  - Each student's course completion %, quiz scores tracked individually
-  - Teacher can see: "Rohan completed 60% of Chapter 5, scored 75% in quiz"
+ - Each student's course completion %, quiz scores tracked individually
+ - Teacher can see: "Rohan completed 60% of Chapter 5, scored 75% in quiz"
 
 **BUSINESS LOGIC:**
 ```
 FUNCTION get_student_courses(student):
-  courses = []
-  
-  // Get core courses based on grade
-  core_courses = GET courses WHERE grade = student.grade AND type = "CORE"
-  courses.add(core_courses)
-  
-  // Get elective courses based on student's choices
-  elective_choices = GET student_electives WHERE student_id = student.id
-  FOR each elective IN elective_choices:
-    course = GET course WHERE subject = elective.subject
-    courses.add(course)
-  END FOR
-  
-  // Add stream-specific courses (Grades 11-12)
-  IF student.grade >= 11:
-    stream_courses = GET courses WHERE stream = student.stream
-    courses.add(stream_courses)
-  END IF
-  
-  // Customize based on performance level
-  IF student.performance_level = "ADVANCED":
-    courses.add(enrichment_modules)
-  ELSE IF student.performance_level = "REMEDIAL":
-    courses.add(remedial_modules)
-  END IF
-  
-  RETURN courses
+ courses = []
+ 
+ // Get core courses based on grade
+ core_courses = GET courses WHERE grade = student.grade AND type = "CORE"
+ courses.add(core_courses)
+ 
+ // Get elective courses based on student's choices
+ elective_choices = GET student_electives WHERE student_id = student.id
+ FOR each elective IN elective_choices:
+ course = GET course WHERE subject = elective.subject
+ courses.add(course)
+ END FOR
+ 
+ // Add stream-specific courses (Grades 11-12)
+ IF student.grade >= 11:
+ stream_courses = GET courses WHERE stream = student.stream
+ courses.add(stream_courses)
+ END IF
+ 
+ // Customize based on performance level
+ IF student.performance_level = "ADVANCED":
+ courses.add(enrichment_modules)
+ ELSE IF student.performance_level = "REMEDIAL":
+ courses.add(remedial_modules)
+ END IF
+ 
+ RETURN courses
 END FUNCTION
 ```
 
@@ -619,12 +619,12 @@ END FUNCTION
 - Student Priya (Grade 9, Section B, Science stream)
 - Enrolled Subjects: Math, Physics, Chemistry, Biology, English, Hindi, Computer Science, Social Studies
 - LMS Dashboard shows 8 courses with:
-  - Current Progress: Math 75%, Physics 60%, Chemistry 80%...
-  - Pending Assignments: Math Homework Due Tomorrow, Physics Quiz on Friday
-  - AI Co-pilot Notice: "You're struggling with Chemical Bonding (scored 55% in quiz). Here are 3 recommended videos and practice exercises."
+ - Current Progress: Math 75%, Physics 60%, Chemistry 80%...
+ - Pending Assignments: Math Homework Due Tomorrow, Physics Quiz on Friday
+ - AI Co-pilot Notice: "You're struggling with Chemical Bonding (scored 55% in quiz). Here are 3 recommended videos and practice exercises."
 - When Priya opens Chemistry course:
-  - Sees Chapter 1-5 (completed), Chapter 6 (in progress 40%), Chapter 7-12 (locked until Chapter 6 done)
-  - Each chapter has: Video Lectures, Notes PDF, Practice Questions, Quiz
+ - Sees Chapter 1-5 (completed), Chapter 6 (in progress 40%), Chapter 7-12 (locked until Chapter 6 done)
+ - Each chapter has: Video Lectures, Notes PDF, Practice Questions, Quiz
 
 ---
 
@@ -636,20 +636,20 @@ Students with learning disabilities (dyslexia, ADHD, autism, etc.) need Individu
 **DATA FLOW:**
 - **Special Needs Flag:** Student marked as requiring IEP
 - **Diagnosis/Assessment:**
-  - Type of Learning Disability (Dyslexia, Dyscalculia, ADHD, Autism Spectrum)
-  - Severity Level (Mild/Moderate/Severe)
-  - Psycho-educational Assessment Report
-  - IQ Test Results
-  - Behavioral Assessment
+ - Type of Learning Disability (Dyslexia, Dyscalculia, ADHD, Autism Spectrum)
+ - Severity Level (Mild/Moderate/Severe)
+ - Psycho-educational Assessment Report
+ - IQ Test Results
+ - Behavioral Assessment
 - **Parental Consent:**
-  - Permission for specialized testing
-  - Approval for IEP implementation
-  - Agreement to modified curriculum
+ - Permission for specialized testing
+ - Approval for IEP implementation
+ - Agreement to modified curriculum
 - **Previous IEP Records:** From previous school if mid-year transfer
 - **Support Team Assignment:**
-  - Special Education Teacher (Resource Teacher)
-  - Counselor
-  - Therapists (Speech, Occupational, Behavioral)
+ - Special Education Teacher (Resource Teacher)
+ - Counselor
+ - Therapists (Speech, Occupational, Behavioral)
 
 **TRIGGER EVENT:**
 - **Screening Test:** All new admissions screened for learning difficulties
@@ -659,58 +659,58 @@ Students with learning disabilities (dyslexia, ADHD, autism, etc.) need Individu
 
 **IMPACT:**
 - **Individual Education Plan Created:**
-  - Modified learning goals tailored to student's abilities
-  - Accommodations documented (extra time, reduced workload, alternative assessments)
+ - Modified learning goals tailored to student's abilities
+ - Accommodations documented (extra time, reduced workload, alternative assessments)
 - **Specialized Support Services:**
-  - Resource room time allocated (2-3 periods per week)
-  - Speech therapy sessions (if speech delay)
-  - Occupational therapy (for motor skill development)
-  - Behavioral therapy (for ADHD/Autism)
+ - Resource room time allocated (2-3 periods per week)
+ - Speech therapy sessions (if speech delay)
+ - Occupational therapy (for motor skill development)
+ - Behavioral therapy (for ADHD/Autism)
 - **Alerts to Teachers:**
-  - All subject teachers notified: "Rohan has dyslexia, allow 1.5x time for reading tasks"
+ - All subject teachers notified: "Rohan has dyslexia, allow 1.5x time for reading tasks"
 - **Progress Monitoring:**
-  - Regular assessments against IEP goals
-  - Quarterly progress reports to parents
+ - Regular assessments against IEP goals
+ - Quarterly progress reports to parents
 
 **BUSINESS LOGIC:**
 ```
 FUNCTION create_iep(student, diagnosis):
-  iep = NEW IndividualEducationPlan
-  
-  iep.student = student
-  iep.diagnosis = diagnosis
-  iep.start_date = TODAY
-  iep.review_date = TODAY + 365 days  // Annual review
-  
-  // Set learning goals based on current level
-  current_level = assess_current_academic_level(student)
-  iep.goals = create_realistic_goals(current_level, diagnosis)
-  
-  // Determine accommodations
-  IF diagnosis.type = "DYSLEXIA":
-    iep.accommodations.add("1.5x time for reading tasks")
-    iep.accommodations.add("Audiobook option for lengthy texts")
-    iep.accommodations.add("Font: Dyslexie, Size: 14pt")
-  ELSE IF diagnosis.type = "ADHD":
-    iep.accommodations.add("Preferential seating (front row)")
-    iep.accommodations.add("Frequent breaks during tests")
-    iep.accommodations.add("Reduce homework quantity by 30%")
-  END IF
-  
-  // Assign support team
-  resource_teacher = GET available_special_ed_teacher()
-  iep.team.add(resource_teacher)
-  
-  IF diagnosis.needs_therapy:
-    therapist = GET available_therapist(diagnosis.therapy_type)
-    schedule_therapy_sessions(student, therapist, frequency=2_per_week)
-  END IF
-  
-  // Notify all stakeholders
-  NOTIFY student.teachers("IEP created, review accommodations")
-  NOTIFY student.parents("IEP plan ready for review")
-  
-  RETURN iep
+ iep = NEW IndividualEducationPlan
+ 
+ iep.student = student
+ iep.diagnosis = diagnosis
+ iep.start_date = TODAY
+ iep.review_date = TODAY + 365 days // Annual review
+ 
+ // Set learning goals based on current level
+ current_level = assess_current_academic_level(student)
+ iep.goals = create_realistic_goals(current_level, diagnosis)
+ 
+ // Determine accommodations
+ IF diagnosis.type = "DYSLEXIA":
+ iep.accommodations.add("1.5x time for reading tasks")
+ iep.accommodations.add("Audiobook option for lengthy texts")
+ iep.accommodations.add("Font: Dyslexie, Size: 14pt")
+ ELSE IF diagnosis.type = "ADHD":
+ iep.accommodations.add("Preferential seating (front row)")
+ iep.accommodations.add("Frequent breaks during tests")
+ iep.accommodations.add("Reduce homework quantity by 30%")
+ END IF
+ 
+ // Assign support team
+ resource_teacher = GET available_special_ed_teacher()
+ iep.team.add(resource_teacher)
+ 
+ IF diagnosis.needs_therapy:
+ therapist = GET available_therapist(diagnosis.therapy_type)
+ schedule_therapy_sessions(student, therapist, frequency=2_per_week)
+ END IF
+ 
+ // Notify all stakeholders
+ NOTIFY student.teachers("IEP created, review accommodations")
+ NOTIFY student.parents("IEP plan ready for review")
+ 
+ RETURN iep
 END FUNCTION
 ```
 
@@ -718,17 +718,17 @@ END FUNCTION
 - Student Arjun (Grade 5) struggling with reading and spelling
 - Parents get him assessed: Diagnosed with Moderate Dyslexia
 - School creates IEP:
-  - **Goal 1:** Improve reading fluency from 60 words/min to 90 words/min by year-end
-  - **Goal 2:** Reduce spelling errors from 40% to 20% in written work
-  - **Accommodations:**
-    - Extra 30 minutes for all exams (1.5x time)
-    - Use of text-to-speech software for long passages
-    - Oral tests option for language subjects
-    - Dyslexia-friendly font in all study materials
-  - **Support Services:**
-    - Resource room: Monday & Wednesday, Period 6 (individualized reading instruction)
-    - Assistive technology training: Use of Grammarly, Read&Write software
-  - **Progress Monitoring:** Reading fluency tested monthly, spelling test biweekly
+ - **Goal 1:** Improve reading fluency from 60 words/min to 90 words/min by year-end
+ - **Goal 2:** Reduce spelling errors from 40% to 20% in written work
+ - **Accommodations:**
+ - Extra 30 minutes for all exams (1.5x time)
+ - Use of text-to-speech software for long passages
+ - Oral tests option for language subjects
+ - Dyslexia-friendly font in all study materials
+ - **Support Services:**
+ - Resource room: Monday & Wednesday, Period 6 (individualized reading instruction)
+ - Assistive technology training: Use of Grammarly, Read&Write software
+ - **Progress Monitoring:** Reading fluency tested monthly, spelling test biweekly
 - All teachers receive alert: "Arjun has dyslexia, provide 1.5x time, use Dyslexie font"
 - Exam department ensures Arjun gets separate room with extra 30 mins for all tests
 
@@ -741,22 +741,22 @@ Every behavioral incident (fights, bullying, rule violations) must be linked to 
 
 **DATA FLOW:**
 - **Student Profile for Incident Assignment:**
-  - Student ID to link incident
-  - Photo for incident documentation
-  - Class/Section for context
+ - Student ID to link incident
+ - Photo for incident documentation
+ - Class/Section for context
 - **Behavioral History:**
-  - Past incidents count
-  - Severity patterns (minor → major escalation)
-  - Type of incidents (academic dishonesty, violence, disrespect)
+ - Past incidents count
+ - Severity patterns (minor → major escalation)
+ - Type of incidents (academic dishonesty, violence, disrespect)
 - **Parent Contact Information:**
-  - For incident notifications
-  - Parent conference scheduling
+ - For incident notifications
+ - Parent conference scheduling
 - **Counseling Records Access:**
-  - Previous counseling sessions
-  - Behavioral improvement plans
+ - Previous counseling sessions
+ - Behavioral improvement plans
 - **Peer Relationships:**
-  - Sibling in school (family context)
-  - Friend groups (for bullying investigation)
+ - Sibling in school (family context)
+ - Friend groups (for bullying investigation)
 
 **TRIGGER EVENT:**
 - **Incident Reported:** Teacher/staff reports behavioral issue
@@ -766,79 +766,79 @@ Every behavioral incident (fights, bullying, rule violations) must be linked to 
 
 **IMPACT:**
 - **Incident Linked to Student Record:**
-  - Permanent behavioral history maintained
-  - Example: "Rohan involved in 3 incidents this term: 2 minor (late to class), 1 major (fight in playground)"
+ - Permanent behavioral history maintained
+ - Example: "Rohan involved in 3 incidents this term: 2 minor (late to class), 1 major (fight in playground)"
 - **Pattern Detection:**
-  - AI identifies: "Student showing increasing aggression (3 fights in 2 months, previously none)"
-  - Triggers counselor intervention alert
+ - AI identifies: "Student showing increasing aggression (3 fights in 2 months, previously none)"
+ - Triggers counselor intervention alert
 - **Disciplinary Action Tracking:**
-  - Warning → Detention → Suspension → Expulsion pathway documented
-  - Parents notified at each escalation
+ - Warning → Detention → Suspension → Expulsion pathway documented
+ - Parents notified at each escalation
 - **Positive Behavior Rewards:**
-  - Merit points accumulated: "Priya has 45 merit points (helped classmates, perfect attendance, won debate)"
-  - Points redeemable for rewards (extra library time, canteen vouchers, no-homework pass)
+ - Merit points accumulated: "Priya has 45 merit points (helped classmates, perfect attendance, won debate)"
+ - Points redeemable for rewards (extra library time, canteen vouchers, no-homework pass)
 - **Counseling Referrals:**
-  - Chronic behavioral issues → Automatic counselor assignment
-  - Progress monitoring: "3 counseling sessions completed, behavioral improvement noted"
+ - Chronic behavioral issues → Automatic counselor assignment
+ - Progress monitoring: "3 counseling sessions completed, behavioral improvement noted"
 
 **BUSINESS LOGIC:**
 ```
 FUNCTION record_incident(student, incident_details):
-  // Create incident record
-  incident = NEW BehavioralIncident
-  incident.student = student
-  incident.type = incident_details.type  // FIGHT, BULLYING, DISRESPECT, etc.
-  incident.severity = incident_details.severity  // MINOR, MODERATE, MAJOR
-  incident.description = incident_details.description
-  incident.reported_by = incident_details.teacher
-  incident.date = TODAY
-  
-  // Check behavioral history
-  past_incidents = GET incidents WHERE student = student AND date > (TODAY - 90 days)
-  incident_count = past_incidents.count
-  
-  // Determine disciplinary action
-  IF incident.severity = "MAJOR" OR incident_count >= 3:
-    action = "PARENT_CONFERENCE_REQUIRED"
-    NOTIFY parents("Serious behavioral incident, meeting required")
-    ASSIGN counselor(student)
-  ELSE IF incident.severity = "MODERATE":
-    action = "DETENTION"
-    SEND warning_letter(parents)
-  ELSE:
-    action = "VERBAL_WARNING"
-    LOG warning(student)
-  END IF
-  
-  // Pattern detection
-  IF incident.type = "FIGHT" AND past_incidents.filter(type="FIGHT").count >= 2:
-    ALERT("PATTERN DETECTED: Repeated aggressive behavior")
-    TRIGGER anger_management_program(student)
-  END IF
-  
-  // Update student behavioral score
-  student.behavioral_score -= severity_points(incident.severity)
-  
-  RETURN incident
+ // Create incident record
+ incident = NEW BehavioralIncident
+ incident.student = student
+ incident.type = incident_details.type // FIGHT, BULLYING, DISRESPECT, etc.
+ incident.severity = incident_details.severity // MINOR, MODERATE, MAJOR
+ incident.description = incident_details.description
+ incident.reported_by = incident_details.teacher
+ incident.date = TODAY
+ 
+ // Check behavioral history
+ past_incidents = GET incidents WHERE student = student AND date > (TODAY - 90 days)
+ incident_count = past_incidents.count
+ 
+ // Determine disciplinary action
+ IF incident.severity = "MAJOR" OR incident_count >= 3:
+ action = "PARENT_CONFERENCE_REQUIRED"
+ NOTIFY parents("Serious behavioral incident, meeting required")
+ ASSIGN counselor(student)
+ ELSE IF incident.severity = "MODERATE":
+ action = "DETENTION"
+ SEND warning_letter(parents)
+ ELSE:
+ action = "VERBAL_WARNING"
+ LOG warning(student)
+ END IF
+ 
+ // Pattern detection
+ IF incident.type = "FIGHT" AND past_incidents.filter(type="FIGHT").count >= 2:
+ ALERT("PATTERN DETECTED: Repeated aggressive behavior")
+ TRIGGER anger_management_program(student)
+ END IF
+ 
+ // Update student behavioral score
+ student.behavioral_score -= severity_points(incident.severity)
+ 
+ RETURN incident
 END FUNCTION
 ```
 
 **EXAMPLE:**
 - Student Rohan (Grade 8) gets into fight during lunch break
 - Incident recorded:
-  - Type: Physical Fight
-  - Severity: Major
-  - Description: "Rohan punched classmate Arjun after verbal argument about cricket"
-  - Reported by: Mr. Sharma (lunch duty teacher)
+ - Type: Physical Fight
+ - Severity: Major
+ - Description: "Rohan punched classmate Arjun after verbal argument about cricket"
+ - Reported by: Mr. Sharma (lunch duty teacher)
 - System checks history:
-  - Previous incidents: 2 (both verbal arguments, 1 month ago)
-  - Pattern detected: Escalating from verbal to physical aggression
+ - Previous incidents: 2 (both verbal arguments, 1 month ago)
+ - Pattern detected: Escalating from verbal to physical aggression
 - Automatic Actions:
-  - Parents notified immediately: "Rohan involved in physical fight, principal meeting scheduled tomorrow 10 AM"
-  - 2-day suspension imposed
-  - Counselor Ms. Gupta assigned for anger management sessions
-  - Merit points deducted: -20 points
-  - Behavioral score: 75/100 (was 95/100)
+ - Parents notified immediately: "Rohan involved in physical fight, principal meeting scheduled tomorrow 10 AM"
+ - 2-day suspension imposed
+ - Counselor Ms. Gupta assigned for anger management sessions
+ - Merit points deducted: -20 points
+ - Behavioral score: 75/100 (was 95/100)
 - Follow-up: 4 counseling sessions scheduled, parents must attend 1st session
 
 ---
@@ -870,22 +870,22 @@ Students need borrowing privileges based on enrollment status. Library fines and
 **BUSINESS LOGIC:**
 ```
 FUNCTION checkout_book(student, book):
-  IF student.status != "ACTIVE":
-    RETURN "Error: Only active students can borrow"
-  END IF
-  
-  current_books = COUNT borrowed WHERE student = student AND returned = FALSE
-  IF current_books >= borrowing_limit(student.grade):
-    RETURN "Error: Borrowing limit reached"
-  END IF
-  
-  IF student.outstanding_fines > 100:
-    RETURN "Error: Clear fines first"
-  END IF
-  
-  CREATE checkout_record
-  UPDATE reading_analytics
-  SEND SMS(parent, "Book borrowed: {book.title}")
+ IF student.status != "ACTIVE":
+ RETURN "Error: Only active students can borrow"
+ END IF
+ 
+ current_books = COUNT borrowed WHERE student = student AND returned = FALSE
+ IF current_books >= borrowing_limit(student.grade):
+ RETURN "Error: Borrowing limit reached"
+ END IF
+ 
+ IF student.outstanding_fines > 100:
+ RETURN "Error: Clear fines first"
+ END IF
+ 
+ CREATE checkout_record
+ UPDATE reading_analytics
+ SEND SMS(parent, "Book borrowed: {book.title}")
 END FUNCTION
 ```
 
@@ -923,15 +923,15 @@ Student safety requires strict entry/exit control. Gate passes for early dismiss
 **BUSINESS LOGIC:**
 ```
 FUNCTION generate_gate_pass(student, reason, requester):
-  IF requester NOT IN student.authorized_pickup_persons:
-    RETURN "Error: Unauthorized person"
-  END IF
-  
-  gate_pass = CREATE with QR_code
-  NOTIFY security, class_teacher
-  SEND SMS(parent, QR_code)
-  
-  RETURN gate_pass
+ IF requester NOT IN student.authorized_pickup_persons:
+ RETURN "Error: Unauthorized person"
+ END IF
+ 
+ gate_pass = CREATE with QR_code
+ NOTIFY security, class_teacher
+ SEND SMS(parent, QR_code)
+ 
+ RETURN gate_pass
 END FUNCTION
 ```
 
@@ -967,17 +967,17 @@ Schools need explicit parental consent for activities (field trips, photo usage,
 **BUSINESS LOGIC:**
 ```
 FUNCTION request_consent(activity, students):
-  FOR each student:
-    IF parent.legal_guardian = TRUE:
-      SEND consent_request(email, SMS, app)
-      SCHEDULE reminder(deadline - 2 days)
-    END IF
-  END FOR
-  
-  ON deadline:
-    final_participants = students WHERE consent = "APPROVED"
-    excluded = students WHERE consent != "APPROVED"
-    ARRANGE alternate_supervision(excluded)
+ FOR each student:
+ IF parent.legal_guardian = TRUE:
+ SEND consent_request(email, SMS, app)
+ SCHEDULE reminder(deadline - 2 days)
+ END IF
+ END FOR
+ 
+ ON deadline:
+ final_participants = students WHERE consent = "APPROVED"
+ excluded = students WHERE consent != "APPROVED"
+ ARRANGE alternate_supervision(excluded)
 END FUNCTION
 ```
 
@@ -1014,20 +1014,20 @@ Students need various certificates (bonafide, transfer certificates, marksheets)
 **BUSINESS LOGIC:**
 ```
 FUNCTION generate_certificate(student, type):
-  IF type = "TRANSFER_CERTIFICATE":
-    IF student.status != "WITHDRAWN":
-      RETURN "Error: TC only for withdrawn students"
-    END IF
-    IF student.has_outstanding_dues():
-      RETURN "Error: Clear dues first"
-    END IF
-  END IF
-  
-  certificate = GENERATE with student_data
-  ADD digital_signature, school_seal, QR_code
-  STORE_ON_BLOCKCHAIN
-  LOG issuance
-  EMAIL to parent
+ IF type = "TRANSFER_CERTIFICATE":
+ IF student.status != "WITHDRAWN":
+ RETURN "Error: TC only for withdrawn students"
+ END IF
+ IF student.has_outstanding_dues():
+ RETURN "Error: Clear dues first"
+ END IF
+ END IF
+ 
+ certificate = GENERATE with student_data
+ ADD digital_signature, school_seal, QR_code
+ STORE_ON_BLOCKCHAIN
+ LOG issuance
+ EMAIL to parent
 END FUNCTION
 ```
 
@@ -1062,17 +1062,17 @@ ML models need comprehensive student data to predict dropout risk, forecast acad
 **BUSINESS LOGIC:**
 ```
 FUNCTION calculate_dropout_risk(student):
-  features = EXTRACT demographic, academic, behavioral, financial
-  dropout_probability = ML_MODEL.predict(features)
-  risk_level = CATEGORIZE(probability)
-  
-  IF risk_level = "CRITICAL":
-    ALERT counselor
-    SCHEDULE parent_meeting(urgency="HIGH")
-    ASSIGN mentor_teacher
-  END IF
-  
-  RETURN {probability, risk_level, top_risk_factors}
+ features = EXTRACT demographic, academic, behavioral, financial
+ dropout_probability = ML_MODEL.predict(features)
+ risk_level = CATEGORIZE(probability)
+ 
+ IF risk_level = "CRITICAL":
+ ALERT counselor
+ SCHEDULE parent_meeting(urgency="HIGH")
+ ASSIGN mentor_teacher
+ END IF
+ 
+ RETURN {probability, risk_level, top_risk_factors}
 END FUNCTION
 ```
 
@@ -1110,21 +1110,21 @@ Parents need real-time access to child's information - academic progress, attend
 **BUSINESS LOGIC:**
 ```
 FUNCTION parent_portal_login(parent):
-  children = GET students WHERE parent_id = parent.id
-  
-  FOR each child:
-    dashboard.add({
-      quick_stats: attendance, latest_grade, next_exam, fees, pending_actions,
-      alerts: recent_notifications(7_days)
-    })
-  END FOR
-  
-  RETURN dashboard
+ children = GET students WHERE parent_id = parent.id
+ 
+ FOR each child:
+ dashboard.add({
+ quick_stats: attendance, latest_grade, next_exam, fees, pending_actions,
+ alerts: recent_notifications(7_days)
+ })
+ END FOR
+ 
+ RETURN dashboard
 END FUNCTION
 ```
 
 **EXAMPLE:**
-Mr. Sharma logs in at 8 PM. Sees Aarav (Grade 6): Today present ✓, Math test 82/100, Field trip consent pending, ₹12,000 dues. Ananya (Grade 9): 100% attendance, Selected for debate competition. Approves consent, pays fee online, messages English teacher for book recommendations.
+Mr. Sharma logs in at 8 PM. Sees Aarav (Grade 6): Today present , Math test 82/100, Field trip consent pending, ₹12,000 dues. Ananya (Grade 9): 100% attendance, Selected for debate competition. Approves consent, pays fee online, messages English teacher for book recommendations.
 
 ---
 
@@ -1155,15 +1155,15 @@ High school students (Grades 9-12) need career guidance based on interests, apti
 **BUSINESS LOGIC:**
 ```
 FUNCTION career_counseling_profile(student):
-  IF student.grade < 9:
-    RETURN "Career counseling starts from Grade 9"
-  END IF
-  
-  profile = {academic, tests, aptitude, extracurricular, preferences}
-  recommendations = AI_MATCH_UNIVERSITIES(profile)
-  career_paths = AI_SUGGEST_CAREERS(profile)
-  
-  RETURN {profile, recommendations, career_paths}
+ IF student.grade < 9:
+ RETURN "Career counseling starts from Grade 9"
+ END IF
+ 
+ profile = {academic, tests, aptitude, extracurricular, preferences}
+ recommendations = AI_MATCH_UNIVERSITIES(profile)
+ career_paths = AI_SUGGEST_CAREERS(profile)
+ 
+ RETURN {profile, recommendations, career_paths}
 END FUNCTION
 ```
 
@@ -1201,17 +1201,17 @@ When students graduate (Grade 12), they transition from "current students" to "a
 **BUSINESS LOGIC:**
 ```
 FUNCTION convert_to_alumni(student):
-  IF student.grade != 12 OR result != "PASSED":
-    RETURN "Error: Only Grade 12 pass students"
-  END IF
-  
-  alumni = CREATE with student_data, batch_year
-  alumni_email = GENERATE alumni.email
-  CREATE portal_access
-  student.status = "ALUMNI"
-  ADD_TO_GROUP("Batch of {year}")
-  
-  SEND welcome_email
+ IF student.grade != 12 OR result != "PASSED":
+ RETURN "Error: Only Grade 12 pass students"
+ END IF
+ 
+ alumni = CREATE with student_data, batch_year
+ alumni_email = GENERATE alumni.email
+ CREATE portal_access
+ student.status = "ALUMNI"
+ ADD_TO_GROUP("Batch of {year}")
+ 
+ SEND welcome_email
 END FUNCTION
 ```
 
@@ -1246,16 +1246,16 @@ Exams and assessments are conducted for enrolled students. Results must be store
 **BUSINESS LOGIC:**
 ```
 FUNCTION generate_exam_roster(exam, section):
-  students = GET WHERE section = section AND status = "ACTIVE"
-  
-  FOR each student:
-    IF student.has_IEP:
-      ALLOCATE separate_room, extra_time
-    END IF
-    IF student.outstanding_fees > threshold:
-      BLOCK admit_card
-    END IF
-  END FOR
+ students = GET WHERE section = section AND status = "ACTIVE"
+ 
+ FOR each student:
+ IF student.has_IEP:
+ ALLOCATE separate_room, extra_time
+ END IF
+ IF student.outstanding_fees > threshold:
+ BLOCK admit_card
+ END IF
+ END FOR
 END FUNCTION
 ```
 
@@ -1290,16 +1290,16 @@ Student participation in events (sports day, cultural fest, competitions) must b
 **BUSINESS LOGIC:**
 ```
 FUNCTION register_for_event(student, event):
-  IF event.requires_consent AND NOT student.has_consent:
-    RETURN "Error: Parent consent required"
-  END IF
-  
-  IF event.capacity_full:
-    ADD_TO_WAITLIST
-  ELSE:
-    REGISTER student
-    NOTIFY parent
-  END IF
+ IF event.requires_consent AND NOT student.has_consent:
+ RETURN "Error: Parent consent required"
+ END IF
+ 
+ IF event.capacity_full:
+ ADD_TO_WAITLIST
+ ELSE:
+ REGISTER student
+ NOTIFY parent
+ END IF
 END FUNCTION
 ```
 
@@ -1334,17 +1334,17 @@ Students use canteen services. Meal plans for day scholars, mess for boarders. D
 **BUSINESS LOGIC:**
 ```
 FUNCTION process_meal_purchase(student, item):
-  IF item.contains_allergen IN student.allergies:
-    RETURN "Error: Allergen detected - {allergen}"
-  END IF
-  
-  IF student.canteen_balance < item.price:
-    RETURN "Error: Insufficient balance"
-  END IF
-  
-  DEDUCT balance
-  LOG purchase
-  NOTIFY parent(daily_summary)
+ IF item.contains_allergen IN student.allergies:
+ RETURN "Error: Allergen detected - {allergen}"
+ END IF
+ 
+ IF student.canteen_balance < item.price:
+ RETURN "Error: Insufficient balance"
+ END IF
+ 
+ DEDUCT balance
+ LOG purchase
+ NOTIFY parent(daily_summary)
 END FUNCTION
 ```
 
@@ -1380,22 +1380,22 @@ Students participate in sports teams, tournaments, and physical education. Medic
 **BUSINESS LOGIC:**
 ```
 FUNCTION enroll_in_sports(student, sport):
-  IF sport.competitive AND NOT student.medical_clearance:
-    RETURN "Error: Medical clearance required"
-  END IF
-  
-  IF student.has_medical_restriction(sport):
-    RETURN "Error: Medical restriction - {condition}"
-  END IF
-  
-  ENROLL student
-  ADD to team_roster
-  NOTIFY coach, parent
+ IF sport.competitive AND NOT student.medical_clearance:
+ RETURN "Error: Medical clearance required"
+ END IF
+ 
+ IF student.has_medical_restriction(sport):
+ RETURN "Error: Medical restriction - {condition}"
+ END IF
+ 
+ ENROLL student
+ ADD to team_roster
+ NOTIFY coach, parent
 END FUNCTION
 ```
 
 **EXAMPLE:**
-Rohan wants to join basketball team. System checks: Medical clearance valid until Dec 2024 ✓, No heart conditions ✓. Enrolled in team. Tournament registration: Inter-school championship. Rohan scores 25 points, team wins. Achievement added: "Basketball Champion 2024."
+Rohan wants to join basketball team. System checks: Medical clearance valid until Dec 2024 , No heart conditions . Enrolled in team. Tournament registration: Inter-school championship. Rohan scores 25 points, team wins. Achievement added: "Basketball Champion 2024."
 
 ---
 
@@ -1425,18 +1425,18 @@ Students may need counseling for academic stress, behavioral issues, family prob
 **BUSINESS LOGIC:**
 ```
 FUNCTION create_counseling_referral(student, reason, referred_by):
-  referral = CREATE with priority_level
-  
-  IF reason = "CRISIS" OR keywords_detected(suicide, self_harm):
-    priority = "URGENT"
-    ALERT counselor, principal, parent IMMEDIATELY
-    SCHEDULE session(within_24_hours)
-  ELSE:
-    priority = "ROUTINE"
-    SCHEDULE session(within_1_week)
-  END IF
-  
-  RETURN referral
+ referral = CREATE with priority_level
+ 
+ IF reason = "CRISIS" OR keywords_detected(suicide, self_harm):
+ priority = "URGENT"
+ ALERT counselor, principal, parent IMMEDIATELY
+ SCHEDULE session(within_24_hours)
+ ELSE:
+ priority = "ROUTINE"
+ SCHEDULE session(within_1_week)
+ END IF
+ 
+ RETURN referral
 END FUNCTION
 ```
 
@@ -1470,18 +1470,18 @@ School needs to send targeted communications to students/parents based on grade,
 **BUSINESS LOGIC:**
 ```
 FUNCTION send_communication(message, target_group):
-  IF target_group = "ALL":
-    recipients = ALL students.parents
-  ELSE IF target_group = "GRADE_10":
-    recipients = students WHERE grade = 10
-  ELSE IF target_group = "BUS_ROUTE_5":
-    recipients = students WHERE transport_route = 5
-  END IF
-  
-  FOR each recipient:
-    SEND via preferred_channels(email, SMS, app)
-    TRACK delivery_status
-  END FOR
+ IF target_group = "ALL":
+ recipients = ALL students.parents
+ ELSE IF target_group = "GRADE_10":
+ recipients = students WHERE grade = 10
+ ELSE IF target_group = "BUS_ROUTE_5":
+ recipients = students WHERE transport_route = 5
+ END IF
+ 
+ FOR each recipient:
+ SEND via preferred_channels(email, SMS, app)
+ TRACK delivery_status
+ END FOR
 END FUNCTION
 ```
 
@@ -1516,26 +1516,26 @@ Exam seating must be allocated based on student enrollment, roll numbers, and sp
 **BUSINESS LOGIC:**
 ```
 FUNCTION allocate_exam_seats(exam):
-  students = GET enrolled_in_subjects(exam) WHERE status = "ACTIVE"
-  
-  regular_students = []
-  special_accommodation = []
-  
-  FOR each student:
-    IF student.outstanding_fees > fee_threshold:
-      BLOCK admit_card
-      NOTIFY parent("Clear dues to receive admit card")
-    ELSE IF student.has_IEP:
-      special_accommodation.add(student)
-    ELSE:
-      regular_students.add(student)
-    END IF
-  END FOR
-  
-  ALLOCATE regular_students TO main_halls(by_roll_number)
-  ALLOCATE special_accommodation TO separate_rooms(with_extra_time)
-  
-  GENERATE admit_cards
+ students = GET enrolled_in_subjects(exam) WHERE status = "ACTIVE"
+ 
+ regular_students = []
+ special_accommodation = []
+ 
+ FOR each student:
+ IF student.outstanding_fees > fee_threshold:
+ BLOCK admit_card
+ NOTIFY parent("Clear dues to receive admit card")
+ ELSE IF student.has_IEP:
+ special_accommodation.add(student)
+ ELSE:
+ regular_students.add(student)
+ END IF
+ END FOR
+ 
+ ALLOCATE regular_students TO main_halls(by_roll_number)
+ ALLOCATE special_accommodation TO separate_rooms(with_extra_time)
+ 
+ GENERATE admit_cards
 END FUNCTION
 ```
 
@@ -1544,7 +1544,7 @@ Grade 10 Math exam: 180 students. System allocates: Hall 1 (60 students, Roll 1-
 
 ---
 
-## 📥 INBOUND CONNECTIONS (Other Modules → Student Management)
+## INBOUND CONNECTIONS (Other Modules → Student Management)
 
 ### FROM ASSESSMENT & EXAMS MODULE
 
@@ -1744,7 +1744,7 @@ Grade 10 Math exam: 180 students. System allocates: Hall 1 (60 students, Roll 1-
 
 ---
 
-## 📊 SUMMARY
+## SUMMARY
 
 **Student Management Module connects to 35+ modules**
 

@@ -1,10 +1,10 @@
 # INCIDENT & CRISIS MANAGEMENT MODULE - COMPLETE DEPENDENCY ANALYSIS
 
-## 🎯 MODULE OVERVIEW
+## MODULE OVERVIEW
 
-**Name:** Incident & Crisis Management Module  
-**Role:** Emergency Response, Crisis Communication & Safety Protocol Engine  
-**Type:** Safety & Compliance Module  
+**Name:** Incident & Crisis Management Module 
+**Role:** Emergency Response, Crisis Communication & Safety Protocol Engine 
+**Type:** Safety & Compliance Module 
 
 **Primary Functions:**
 - Emergency Alert System
