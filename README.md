@@ -1,8 +1,8 @@
-# School ERP System - Complete Module Documentation
+# Hogwarts - School ERP System
 
 ## Overview
 
-This repository contains comprehensive documentation for all 50 modules of the **School ERP System** - a world-class, AI-powered, future-ready enterprise resource planning solution for educational institutions.
+This repository contains comprehensive documentation for all 50 modules of **Hogwarts** - a world-class, AI-powered, future-ready enterprise resource planning solution for educational institutions.
 
 ## Project Structure
 
