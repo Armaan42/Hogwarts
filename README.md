@@ -89,6 +89,5 @@ Hogwarts/
 
 ---
 
-**Built with care for the future of education**
 
 
