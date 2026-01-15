@@ -12,14 +12,14 @@ Each module has its own subdirectory:
 
 ```
 submodules/
-├── 01_student_management/
-│   ├── README.md                          # Overview of all submodules
-│   ├── 01_registration_admission.md       # Detailed submodule specs
-│   ├── 02_document_vault_kyc.md
-│   └── ... (all submodules)
-├── 02_academic_curriculum/
-├── 03_timetable_scheduling/
-└── ... (all 50 modules)
+ 01_student_management/
+ README.md # Overview of all submodules
+ 01_registration_admission.md # Detailed submodule specs
+ 02_document_vault_kyc.md
+ ... (all submodules)
+ 02_academic_curriculum/
+ 03_timetable_scheduling/
+ ... (all 50 modules)
 ```
 
 ## Naming Convention
@@ -48,7 +48,7 @@ Each submodule document should include:
 
 ## Module Coverage
 
-- ✅ **Module 01 (Student Management):** 16 submodules documented
+- **Module 01 (Student Management):** 16 submodules documented
 - ⏳ **Remaining Modules:** To be documented
 
 ---
