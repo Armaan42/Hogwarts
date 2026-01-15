@@ -659,3 +659,332 @@ Timetable aligned with academic calendar. Holidays, events, exams integrated int
 - Overload: Redistribute sections
 
 This module is the **"academic operations backbone"** - orchestrating daily school operations through optimized scheduling of teachers, students, and resources while maintaining flexibility for changes and special events.
+
+**Real-world Timetable Scenarios:**
+
+**Scenario 1: New Academic Year Timetable Generation (1,000+ students, 150 teachers)**
+- **Phase 1: Data Collection (June)**
+  - Student enrollment: 1,050 students across Grades 6-12
+  - Sections created:
+    - Grade 6-8: 5 sections each (A-E), 40 students/section
+    - Grade 9-10: 6 sections each (A-F), 35 students/section
+    - Grade 11-12: 4 sections each (Science, Commerce), 30 students/section
+  - Teacher allocation:
+    - 150 teachers (100 full-time, 50 part-time)
+    - Subject expertise mapped
+    - Workload capacity: Full-time 30 periods/week, Part-time 15 periods/week
+- **Phase 2: Curriculum Mapping (July)**
+  - Periods per subject defined:
+    - Core subjects (Math, Science, English): 6 periods/week
+    - Secondary subjects (Social, Hindi): 4-5 periods/week
+    - Activity subjects (PE, Art, Music): 2 periods/week
+  - Lab requirements:
+    - Science labs: 2 periods/week (double period)
+    - Computer labs: 1 period/week
+- **Phase 3: Constraint Application (July 15-20)**
+  - Teacher constraints:
+    - Mr. Verma (Math): Max 28 periods (health reasons)
+    - Ms. Sharma (English): Prefers morning slots (personal)
+    - Dr. Patel (Science): Lab supervision only (safety)
+  - Room constraints:
+    - 30 classrooms, 3 science labs, 2 computer labs
+    - Auditorium unavailable Mon/Wed (renovation)
+  - Time constraints:
+    - No consecutive periods for same subject
+    - Lab periods: Double periods (90 mins)
+    - PE periods: Last 2 periods (outdoor activities)
+- **Phase 4: AI-based Optimization (July 21-25)**
+  - Algorithm: Genetic Algorithm + Constraint Satisfaction
+  - Iterations: 10,000 generations
+  - Fitness function:
+    - Minimize teacher idle time (weight: 30%)
+    - Balance daily workload (weight: 25%)
+    - Maximize room utilization (weight: 20%)
+    - Respect teacher preferences (weight: 15%)
+    - Avoid consecutive same-subject periods (weight: 10%)
+  - Result:
+    - Teacher utilization: 87% (avg 26.1/30 periods)
+    - Room utilization: 92%
+    - Conflicts: 12 (manual resolution needed)
+    - Optimization time: 45 minutes
+- **Phase 5: Manual Conflict Resolution (July 26-28)**
+  - Conflict 1: Room 205 double-booked (9A Math, 9B Science) at 10 AM Monday
+    - Resolution: 9B Science moved to Lab 1
+  - Conflict 2: Mr. Verma overloaded (32 periods)
+    - Resolution: 2 sections redistributed to Ms. Gupta
+  - Conflict 3: No teacher for Grade 6A Hindi (Period 5, Wednesday)
+    - Resolution: Mr. Singh's free period utilized
+  - All conflicts resolved, final timetable generated
+- **Phase 6: Review & Approval (July 29-31)**
+  - Principal review: Approved with minor adjustments
+  - Teacher feedback: 95% satisfaction
+  - Adjustments: 5 period swaps for teacher convenience
+- **Phase 7: Publication (August 1)**
+  - Timetable published to:
+    - Teacher portal (PDF + interactive)
+    - Student portal (mobile app + web)
+    - Parent portal (view-only)
+  - Notifications sent: 1,200+ (students, parents, teachers)
+  - Printouts distributed: First day of school
+
+**Scenario 2: Mid-year Teacher Resignation & Timetable Adjustment**
+- **Week 1 (January 10):**
+  - Ms. Sharma (English, 4 sections) resigns (personal reasons)
+  - Immediate impact: 24 periods/week vacant
+  - Sections affected: 9A, 9B, 10A, 10B
+- **Week 1 (January 11):**
+  - Emergency meeting: Principal, Timetable Coordinator, HR
+  - Options considered:
+    - Option 1: Hire replacement (takes 2-3 weeks)
+    - Option 2: Redistribute to existing teachers
+    - Option 3: Combination (temporary redistribution + new hire)
+  - Decision: Option 3 selected
+- **Week 1 (January 12):**
+  - Temporary redistribution:
+    - Mr. Gupta (English, currently 22 periods): +12 periods (9A, 9B)
+    - Mrs. Reddy (English, currently 24 periods): +12 periods (10A, 10B)
+  - Timetable adjustments:
+    - Mr. Gupta's free periods reduced: 8 → 2
+    - Mrs. Reddy's free periods reduced: 6 → 0 (overload approved temporarily)
+  - Compensation: Extra pay for overload (₹500/period)
+- **Week 2 (January 15):**
+  - Updated timetable published
+  - Students notified: "English teacher change: Mr. Gupta/Mrs. Reddy"
+  - Parents informed via SMS
+- **Week 4 (February 1):**
+  - New teacher hired: Ms. Kapoor (English)
+  - Onboarding: 1 week
+- **Week 5 (February 8):**
+  - Timetable re-adjusted:
+    - Ms. Kapoor: 24 periods (9A, 9B, 10A, 10B)
+    - Mr. Gupta: Back to 22 periods
+    - Mrs. Reddy: Back to 24 periods
+  - Final timetable published, system stabilized
+
+**Scenario 3: Sports Day Special Schedule (1-day event)**
+- **Event:** Annual Sports Day (November 15)
+- **Planning (October 15):**
+  - Regular timetable suspended for Grades 6-12
+  - Special schedule created:
+    - 8:30-9:00 AM: Assembly & Inauguration
+    - 9:00-12:30 PM: Track & Field Events
+    - 12:30-1:00 PM: Lunch
+    - 1:00-3:00 PM: Team Sports (Football, Basketball, Cricket)
+    - 3:00-3:30 PM: Prize Distribution
+  - Teacher duties assigned:
+    - Event coordinators: 10 teachers
+    - Judges: 15 teachers
+    - First aid: 5 teachers
+    - Photography: 2 teachers
+    - Remaining: Crowd management, student supervision
+- **Implementation (November 15):**
+  - Regular timetable disabled in system
+  - Special schedule activated
+  - Students grouped by house (Red, Blue, Green, Yellow)
+  - Events conducted smoothly
+- **Post-event (November 16):**
+  - Regular timetable resumed
+  - No classes lost (Saturday makeup classes scheduled)
+
+**Scenario 4: Exam Period Timetable (Mid-term Exams)**
+- **Exam Period:** March 10-20 (10 days)
+- **Grades Affected:** 9-12 (Grades 6-8 continue regular classes)
+- **Exam Schedule:**
+  - 2 exams/day (9 AM - 12 PM, 1 PM - 4 PM)
+  - 3-hour duration per exam
+  - Subjects: Math, Science, English, Social, Hindi, Computer (6 exams)
+- **Hall Allocation:**
+  - Grade 9: Rooms 201-205 (5 sections, 180 students)
+  - Grade 10: Rooms 206-210 (6 sections, 210 students)
+  - Grade 11: Rooms 211-214 (4 sections, 120 students)
+  - Grade 12: Rooms 215-218 (4 sections, 120 students)
+- **Invigilation Duty Roster:**
+  - 2 invigilators per hall (1 senior, 1 junior)
+  - Rotation: Each teacher 4-6 duties over 10 days
+  - Free period teachers prioritized
+  - Example: Mr. Verma (Math) - 5 duties
+    - March 10: Room 201 (9 AM - 12 PM)
+    - March 12: Room 206 (1 PM - 4 PM)
+    - March 14: Room 211 (9 AM - 12 PM)
+    - March 16: Room 215 (1 PM - 4 PM)
+    - March 18: Room 201 (9 AM - 12 PM)
+- **Regular Classes (Grades 6-8):**
+  - Continue normal timetable
+  - Rooms: 101-115 (separate building)
+  - Teachers: Those not on invigilation duty
+- **Result:** Exams conducted smoothly, zero conflicts
+
+**AI-based Timetable Optimization:**
+
+**Optimization Algorithm:**
+```
+FUNCTION optimize_timetable_with_ai(constraints, preferences):
+  // Initialize population
+  population = GENERATE_RANDOM_TIMETABLES(size=100)
+  
+  FOR generation = 1 TO 10000:
+    // Evaluate fitness
+    FOR each timetable IN population:
+      fitness = CALCULATE_FITNESS(timetable, constraints, preferences)
+      timetable.fitness = fitness
+    END FOR
+    
+    // Selection (top 50%)
+    selected = SELECT_TOP_50_PERCENT(population)
+    
+    // Crossover (breed new timetables)
+    offspring = []
+    FOR i = 1 TO 50:
+      parent1 = RANDOM_SELECT(selected)
+      parent2 = RANDOM_SELECT(selected)
+      child = CROSSOVER(parent1, parent2)
+      offspring.add(child)
+    END FOR
+    
+    // Mutation (random changes)
+    FOR each child IN offspring:
+      IF RANDOM() < 0.1:  // 10% mutation rate
+        MUTATE(child)
+      END IF
+    END FOR
+    
+    // New population
+    population = selected + offspring
+    
+    // Check convergence
+    IF BEST_FITNESS_NOT_IMPROVED_FOR(100_GENERATIONS):
+      BREAK
+    END IF
+  END FOR
+  
+  best_timetable = SELECT_BEST(population)
+  RETURN best_timetable
+END FUNCTION
+
+FUNCTION calculate_fitness(timetable, constraints, preferences):
+  score = 0
+  
+  // Hard constraints (must be satisfied)
+  IF HAS_ROOM_CONFLICTS(timetable):
+    score -= 1000
+  END IF
+  
+  IF HAS_TEACHER_CONFLICTS(timetable):
+    score -= 1000
+  END IF
+  
+  IF TEACHER_OVERLOADED(timetable):
+    score -= 500
+  END IF
+  
+  // Soft constraints (preferences)
+  // Minimize teacher idle time
+  idle_time = CALCULATE_TEACHER_IDLE_TIME(timetable)
+  score += (1000 - idle_time * 10)
+  
+  // Balance daily workload
+  workload_variance = CALCULATE_DAILY_WORKLOAD_VARIANCE(timetable)
+  score += (500 - workload_variance * 5)
+  
+  // Maximize room utilization
+  room_utilization = CALCULATE_ROOM_UTILIZATION(timetable)
+  score += room_utilization * 200
+  
+  // Respect teacher preferences
+  preference_satisfaction = CALCULATE_PREFERENCE_SATISFACTION(timetable, preferences)
+  score += preference_satisfaction * 150
+  
+  // Avoid consecutive same-subject periods
+  consecutive_penalties = COUNT_CONSECUTIVE_SAME_SUBJECT(timetable)
+  score -= consecutive_penalties * 100
+  
+  RETURN score
+END FUNCTION
+```
+
+**Timetable Analytics Dashboard:**
+
+**Weekly Analytics:**
+- **Teacher Utilization:**
+  - Highest: Mr. Verma (30/30 periods, 100%)
+  - Lowest: Ms. Kapoor (18/30 periods, 60%) - New teacher, ramping up
+  - Average: 26.1/30 periods (87%)
+  - Overloaded: 0 teachers (optimal)
+  - Underutilized: 5 teachers (<20 periods) - Part-time by choice
+- **Room Utilization:**
+  - Classrooms: 92% (optimal)
+  - Science Labs: 75% (acceptable)
+  - Computer Labs: 85% (good)
+  - Auditorium: 40% (low, but expected for special venue)
+- **Subject Distribution:**
+  - Core subjects (Math, Science, English): 60% of periods
+  - Secondary subjects: 25% of periods
+  - Activity subjects: 15% of periods
+- **Conflict Resolution:**
+  - Conflicts detected: 12/week (avg)
+  - Auto-resolved: 8 (67%)
+  - Manual resolution: 4 (33%)
+  - Resolution time: <1 hour (avg)
+
+**Monthly Trends:**
+- **Substitute Assignments:**
+  - September: 45 substitutions (teacher leaves)
+  - October: 38 substitutions
+  - November: 52 substitutions (flu season)
+  - December: 30 substitutions
+  - Average: 41 substitutions/month
+- **Timetable Changes:**
+  - Major changes: 2/month (teacher resignation, new hire)
+  - Minor changes: 15/month (room swaps, period adjustments)
+  - Emergency changes: 5/month (teacher illness, facility issues)
+
+**Timetable Best Practices:**
+1. **Early Planning:** Start timetable creation 2 months before academic year
+2. **Stakeholder Input:** Collect teacher preferences, student feedback
+3. **Flexibility:** Keep 10% buffer for changes
+4. **Technology:** Use AI optimization for large schools (500+ students)
+5. **Communication:** Publish timetable 2 weeks before school starts
+6. **Backup Plans:** Have substitute teacher pool ready
+7. **Regular Review:** Monthly timetable review meetings
+8. **Data-driven:** Use analytics to improve future timetables
+
+**Timetable Challenges & Solutions:**
+
+**Challenge 1: Teacher Shortage**
+- **Problem:** Not enough Math teachers for all sections
+- **Solution:** Hire part-time teachers, redistribute workload, online classes
+
+**Challenge 2: Lab Conflicts**
+- **Problem:** 10 sections need science lab, only 3 labs available
+- **Solution:** Double periods, staggered lab schedules, virtual labs
+
+**Challenge 3: Last-minute Changes**
+- **Problem:** Teacher absent, no substitute available
+- **Solution:** Self-study period, online class, combine sections
+
+**Challenge 4: Student Electives**
+- **Problem:** Students choose different elective combinations
+- **Solution:** Elective periods scheduled simultaneously, students move to chosen class
+
+**Challenge 5: Special Events**
+- **Problem:** Annual function disrupts regular schedule
+- **Solution:** Special schedule for event day, makeup classes on Saturday
+
+**Future Enhancements:**
+- **AI-powered Predictive Scheduling:** Predict teacher absences, pre-assign substitutes
+- **Dynamic Timetable:** Real-time adjustments based on attendance, room availability
+- **Student Preferences:** Allow students to choose preferred time slots (college-style)
+- **Mobile App:** Teachers mark attendance, view schedule, request changes via app
+- **Integration:** Sync with Google Calendar, Outlook for seamless scheduling
+- **Analytics:** Predictive analytics for optimal timetable generation
+
+**Data Freshness:**
+- **Real-time:** Teacher absence, substitute assignment, room changes
+- **Hourly:** Timetable conflict detection
+- **Daily:** Period schedules, attendance slots, utilization reports
+- **Weekly:** Timetable adjustments, teacher workload reports
+- **Monthly:** Utilization analytics, conflict analysis
+- **Annually:** Master timetable creation, optimization review
+
+This module is the **"academic operations backbone"** - orchestrating daily school operations through AI-powered optimization, real-time conflict resolution, comprehensive analytics, and seamless integration with all academic modules, ensuring efficient utilization of teachers, classrooms, and time while maintaining flexibility for changes, special events, and emergencies, ultimately creating a smooth, predictable, and optimized learning environment for 1,000+ students and 150+ teachers.
+
