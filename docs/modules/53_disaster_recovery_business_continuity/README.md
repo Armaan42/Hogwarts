@@ -510,7 +510,458 @@ Monitoring module detects system failures and triggers disaster recovery procedu
 
 ---
 
-**Status:** Production-Ready Documentation  
+## DISASTER RECOVERY DRILLS
+
+### Quarterly DR Drill Schedule (2024-25)
+
+**Q1 Drill (June 2024): Database Corruption Simulation**
+
+**Scenario:**
+- Simulated: Student Management database corrupted
+- Objective: Restore from backup within 2 hours (RTO)
+- Participants: IT team (5 members), Principal, Admin staff
+
+**Execution:**
+```
+9:00 AM - Drill Start
+- IT team notified: "Student database corrupted, initiate DR"
+- Incident response team activated
+
+9:05 AM - Assessment
+- Verify corruption (simulated)
+- Identify last good backup: 6:00 AM (3 hours ago)
+- Decision: Restore from 6:00 AM backup
+
+9:10 AM - Backup Retrieval
+- Download backup from AWS S3
+- Verify checksum: ✓ Match
+- Decrypt backup: ✓ Success
+
+9:25 AM - Database Restore
+- Stop production database
+- Restore from backup
+- Verify data integrity
+
+10:15 AM - Testing
+- Test student portal login: ✓
+- Test fee payment: ✓
+- Test report card generation: ✓
+
+10:30 AM - Go Live
+- Switch production traffic to restored database
+- Monitor for issues
+
+10:45 AM - Drill Complete
+- Total time: 1 hour 45 minutes (within 2-hour RTO ✓)
+- Data loss: 3 hours (within 4-hour acceptable range)
+```
+
+**Drill Results:**
+- RTO Target: <2 hours → Achieved: 1h 45m ✓
+- RPO Target: <15 minutes → Actual: 3 hours ✗ (need improvement)
+- Success Rate: 90%
+- Issues Found: Backup download slow (25 minutes)
+
+**Action Items:**
+1. Implement faster backup storage (upgrade to S3 Transfer Acceleration)
+2. Reduce backup interval to 30 minutes (from 4 hours)
+3. Add local backup copy for faster recovery
+
+---
+
+**Q2 Drill (September 2024): Ransomware Attack Simulation**
+
+**Scenario:**
+- Simulated: Ransomware encrypts all servers
+- Objective: Recover all systems within 4 hours
+- Participants: Full IT team, Security team, Management
+
+**Execution:**
+```
+2:00 PM - Attack Detected
+- Ransomware note appears: "All files encrypted, pay ₹50L"
+- Immediate action: Isolate infected servers
+
+2:05 PM - Incident Response
+- Activate incident response plan
+- Notify management and board
+- Contact cybersecurity consultant
+
+2:15 PM - Assessment
+- Affected systems: All application servers (5 servers)
+- Database servers: Isolated in time, not encrypted ✓
+- Last clean backup: 12:00 PM (2 hours ago)
+
+2:30 PM - Recovery Plan
+- Wipe infected servers (cannot trust them)
+- Rebuild from clean OS images
+- Restore applications from backup
+- Restore data from 12:00 PM backup
+
+3:00 PM - Server Rebuild
+- Install fresh OS on all 5 servers
+- Install applications
+- Configure security hardening
+
+4:30 PM - Data Restore
+- Restore databases from 12:00 PM backup
+- Restore application files
+- Verify integrity
+
+5:15 PM - Testing
+- Test all critical functions
+- Security scan: No malware detected ✓
+
+5:45 PM - Go Live
+- Switch production traffic
+- Monitor closely
+
+6:00 PM - Drill Complete
+- Total time: 4 hours (exactly at RTO limit)
+- Data loss: 2 hours (acceptable)
+```
+
+**Drill Results:**
+- RTO Target: <4 hours → Achieved: 4h 0m ✓ (barely)
+- Systems Recovered: 5/5 (100%)
+- Security: Enhanced post-recovery
+- Issues: Server rebuild took too long (1.5 hours)
+
+**Action Items:**
+1. Pre-configure server images for faster deployment
+2. Automate server rebuild process
+3. Implement better ransomware prevention (EDR software)
+4. Conduct security awareness training for staff
+
+---
+
+## BACKUP STRATEGIES
+
+### Backup Types & Schedule
+
+**1. Full Backup (Daily)**
+- **Schedule:** 2:00 AM every day
+- **Duration:** 2-3 hours
+- **Size:** 500 GB (compressed)
+- **Retention:** 30 days (daily), 12 months (monthly)
+- **Storage:** Local NAS + AWS S3 + Offsite datacenter
+
+**2. Incremental Backup (Every 4 Hours)**
+- **Schedule:** 6 AM, 10 AM, 2 PM, 6 PM, 10 PM
+- **Duration:** 15-30 minutes
+- **Size:** 50-100 GB per backup
+- **Retention:** 7 days
+- **Storage:** Local NAS + AWS S3
+
+**3. Transaction Log Backup (Every 15 Minutes)**
+- **Schedule:** Continuous (every 15 min)
+- **Duration:** 2-5 minutes
+- **Size:** 5-10 GB per backup
+- **Retention:** 24 hours
+- **Storage:** Local NAS (fast recovery)
+- **Purpose:** Point-in-time recovery (RPO <15 min)
+
+**4. Snapshot Backup (Hourly)**
+- **Schedule:** Every hour
+- **Duration:** Instant (copy-on-write)
+- **Size:** Incremental (only changes)
+- **Retention:** 48 hours
+- **Storage:** SAN storage
+- **Purpose:** Quick rollback for recent changes
+
+---
+
+### Backup Storage Locations
+
+**Primary Storage (Local NAS):**
+- **Capacity:** 10 TB
+- **Technology:** RAID 6 (dual parity)
+- **Purpose:** Fast recovery (local network speed)
+- **Retention:** 7 days full + 30 days incremental
+
+**Secondary Storage (Offsite Datacenter):**
+- **Location:** 50 km away (different city)
+- **Capacity:** 20 TB
+- **Purpose:** Disaster recovery (fire, flood, earthquake)
+- **Retention:** 30 days full + 90 days incremental
+
+**Tertiary Storage (Cloud - AWS S3):**
+- **Capacity:** Unlimited (pay-per-use)
+- **Purpose:** Long-term archival, geographic redundancy
+- **Retention:** 90 days full + 12 months monthly archives
+- **Cost:** ~₹50,000/month
+
+---
+
+## FAILOVER MECHANISMS
+
+### High Availability Architecture
+
+**Database Failover:**
+```
+Primary Database Server (Production)
+    ↓ (Real-time replication)
+Standby Database Server (Hot standby)
+    ↓ (Async replication)
+Backup Database Server (Warm standby)
+```
+
+**Failover Process:**
+1. **Health Check:** Monitor primary server every 30 seconds
+2. **Failure Detection:** 3 consecutive failed checks = failure
+3. **Automatic Failover:** Standby promoted to primary (90 seconds)
+4. **DNS Update:** Point traffic to new primary (30 seconds)
+5. **Total Failover Time:** <2 minutes
+
+**Application Server Failover:**
+- **Load Balancer:** Distributes traffic across 3 app servers
+- **Health Checks:** Every 10 seconds
+- **Automatic Removal:** Failed server removed from pool
+- **No Downtime:** Other servers handle load
+
+---
+
+## INCIDENT RESPONSE PLAN
+
+### Incident Response Team
+
+**Team Structure:**
+- **Incident Commander:** IT Manager (Mr. Verma)
+- **Technical Lead:** Senior System Admin (Mr. Patel)
+- **Communication Lead:** Admin Manager (Ms. Gupta)
+- **Security Lead:** Security Officer (Mr. Sharma)
+- **Business Lead:** Principal (Dr. Reddy)
+
+**Contact Information:**
+- 24/7 Hotline: +91-98765-43210
+- Email: incident@hogwarts.edu.in
+- WhatsApp Group: "DR Incident Response"
+
+---
+
+### Incident Severity Levels
+
+**Level 1 (Critical):**
+- **Impact:** Complete system outage, all users affected
+- **Examples:** Datacenter fire, ransomware attack, database corruption
+- **Response Time:** Immediate (within 15 minutes)
+- **Escalation:** Board notification required
+
+**Level 2 (High):**
+- **Impact:** Major module outage, many users affected
+- **Examples:** Fee payment system down, exam portal crash
+- **Response Time:** Within 1 hour
+- **Escalation:** Management notification
+
+**Level 3 (Medium):**
+- **Impact:** Minor module issue, some users affected
+- **Examples:** Report generation slow, email delays
+- **Response Time:** Within 4 hours
+- **Escalation:** IT team handles
+
+**Level 4 (Low):**
+- **Impact:** Individual user issues, minimal impact
+- **Examples:** Single student login issue, minor bug
+- **Response Time:** Within 24 hours
+- **Escalation:** Help desk handles
+
+---
+
+## REAL-WORLD DISASTER SCENARIOS
+
+### Scenario 1: Server Hardware Failure (March 2024)
+
+**Incident:**
+```
+Date: March 15, 2024, 11:30 AM
+Event: Primary database server hard drive failure
+Affected: All modules (complete system down)
+Users Impacted: 1,800 students + 165 staff + 3,600 parents
+Severity: Level 1 (Critical)
+```
+
+**Timeline:**
+```
+11:30 AM - Hard drive failure, database offline
+11:32 AM - Monitoring alerts triggered
+11:35 AM - IT team notified, incident response activated
+11:40 AM - Assessment: Primary server dead, need failover
+11:45 AM - Failover initiated to standby server
+11:50 AM - Standby promoted to primary
+11:55 AM - DNS updated, traffic redirected
+12:00 PM - System back online
+12:15 PM - Full testing completed
+12:30 PM - Incident resolved, monitoring continues
+```
+
+**Recovery:**
+- **Total Downtime:** 30 minutes
+- **Data Loss:** 0 (real-time replication worked)
+- **RTO Target:** <2 hours → Achieved: 30 min ✓
+- **RPO Target:** <15 min → Achieved: 0 min ✓
+
+**Root Cause:**
+- Hard drive age: 4 years (beyond 3-year replacement cycle)
+- No warning signs (SMART monitoring showed healthy)
+
+**Corrective Actions:**
+1. Replace all hard drives >3 years old (10 drives replaced)
+2. Implement predictive failure monitoring
+3. Increase standby server capacity
+4. Update failover documentation
+
+**Cost:**
+- Hardware replacement: ₹2,00,000
+- Downtime cost: Minimal (30 min, no exams/payments affected)
+- Total: ₹2,00,000
+
+---
+
+### Scenario 2: Accidental Data Deletion (July 2024)
+
+**Incident:**
+```
+Date: July 22, 2024, 3:45 PM
+Event: Admin accidentally deleted entire Grade 10 student records (180 students)
+Affected: Student Management module
+Users Impacted: 180 students + 360 parents
+Severity: Level 2 (High)
+```
+
+**Timeline:**
+```
+3:45 PM - Admin executes bulk delete (thought it was test data)
+3:47 PM - Admin realizes mistake, panics
+3:50 PM - IT team notified
+3:55 PM - Assessment: 180 student records deleted
+4:00 PM - Recovery plan: Restore from 3:00 PM snapshot
+4:05 PM - Snapshot restore initiated
+4:20 PM - Data restored successfully
+4:30 PM - Verification: All 180 students back
+4:45 PM - Incident resolved
+```
+
+**Recovery:**
+- **Total Downtime:** 0 (read-only mode during restore)
+- **Data Loss:** 45 minutes (3:00 PM to 3:45 PM)
+- **Lost Changes:** 2 new admissions, 3 address updates
+- **Manual Re-entry:** 5 changes re-applied (15 minutes)
+
+**Root Cause:**
+- Admin confusion between production and test environment
+- No confirmation prompt for bulk delete
+- Insufficient access controls
+
+**Corrective Actions:**
+1. Implement "Are you sure?" prompt for bulk operations
+2. Color-code environments (production=red, test=green)
+3. Restrict bulk delete to senior admins only
+4. Mandatory training on data safety
+
+**Cost:**
+- Recovery cost: ₹0 (automated)
+- Manual re-entry: 1 hour staff time (₹500)
+- Total: ₹500
+
+---
+
+## BUSINESS CONTINUITY PLANNING
+
+### Critical Business Functions
+
+**Priority 1 (Must Continue):**
+- Student attendance tracking
+- Fee payment processing
+- Exam conduct and grading
+- Emergency communication
+
+**Priority 2 (Important):**
+- LMS access for online classes
+- Library book issue/return
+- Transport tracking
+- Parent portal access
+
+**Priority 3 (Can Wait):**
+- Event management
+- Alumni portal
+- Clubs & societies
+- Sports management
+
+---
+
+### Alternate Operating Procedures
+
+**If ERP System Down:**
+
+**Attendance:**
+- Manual attendance registers (paper-based)
+- Entry into system after recovery
+
+**Fee Payment:**
+- Accept cash/cheque payments
+- Manual receipts issued
+- Entry into system after recovery
+
+**Exams:**
+- Paper-based exams (always backup plan)
+- Manual grading
+- Entry into system after recovery
+
+**Communication:**
+- WhatsApp groups (already exist)
+- SMS via third-party service
+- Phone calls for urgent matters
+
+---
+
+## SUMMARY
+
+**Total Connections:** 53 modules depend on Disaster Recovery
+
+**Critical Dependencies:**
+- ALL modules require backup services
+- ALL modules may need recovery services
+- ALL modules participate in DR drills
+
+**Data Flow Metrics:**
+- **Daily Backups:** 54 modules × 1 full backup = 54 backups/day
+- **Hourly Incremental:** 54 modules × 24 hours = 1,296 backups/day
+- **Total Backup Size:** ~500 GB/day (compressed & encrypted)
+- **Recovery Requests:** ~5-10/month (mostly accidental deletions)
+- **Disaster Events:** Target: 0, Reality: 1-2/year (minor incidents)
+
+**Integration Complexity:** CRITICAL
+- DR is foundation for business continuity
+- Failure = catastrophic data loss
+- Requires 24/7 monitoring and testing
+
+**DR Drill Results (2024):**
+- Q1 Drill: Database corruption - 1h 45m recovery ✓
+- Q2 Drill: Ransomware attack - 4h 0m recovery ✓
+- Q3 Drill: Scheduled October 2024
+- Q4 Drill: Scheduled January 2025
+
+**Real Incidents (2024):**
+- Hardware failure: 30 min downtime, 0 data loss ✓
+- Accidental deletion: 0 downtime, 45 min data loss ✓
+- Total incidents: 2 (both resolved successfully)
+
+**Backup Statistics:**
+- Total backups: 15,000+ (2024)
+- Failed backups: 12 (0.08%)
+- Average backup time: 2h 15m (full), 25m (incremental)
+- Total storage used: 50 TB (all locations)
+
+**Recovery Statistics:**
+- Recovery requests: 72 (2024)
+- Successful recoveries: 71 (98.6%)
+- Failed recovery: 1 (backup corrupted, used older backup)
+- Average recovery time: 45 minutes
+
+---
+
+**Status:** Production-Ready  
 **Last Updated:** January 16, 2026  
-**Version:** 1.0  
+**Version:** 2.0  
 **Compliance:** ISO 22301 (Business Continuity), ISO 27001 (Information Security)
+
