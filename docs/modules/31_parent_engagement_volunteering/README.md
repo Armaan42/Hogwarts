@@ -161,7 +161,130 @@ Parent Engagement module needs to communicate with parents for PTM reminders, vo
 
 ---
 
+
+---
+
+## INBOUND CONNECTIONS (Other Modules → Parent Engagement)
+
+### 1. FROM STUDENT MANAGEMENT MODULE
+
+**WHY This Connection Exists:**
+Parent portal displays real-time student information. Student Management module sends student data to Parent Engagement for portal display.
+
+**DATA RECEIVED:**
+- Student profile (name, photo, class, section)
+- Admission details (admission number, date)
+- Parent information (father, mother, guardian details)
+- Emergency contacts
+- Sibling information
+
+**IMPACT:**
+- **Real-Time Portal Updates:**
+  - Student promoted to next grade → Portal shows new class
+  - Profile photo updated → Portal displays new photo
+  - Contact details changed → Portal reflects updates
+
+**TRIGGER:** Student data created/updated in Student Management
+
+---
+
+### 2. FROM ATTENDANCE MODULE
+
+**WHY This Connection Exists:**
+Parents need daily attendance updates. Attendance module sends attendance data to Parent Engagement for portal display and notifications.
+
+**DATA RECEIVED:**
+- Daily attendance status (Present/Absent/Late)
+- Attendance percentage (monthly, yearly)
+- Leave applications status
+- Attendance alerts (3+ consecutive absences)
+
+**IMPACT:**
+- **Instant Notifications:**
+  - Student absent → SMS/email sent to parent within 30 minutes
+  - Low attendance (< 75%) → Alert sent to parent
+- **Portal Display:**
+  - Attendance calendar view
+  - Monthly attendance report
+
+**TRIGGER:** Attendance marked daily (9:00 AM)
+
+---
+
+### 3. FROM ASSESSMENT & EXAMS MODULE
+
+**WHY This Connection Exists:**
+Parents track child's academic progress. Assessment module sends grades and exam results to Parent Engagement for portal display.
+
+**DATA RECEIVED:**
+- Exam schedules (date, time, subject)
+- Grades (subject-wise marks, grades)
+- Report cards (term-wise, annual)
+- Teacher remarks
+- Class rank, percentile
+
+**IMPACT:**
+- **Academic Transparency:**
+  - Exam results published → Parents notified immediately
+  - Report card available → Download from portal
+- **Progress Tracking:**
+  - Subject-wise performance trends
+  - Comparison with previous terms
+
+**TRIGGER:** Grades published, report card generated
+
+---
+
+### 4. FROM FEE MANAGEMENT MODULE
+
+**WHY This Connection Exists:**
+Parents manage fee payments through portal. Fee Management sends fee data to Parent Engagement for display and payment.
+
+**DATA RECEIVED:**
+- Fee structure (tuition, transport, activities)
+- Payment status (paid, pending, overdue)
+- Payment history (receipts, transaction IDs)
+- Outstanding dues
+- Next installment due date
+
+**IMPACT:**
+- **Fee Transparency:**
+  - Clear breakdown of all fees
+  - Payment history accessible anytime
+- **Online Payment:**
+  - Pay fees directly from portal
+  - Instant receipt generation
+
+**TRIGGER:** Fee invoice generated, payment received
+
+---
+
+### 5. FROM COMMUNICATION MODULE
+
+**WHY This Connection Exists:**
+Parents receive school communications. Communication module sends messages, announcements, and notifications to Parent Engagement portal.
+
+**DATA RECEIVED:**
+- School announcements (events, holidays, policy changes)
+- Teacher messages (homework, performance feedback)
+- Emergency alerts (school closure, safety issues)
+- Event invitations
+- Newsletter
+
+**IMPACT:**
+- **Centralized Communication:**
+  - All messages in one place (portal inbox)
+  - Push notifications for urgent messages
+- **Two-Way Communication:**
+  - Parents can reply to teacher messages
+  - Submit feedback, suggestions
+
+**TRIGGER:** Message/announcement created in Communication module
+
+---
+
 ## PARENT PORTAL FEATURES
+
 
 ### Dashboard
 
