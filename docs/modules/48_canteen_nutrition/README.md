@@ -25,51 +25,491 @@
 
 ### 1. TO STUDENT MANAGEMENT MODULE
 
-**WHY:** Track student dietary preferences, allergies, meal consumption history.
+**WHY This Connection Exists:**
+Canteen needs to track student dietary preferences, allergies, and meal consumption history to provide personalized, safe meal options. Student Management stores this critical health and preference data that directly impacts meal planning and service.
 
 **DATA FLOW:**
-- Student dietary preferences (vegetarian, vegan, Jain, etc.)
-- Allergy information (nuts, dairy, gluten)
-- Meal consumption history
-- Canteen wallet balance
+- Student dietary preferences (Vegetarian, Vegan, Jain, Non-veg)
+- Allergy information (Nuts, Dairy, Gluten, Soy, Eggs)
+- Medical dietary restrictions (Diabetic, Celiac, Lactose intolerant)
+- Meal consumption history (what student ordered, frequency)
+- Canteen wallet balance (current balance, transaction history)
+- Spending patterns (daily average, monthly total)
+- Favorite items (most ordered dishes)
+- Grade and section (for lunch timing coordination)
+- Parent contact (for allergy alerts, wallet notifications)
 
-**TRIGGER:** Student enrollment, preference update, meal purchase
+**TRIGGER EVENT:**
+- New student enrollment (dietary preferences captured)
+- Student updates dietary preference (becomes vegetarian)
+- Allergy discovered (parent reports nut allergy)
+- Meal purchase (wallet balance updated)
+- Wallet recharge (balance increased)
+- Medical condition diagnosed (diabetes, requires diet modification)
 
-**IMPACT:** Personalized meal recommendations, allergy alerts
+**IMPACT:**
+- **Personalized Meal Recommendations:**
+  - Rohan (vegetarian) sees only veg items in app
+  - Priya (nut allergy) gets allergy alert when ordering items with nuts
+  - Diabetic student Ananya gets low-sugar meal suggestions
+- **Safety Alerts:**
+  - System blocks nut-containing items for allergic students
+  - Warning displayed: "This item contains peanuts. You have a nut allergy."
+- **Wallet Management:**
+  - Parent gets SMS when balance < ₹100
+  - Auto-recharge triggers at ₹50 balance
+- **Consumption Analytics:**
+  - Student dashboard shows: "You ordered Chole Bhature 8 times this month"
+  - Nutritionist can review eating patterns
+
+**BUSINESS LOGIC:**
+```
+FUNCTION process_meal_order(student_id, item_id):
+  student = GET_STUDENT_DATA(student_id)
+  item = GET_MENU_ITEM(item_id)
+  
+  // Check allergies
+  IF student.allergies CONTAINS ANY item.allergens:
+    SHOW_ALERT("ALLERGY WARNING: This item contains " + item.allergens)
+    REQUIRE_CONFIRMATION("Are you sure you want to proceed?")
+    IF NOT confirmed:
+      RETURN "Order cancelled for safety"
+    END IF
+  END IF
+  
+  // Check dietary preference
+  IF student.diet_preference == "VEGAN" AND item.contains_dairy:
+    SHOW_WARNING("This item contains dairy (not vegan)")
+  END IF
+  
+  // Check wallet balance
+  IF student.wallet_balance < item.price:
+    RETURN "Insufficient balance. Please recharge wallet."
+  END IF
+  
+  // Process order
+  DEDUCT_WALLET_BALANCE(student_id, item.price)
+  RECORD_CONSUMPTION(student_id, item_id, timestamp)
+  UPDATE_FAVORITE_ITEMS(student_id, item_id)
+  
+  // Send notifications
+  IF student.wallet_balance < 100:
+    SEND_SMS(student.parent_mobile, "Wallet balance low: ₹" + balance)
+  END IF
+  
+  RETURN "Order successful"
+END FUNCTION
+```
+
+**REAL-WORLD EXAMPLE:**
+```
+Scenario: Rohan Kumar (Grade 9) has severe nut allergy
+
+Student Profile (in Student Management):
+- Name: Rohan Kumar
+- Grade: 9A
+- Dietary Preference: Vegetarian
+- Allergies: Peanuts, Tree Nuts (Severe - EpiPen required)
+- Medical Certificate: Uploaded (Dr. Sharma, June 2024)
+- Parent Contact: +91-98765-43210 (Mrs. Kumar)
+- Wallet Balance: ₹250
+
+Incident: October 15, 2024 - Lunch Time
+- Rohan scans RFID card at canteen
+- Selects "Peanut Butter Sandwich" (₹40)
+- System checks allergens
+
+System Response:
+╔══════════════════════════════════════════════╗
+║         ⚠️  ALLERGY ALERT  ⚠️                ║
+╠══════════════════════════════════════════════╣
+║                                              ║
+║  DANGER: This item contains PEANUTS          ║
+║                                              ║
+║  Your profile indicates:                     ║
+║  - Severe peanut allergy                     ║
+║  - EpiPen required                           ║
+║                                              ║
+║  This item is NOT SAFE for you.              ║
+║                                              ║
+║  ORDER BLOCKED FOR YOUR SAFETY               ║
+║                                              ║
+║  Please select a different item.             ║
+╚══════════════════════════════════════════════╝
+
+- Order automatically cancelled
+- Canteen staff alerted (screen flashes red)
+- Parent SMS sent: "Rohan attempted to order peanut item. Order blocked for safety."
+- Rohan selects "Veg Sandwich" instead (₹35)
+- Order successful
+
+Outcome:
+- Allergy incident prevented
+- Rohan safe
+- Parent informed and appreciative
+- System working as designed
+```
 
 ---
 
 ### 2. TO FEE MANAGEMENT MODULE
 
-**WHY:** Canteen wallet recharge, meal plan payments.
+**WHY This Connection Exists:**
+Canteen wallet recharges are financial transactions that must be recorded in the school's fee management system for accounting, reconciliation, and parent billing purposes.
 
 **DATA FLOW:**
-- Wallet recharge transactions
-- Meal plan subscriptions (monthly, quarterly)
-- Payment history
+- Wallet recharge amount (₹500, ₹1,000, ₹2,000)
+- Payment method (Online, Cash, Cheque, UPI)
+- Transaction ID (unique identifier)
+- Parent ID (who made payment)
+- Student ID (whose wallet was recharged)
+- Timestamp (date and time of recharge)
+- Receipt number (for accounting)
+- Meal plan subscriptions (monthly, quarterly, annual)
+- Subscription amount (₹3,000/month, ₹8,000/quarter)
 
-**TRIGGER:** Parent recharges wallet, subscribes to meal plan
+**TRIGGER EVENT:**
+- Parent recharges wallet via parent portal
+- Parent pays cash at school office
+- Parent subscribes to meal plan
+- Meal plan renewal (monthly auto-debit)
+- Refund request (student leaving school)
 
-**IMPACT:** ₹500 wallet recharge, ₹3,000/month meal plan
+**IMPACT:**
+- **Financial Reconciliation:**
+  - Daily canteen revenue: ₹45,000 (1,500 transactions)
+  - Matches with wallet recharges: ₹45,000 ✓
+  - Accounting books balanced
+- **Parent Billing:**
+  - Parent sees wallet recharge in fee statement
+  - "Canteen Wallet Recharge: ₹1,000 (Oct 15, 2024)"
+- **Meal Plan Management:**
+  - 400 students on monthly meal plan (₹3,000/month)
+  - Auto-debit on 1st of every month
+  - Revenue predictability: ₹12L/month guaranteed
+
+**BUSINESS LOGIC:**
+```
+FUNCTION recharge_wallet(student_id, amount, payment_method):
+  // Validate amount
+  IF amount NOT IN [500, 1000, 2000, 5000]:
+    RETURN "Invalid amount. Choose ₹500, ₹1000, ₹2000, or ₹5000"
+  END IF
+  
+  // Process payment
+  transaction_id = GENERATE_TRANSACTION_ID()
+  payment_status = PROCESS_PAYMENT(amount, payment_method)
+  
+  IF payment_status == "SUCCESS":
+    // Update wallet
+    UPDATE_WALLET_BALANCE(student_id, amount, "ADD")
+    
+    // Record in Fee Management
+    RECORD_TRANSACTION({
+      type: "CANTEEN_WALLET_RECHARGE",
+      student_id: student_id,
+      amount: amount,
+      transaction_id: transaction_id,
+      payment_method: payment_method,
+      timestamp: NOW,
+      receipt_number: GENERATE_RECEIPT()
+    })
+    
+    // Send notifications
+    SEND_SMS(parent_mobile, "Wallet recharged: ₹" + amount + ". New balance: ₹" + new_balance)
+    SEND_EMAIL(parent_email, receipt_pdf)
+    
+    RETURN "Recharge successful. Receipt sent to email."
+  ELSE:
+    RETURN "Payment failed. Please try again."
+  END IF
+END FUNCTION
+```
+
+**REAL-WORLD EXAMPLE:**
+```
+Scenario: Mrs. Sharma recharges Priya's canteen wallet
+
+Date: November 1, 2024, 8:30 PM
+Parent: Mrs. Sharma (Priya's mother)
+Student: Priya Sharma (Grade 10A)
+Current Wallet Balance: ₹75 (low)
+
+Action:
+- Mrs. Sharma logs into parent portal
+- Navigates to "Canteen Wallet"
+- Sees balance: ₹75 (Low balance warning)
+- Clicks "Recharge Wallet"
+- Selects amount: ₹1,000
+- Payment method: UPI (Google Pay)
+- Confirms payment
+
+System Processing:
+1. Payment gateway: Razorpay
+2. UPI transaction: ₹1,000 debited from Mrs. Sharma's account
+3. Transaction ID: TXN2024110100123
+4. Payment status: SUCCESS (within 5 seconds)
+
+System Updates:
+1. Canteen Module:
+   - Priya's wallet: ₹75 + ₹1,000 = ₹1,075
+   - Transaction recorded
+
+2. Fee Management Module:
+   - New entry created:
+     - Date: Nov 1, 2024, 8:30 PM
+     - Type: Canteen Wallet Recharge
+     - Amount: ₹1,000
+     - Payment Method: UPI
+     - Receipt No: RCP/2024/11/00456
+     - Status: Paid
+
+3. Notifications Sent:
+   - SMS to Mrs. Sharma: "Canteen wallet recharged successfully. Amount: ₹1,000. New balance: ₹1,075. Receipt: RCP/2024/11/00456"
+   - Email to Mrs. Sharma: PDF receipt attached
+   - App notification to Priya: "Your canteen wallet has been recharged by ₹1,000"
+
+Next Day (Nov 2):
+- Priya buys lunch: Veg Biryani (₹70)
+- Wallet balance: ₹1,075 - ₹70 = ₹1,005
+- Transaction smooth, no issues
+
+Month-End (Nov 30):
+- Mrs. Sharma checks fee statement
+- Sees: "Canteen Wallet Recharge: ₹1,000 (Nov 1, 2024)" listed
+- Accounting reconciliation: Perfect match ✓
+```
 
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → Canteen)
 
-### FROM HEALTH MODULE
+### FROM HEALTH & WELLNESS MODULE
 
-**WHY:** Medical dietary restrictions, nutritionist recommendations.
+**WHY This Connection Exists:**
+Health module tracks student medical conditions, BMI, nutritionist consultations that directly impact meal planning. Canteen must receive this data to provide appropriate, medically-compliant meals.
 
 **DATA RECEIVED:**
-- Medical conditions (diabetes, obesity, anemia)
-- Nutritionist diet plans
-- BMI data for portion control
+- Medical conditions (Diabetes, Obesity, Anemia, Hypertension)
+- BMI data (Underweight, Normal, Overweight, Obese)
+- Nutritionist diet plans (calorie limits, macro ratios)
+- Food allergies (newly discovered or updated)
+- Medical certificates (doctor's recommendations)
+- Health checkup results (cholesterol, blood sugar levels)
 
-**IMPACT:** Diabetic student gets low-sugar meals, obese student gets calorie-controlled portions
+**IMPACT:**
+- **Customized Meal Plans:**
+  - Diabetic student: Low-sugar, low-GI meals
+  - Obese student: Calorie-controlled portions (1,500 kcal/day)
+  - Anemic student: Iron-rich foods (spinach, dates, jaggery)
+  - Underweight student: High-calorie, protein-rich meals
+- **Portion Control:**
+  - Overweight students: Smaller portions automatically served
+  - Underweight students: Extra servings encouraged
+- **Menu Restrictions:**
+  - Hypertensive student: Low-salt meals
+  - High cholesterol student: Low-fat cooking methods
+
+**TRIGGER:** Annual health checkup, medical condition diagnosed, nutritionist consultation
+
+**REAL-WORLD EXAMPLE:**
+```
+Scenario: Rohan Kumar diagnosed with Type 1 Diabetes
+
+Date: September 15, 2024
+Student: Rohan Kumar (Grade 9A, Age 14)
+Diagnosis: Type 1 Diabetes (insulin-dependent)
+Doctor: Dr. Mehta, Endocrinologist
+Medical Certificate: Uploaded to Health Module
+
+Health Module → Canteen Module Data Transfer:
+- Condition: Type 1 Diabetes
+- Severity: Moderate (requires insulin)
+- Dietary Restrictions:
+  - Max carbs: 60g per meal
+  - No refined sugar
+  - Low glycemic index foods only
+  - Meal timing: Regular (no skipping)
+- Nutritionist Plan:
+  - Breakfast: 300 kcal, 40g carbs
+  - Lunch: 500 kcal, 60g carbs
+  - Snacks: 150 kcal, 20g carbs
+- Foods to Avoid: Sweets, white rice, white bread, sugary drinks
+- Foods to Include: Brown rice, whole wheat, vegetables, lean protein
+
+Canteen System Updates:
+1. Rohan's profile flagged: "DIABETIC - SPECIAL DIET"
+2. Menu customization:
+   - Regular rice → Brown rice
+   - Regular roti → Whole wheat roti
+   - Desserts → Sugar-free options
+   - Juice → Unsweetened buttermilk
+3. Portion control:
+   - Rice: 1 cup (max 60g carbs)
+   - Roti: 2 pieces (whole wheat)
+   - Dal: 1 bowl (protein)
+   - Vegetables: Unlimited
+4. Meal timing alerts:
+   - Lunch: 12:30 PM - 1:00 PM (strict timing)
+   - Snacks: 3:30 PM (if needed)
+
+Daily Meal Example (October 10, 2024):
+Regular Menu:
+- White Rice + Dal + Aloo Gobi + Gulab Jamun
+
+Rohan's Customized Menu:
+- Brown Rice (1 cup) + Dal (1 bowl) + Aloo Gobi (1 bowl) + Sugar-free Kheer (small bowl)
+- Nutritional Info Displayed:
+  - Calories: 480 kcal
+  - Carbs: 58g (within limit ✓)
+  - Protein: 18g
+  - Fat: 12g
+  - GI: Low (✓)
+
+Outcome:
+- Rohan's blood sugar stable (monitored by school nurse)
+- Parents satisfied with meal customization
+- Rohan feels included (not eating different food visibly)
+- Health improving (HbA1c reduced from 8.5 to 7.2 in 3 months)
+```
 
 ---
 
-## CANTEEN OPERATIONS
+### FROM ATTENDANCE MODULE
+
+**WHY This Connection Exists:**
+Attendance data helps canteen predict daily meal requirements, reduce food waste, and optimize procurement. If 200 students are absent, canteen doesn't need to prepare 1,800 meals.
+
+**DATA RECEIVED:**
+- Daily attendance count (students present)
+- Absentee list (students not in school)
+- Half-day information (early dismissals)
+- Field trip data (students eating elsewhere)
+- Holiday calendar (no meals needed)
+
+**IMPACT:**
+- **Accurate Meal Planning:**
+  - Normal day: 1,800 students → Prepare 1,800 meals
+  - Rainy day: 1,600 students present → Prepare 1,600 meals
+  - Field trip day: 180 students on trip → Prepare 1,620 meals
+- **Waste Reduction:**
+  - Before integration: 200 kg food waste/day
+  - After integration: 50 kg food waste/day (75% reduction)
+  - Annual savings: ₹5L (reduced waste + procurement)
+- **Cost Optimization:**
+  - Vegetables ordered based on attendance forecast
+  - Milk ordered for actual student count
+  - Snacks stocked appropriately
+
+**TRIGGER:** Daily attendance marked (9:00 AM), field trip scheduled, holiday declared
+
+**REAL-WORLD EXAMPLE:**
+```
+Scenario: Heavy rain day - Low attendance
+
+Date: July 20, 2024 (Monday)
+Weather: Heavy rain, flooding in some areas
+Normal Attendance: 1,800 students
+Actual Attendance: 1,200 students (33% absent)
+
+Morning (8:00 AM):
+- Canteen staff prepares for normal day (1,800 meals)
+- Vegetables received: For 1,800 students
+- Cooking begins
+
+9:00 AM - Attendance Marked:
+- Attendance Module records: 1,200 present, 600 absent
+- Data sent to Canteen Module
+
+Canteen System Alert:
+╔══════════════════════════════════════════════╗
+║     ⚠️  LOW ATTENDANCE ALERT  ⚠️             ║
+╠══════════════════════════════════════════════╣
+║  Expected: 1,800 students                    ║
+║  Actual: 1,200 students (67%)                ║
+║  Difference: -600 students (33% absent)      ║
+║                                              ║
+║  RECOMMENDATION:                             ║
+║  - Reduce lunch preparation by 33%           ║
+║  - Prepare 1,200 meals instead of 1,800      ║
+║  - Save excess vegetables for tomorrow       ║
+╚══════════════════════════════════════════════╝
+
+Canteen Manager Action:
+- Adjusts cooking quantities
+- Rice: 60 kg → 40 kg
+- Dal: 30 kg → 20 kg
+- Vegetables: 40 kg → 27 kg
+- Roti: 3,600 pieces → 2,400 pieces
+
+Result:
+- Meals prepared: 1,250 (buffer of 50)
+- Meals served: 1,180 (20 students brought lunch from home)
+- Leftover: 70 meals (distributed to staff, security guards)
+- Food waste: 5 kg (minimal)
+- Cost saved: ₹8,000 (vegetables, ingredients)
+
+Without Attendance Integration:
+- Would have prepared: 1,800 meals
+- Leftover: 620 meals
+- Food waste: 150 kg
+- Cost wasted: ₹25,000
+
+Annual Impact:
+- 50 low-attendance days/year
+- Savings per day: ₹17,000
+- Annual savings: ₹8.5L
+- Waste reduction: 75%
+```
+
+---
+
+## SUMMARY
+
+**Canteen & Nutrition Module - Key Metrics:**
+
+**Operations:**
+- Daily meals served: 1,800 (breakfast: 600, lunch: 1,800, snacks: 800)
+- Operating hours: 7:30 AM - 5:00 PM (9.5 hours)
+- Staff: 15 (cooks: 8, servers: 5, manager: 1, helper: 1)
+- Halls: 1 main canteen (capacity: 200 seated)
+
+**Menu & Nutrition:**
+- Menu rotation: 4-week cycle
+- Meal types: Vegetarian (100%), Vegan options, Jain options
+- Nutritional compliance: FSSAI guidelines, age-appropriate calories
+- Special diets: 125 students (7%) with dietary accommodations
+
+**Financial:**
+- Annual budget: ₹72L
+- Revenue: ₹72L (meals: ₹60L, snacks: ₹10L, beverages: ₹2L)
+- Expenses: ₹72L (break-even, non-profit)
+- School subsidy: ₹10L/year (to keep prices affordable)
+
+**Technology:**
+- Canteen wallet: 1,500 active (83% students)
+- RFID transactions: 25,000/month
+- Mobile app users: 1,200 parents (67%)
+- Average wallet balance: ₹350
+
+**Quality & Safety:**
+- FSSAI rating: 4.5/5.0
+- Food safety incidents: 0 (2024-25)
+- Student satisfaction: 4.2/5.0
+- Waste reduction: 75% (200 kg → 50 kg/day)
+
+**Impact:**
+- Student health: Improved (balanced nutrition)
+- Parent satisfaction: 4.5/5.0
+- Waste composted: 15 tons/year
+- Cost optimization: ₹8.5L/year (attendance-based planning)
+
+---
+
+**Status:** Production-Ready  
+**Last Updated:** January 16, 2026  
+**Version:** 2.0
+
 
 ### Daily Operations Schedule
 
