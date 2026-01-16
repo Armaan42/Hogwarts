@@ -21,6 +21,44 @@
 
 ---
 
+## OUTBOUND CONNECTIONS (Reports & Dashboards → Other Modules)
+
+### 1. TO ALL MODULES (DATA AGGREGATION)
+
+**WHY:** Reports aggregate data from all 54 modules for comprehensive analytics.
+
+**DATA FLOW:** Student data, fee data, attendance, grades, HR data  
+**TRIGGER:** Report generation requested  
+**IMPACT:** Principal generates annual performance report with data from 20+ modules
+
+**BUSINESS LOGIC:**
+```
+FUNCTION generate_annual_report():
+  data = {
+    students: STUDENT_MANAGEMENT.get_all_stats(),
+    fees: FEE_MANAGEMENT.get_collection_stats(),
+    attendance: ATTENDANCE.get_overall_stats(),
+    grades: ASSESSMENT.get_performance_stats()
+  }
+  report = COMPILE_REPORT(data)
+  RETURN report
+END FUNCTION
+```
+
+---
+
+## INBOUND CONNECTIONS (Other Modules → Reports)
+
+### FROM ALL MODULES
+
+**WHY:** Every module sends data to Reports module for analytics.
+
+**DATA RECEIVED:** Real-time metrics, historical data, KPIs  
+**IMPACT:** Dashboards show live data from all modules  
+**TRIGGER:** Data changes in any module
+
+---
+
 ## REPORTING ARCHITECTURE
 
 ### Report Types
