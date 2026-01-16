@@ -636,6 +636,533 @@ Tap to mark attendance
 
 ---
 
+## APP DEVELOPMENT WORKFLOW
+
+### Development Environment
+
+**iOS Development:**
+- **IDE:** Xcode 14.0+
+- **Language:** Swift 5.5
+- **UI Framework:** SwiftUI
+- **Minimum iOS:** 14.0
+- **Simulator:** iPhone 13, iPad Pro
+
+**Android Development:**
+- **IDE:** Android Studio 2022.1+
+- **Language:** Kotlin 1.7
+- **UI Framework:** Jetpack Compose
+- **Minimum Android:** 8.0 (API 26)
+- **Emulator:** Pixel 5, Pixel Tablet
+
+**Version Control:**
+- **Git:** GitHub
+- **Branching:** GitFlow (main, develop, feature branches)
+- **Code Review:** Pull requests, 2 approvals required
+
+---
+
+### Development Process
+
+**Sprint Cycle:** 2 weeks
+
+**Sprint Activities:**
+1. **Planning:** Define features, user stories
+2. **Development:** Code, test, review
+3. **QA:** Testing, bug fixes
+4. **Release:** Deploy to TestFlight/Play Console
+5. **Retrospective:** Review, improve
+
+**Example Sprint (Sprint 25 - Jan 2026):**
+```
+Sprint Goal: Add dark mode support
+
+User Stories:
+1. As a user, I want dark mode to reduce eye strain
+2. As a user, I want auto dark mode based on system settings
+3. As a user, I want to manually toggle dark mode
+
+Tasks:
+- Design dark mode color palette
+- Implement dark mode in SwiftUI (iOS)
+- Implement dark mode in Compose (Android)
+- Add toggle in settings
+- Test on all screens
+- Update screenshots for App Store
+
+Completed: 8/8 tasks
+Sprint Velocity: 40 story points
+```
+
+---
+
+## TESTING STRATEGIES
+
+### Unit Testing
+
+**iOS (XCTest):**
+- **Test Coverage:** 75%
+- **Tests:** 450 unit tests
+- **Frameworks:** XCTest, Quick, Nimble
+
+**Android (JUnit):**
+- **Test Coverage:** 72%
+- **Tests:** 520 unit tests
+- **Frameworks:** JUnit, Mockito, Truth
+
+**Example Unit Test (iOS):**
+```swift
+func testFeeCalculation() {
+    let feeCalculator = FeeCalculator()
+    let totalFee = feeCalculator.calculate(
+        tuitionFee: 40000,
+        transportFee: 8000,
+        activityFee: 2000
+    )
+    XCTAssertEqual(totalFee, 50000)
+}
+```
+
+---
+
+### Integration Testing
+
+**API Integration Tests:**
+- **Tests:** 150 integration tests
+- **Mock Server:** WireMock (for testing without backend)
+- **Coverage:** All API endpoints
+
+**Example Integration Test:**
+```kotlin
+@Test
+fun testLoginAPI() {
+    val response = apiClient.login("student123", "password")
+    assertEquals(200, response.code)
+    assertNotNull(response.body.token)
+}
+```
+
+---
+
+### UI Testing
+
+**iOS (XCUITest):**
+- **Tests:** 80 UI tests
+- **Scenarios:** Login, view grades, pay fees, mark attendance
+
+**Android (Espresso):**
+- **Tests:** 90 UI tests
+- **Scenarios:** Login, view grades, pay fees, mark attendance
+
+**Example UI Test (iOS):**
+```swift
+func testLoginFlow() {
+    let app = XCUIApplication()
+    app.launch()
+    
+    app.textFields["Email"].tap()
+    app.textFields["Email"].typeText("student@hogwarts.edu")
+    
+    app.secureTextFields["Password"].tap()
+    app.secureTextFields["Password"].typeText("password123")
+    
+    app.buttons["Login"].tap()
+    
+    XCTAssertTrue(app.staticTexts["Dashboard"].exists)
+}
+```
+
+---
+
+### Manual Testing
+
+**Test Cases:** 200+ manual test cases
+
+**Test Scenarios:**
+- **Smoke Testing:** Critical flows (login, view grades, pay fees)
+- **Regression Testing:** All features after each release
+- **Device Testing:** Test on 10+ devices (iOS, Android)
+- **Network Testing:** Test on WiFi, 4G, 3G, offline
+
+**Device Lab:**
+- **iOS:** iPhone 11, 12, 13, 14, iPad Pro
+- **Android:** Samsung S21, Pixel 5, OnePlus 9, Xiaomi Redmi
+
+---
+
+## CI/CD PIPELINE
+
+### Continuous Integration
+
+**Platform:** GitHub Actions
+
+**Workflow:**
+1. **Code Push:** Developer pushes code to GitHub
+2. **Build:** GitHub Actions builds app
+3. **Test:** Run unit tests, integration tests
+4. **Lint:** Check code quality (SwiftLint, Detekt)
+5. **Report:** Generate test report, code coverage
+
+**Build Time:**
+- **iOS:** 8 minutes
+- **Android:** 10 minutes
+
+**Example GitHub Actions Workflow (iOS):**
+```yaml
+name: iOS CI
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: xcodebuild -scheme HogwartsApp -sdk iphonesimulator
+      - name: Test
+        run: xcodebuild test -scheme HogwartsApp -sdk iphonesimulator
+      - name: Lint
+        run: swiftlint
+```
+
+---
+
+### Continuous Deployment
+
+**iOS (TestFlight):**
+1. **Build:** GitHub Actions builds IPA
+2. **Upload:** Upload to TestFlight (App Store Connect API)
+3. **Beta Testing:** Internal testers (10 users) test for 1 day
+4. **External Testing:** External testers (50 users) test for 3 days
+5. **Production:** Submit for App Store review
+
+**Android (Play Console):**
+1. **Build:** GitHub Actions builds AAB
+2. **Upload:** Upload to Play Console (Google Play API)
+3. **Internal Testing:** Internal track (10 users) test for 1 day
+4. **Beta Testing:** Beta track (100 users) test for 3 days
+5. **Production:** Rollout to 10% → 50% → 100%
+
+---
+
+## APP STORE DEPLOYMENT
+
+### iOS App Store Submission
+
+**Process:**
+1. **Prepare:** Update version, build number, screenshots
+2. **Archive:** Create archive in Xcode
+3. **Upload:** Upload to App Store Connect
+4. **Submit:** Submit for review
+5. **Review:** Apple reviews (1-3 days)
+6. **Approve:** App approved, ready for release
+7. **Release:** Release to App Store
+
+**Review Time:** 1-3 days average
+
+**Rejection Reasons (Historical):**
+- **Crash on Launch:** Fixed, resubmitted (1 time)
+- **Missing Privacy Policy:** Added, resubmitted (1 time)
+- **Guideline 4.3 (Spam):** Explained, approved (1 time)
+
+---
+
+### Android Play Store Submission
+
+**Process:**
+1. **Prepare:** Update version, screenshots
+2. **Build:** Create signed AAB
+3. **Upload:** Upload to Play Console
+4. **Submit:** Submit for review
+5. **Review:** Google reviews (1-7 days)
+6. **Approve:** App approved, ready for release
+7. **Release:** Staged rollout (10% → 50% → 100%)
+
+**Review Time:** 1-7 days average
+
+**Rejection Reasons (Historical):**
+- **Missing Content Rating:** Added, resubmitted (1 time)
+- **Privacy Policy Link Broken:** Fixed, resubmitted (1 time)
+
+---
+
+## VERSION MANAGEMENT
+
+### Versioning Scheme
+
+**Format:** MAJOR.MINOR.PATCH (Semantic Versioning)
+
+**Example:** 2.5.3
+- **MAJOR (2):** Breaking changes, major redesign
+- **MINOR (5):** New features, non-breaking changes
+- **PATCH (3):** Bug fixes, minor improvements
+
+**Release History:**
+- **v1.0.0:** Initial release (Jan 2024)
+- **v1.5.0:** Added offline mode (Jun 2024)
+- **v2.0.0:** Major redesign, SwiftUI/Compose (Jan 2025)
+- **v2.5.0:** Added biometric auth, dark mode (Jan 2026)
+- **v2.6.0:** Planned (Feb 2026) - In-app messaging
+
+---
+
+### Release Notes
+
+**v2.5.0 (Jan 2026):**
+```
+What's New:
+- 🌙 Dark Mode: Reduce eye strain with dark mode
+- 🔒 Biometric Login: Login with Face ID/Fingerprint
+- 📸 Improved Camera: Better photo upload experience
+- 🐛 Bug Fixes: Fixed crash on fee payment page
+
+We're always improving! Rate us 5 stars if you love the app!
+```
+
+---
+
+## DEEP LINKING
+
+### Deep Link Support
+
+**Purpose:** Open specific screens from external links
+
+**Supported Deep Links:**
+- `hogwarts://grades` - Open grades screen
+- `hogwarts://attendance` - Open attendance screen
+- `hogwarts://fees` - Open fee payment screen
+- `hogwarts://assignments/{id}` - Open specific assignment
+
+**Use Cases:**
+1. **Push Notification:** Tap notification → Open relevant screen
+2. **Email Link:** Tap link in email → Open app
+3. **Website Link:** Tap "Open in App" → Open app
+
+**Example:**
+```
+Push Notification: "Your Math test grade is available"
+Deep Link: hogwarts://grades?subject=math
+Action: Tap notification → App opens → Grades screen (Math filtered)
+```
+
+---
+
+## IN-APP MESSAGING
+
+### Chat Feature
+
+**Purpose:** Direct messaging between parents and teachers
+
+**Features:**
+- **One-on-One Chat:** Parent ↔ Teacher
+- **Real-Time:** WebSocket for instant messages
+- **Typing Indicator:** See when other person is typing
+- **Read Receipts:** See when message is read
+- **Attachments:** Send photos, documents
+- **Push Notifications:** Notify when new message received
+
+**Example Chat:**
+```
+Mr. Sharma (Parent):
+"Hi Mrs. Gupta, I wanted to discuss Rohan's Math performance."
+[Sent 10:00 AM, Read 10:05 AM]
+
+Mrs. Gupta (Teacher):
+"Hello Mr. Sharma! Rohan has improved significantly. His last test score was 92%."
+[Sent 10:06 AM, Read 10:07 AM]
+
+Mr. Sharma:
+"That's great to hear! Thank you for your support."
+[Sent 10:08 AM, Read 10:10 AM]
+```
+
+---
+
+## APP UPDATES
+
+### Update Strategy
+
+**Frequency:** Every 2 weeks (minor updates), every 3 months (major updates)
+
+**Update Types:**
+1. **Critical Updates:** Bug fixes, security patches (immediate)
+2. **Feature Updates:** New features (every 2 weeks)
+3. **Major Updates:** Major redesign (every 6-12 months)
+
+**Force Update:**
+- **When:** Critical security issue, breaking API changes
+- **How:** App checks version on launch, prompts user to update
+- **Example:** "A new version is available. Please update to continue."
+
+---
+
+### Update Notifications
+
+**In-App Update Prompt:**
+```
+New Update Available! 🎉
+
+Version 2.6.0 is now available with:
+- In-app messaging with teachers
+- Improved performance
+- Bug fixes
+
+[Update Now] [Later]
+```
+
+**App Store Update:**
+- **iOS:** Users update via App Store
+- **Android:** Users update via Play Store (or in-app update API)
+
+---
+
+## USER ONBOARDING
+
+### First-Time User Experience
+
+**Onboarding Flow:**
+1. **Welcome Screen:** "Welcome to Hogwarts School App!"
+2. **Feature Highlights:** 3 screens showing key features
+3. **Login:** Enter email + password
+4. **Permissions:** Request push notifications, camera, location
+5. **Dashboard:** Show personalized dashboard
+
+**Feature Highlights:**
+```
+Screen 1: 📊 View Grades
+"Check your grades anytime, anywhere"
+
+Screen 2: 💰 Pay Fees
+"Pay fees securely with UPI, cards, net banking"
+
+Screen 3: 🔔 Stay Updated
+"Get instant notifications for attendance, grades, events"
+```
+
+---
+
+### Permissions
+
+**Requested Permissions:**
+1. **Push Notifications:** For alerts, announcements
+2. **Camera:** For photo uploads, document scanning
+3. **Location:** For campus check-in, bus tracking
+4. **Biometric:** For fingerprint/Face ID login
+
+**Permission Rationale:**
+```
+Camera Access
+
+We need camera access to:
+- Upload assignment photos
+- Scan documents
+- Update profile picture
+
+[Allow] [Don't Allow]
+```
+
+---
+
+## ADDITIONAL USE CASES
+
+### Use Case 3: Student Submits Assignment via Camera
+
+**Scenario:** Student takes photo of handwritten assignment and submits
+
+**Actors:**
+- Student (Rohan Sharma)
+- Mobile App (iOS)
+- Assignment Module
+
+**Timeline:**
+
+**8:00 PM - Open App:**
+- Rohan opens app on iPhone
+- Navigates to "Assignments"
+
+**8:01 PM - View Assignment:**
+- Sees "English Essay" (due tomorrow)
+- Taps "Submit Assignment"
+
+**8:02 PM - Take Photo:**
+- Taps "Take Photo"
+- Camera opens
+- Takes photo of handwritten essay (3 pages)
+- App auto-detects edges, crops, enhances
+
+**8:03 PM - Review & Submit:**
+- Reviews photos (swipe to see all 3 pages)
+- Taps "Submit"
+- App uploads photos to S3 (2 MB)
+
+**8:04 PM - Upload Complete:**
+- App shows "Assignment submitted successfully! ✓"
+- Push notification sent to teacher
+
+**8:05 PM - Teacher Notified:**
+- Mrs. Gupta receives push notification
+- "Rohan Sharma submitted English Essay"
+
+**Total Duration:** 5 minutes  
+**Success:** Yes  
+**Camera Feature:** Worked perfectly
+
+---
+
+### Use Case 4: Parent Receives Push Notification (Child Absent)
+
+**Scenario:** Parent receives push notification when child is marked absent
+
+**Actors:**
+- Teacher (Mrs. Gupta)
+- Attendance Module
+- Integration Hub
+- Parent (Mr. Sharma)
+- Mobile App (iOS)
+
+**Timeline:**
+
+**8:05 AM - Teacher Marks Attendance:**
+- Mrs. Gupta marks Rohan as absent
+- Attendance Module saves attendance
+
+**8:06 AM - Trigger Notification:**
+- Attendance Module → Integration Hub: Send absence alert
+- Integration Hub → FCM/APNs: Send push notification
+
+**8:07 AM - Push Notification Sent:**
+- FCM → Mr. Sharma's iPhone
+- Notification appears on lock screen
+
+**8:07 AM - Mr. Sharma Sees Notification:**
+```
+Hogwarts School 🏫
+Rohan was marked absent today (16-Jan-2026)
+Tap to view details
+```
+
+**8:08 AM - Tap Notification:**
+- Mr. Sharma taps notification
+- App opens (Face ID authentication)
+- Deep link to attendance screen
+- Shows Rohan's attendance (marked absent)
+
+**8:09 AM - Apply for Leave:**
+- Mr. Sharma taps "Apply for Leave"
+- Fills reason: "Sick (fever)"
+- Uploads photo of medical certificate
+- Submits leave application
+
+**8:10 AM - Leave Application Submitted:**
+- App shows "Leave application submitted"
+- Notification sent to teacher for approval
+
+**Total Duration:** 5 minutes  
+**Success:** Yes  
+**Push Notification:** Delivered instantly
+
+---
+
 ## SUMMARY
 
 **Total Connections:** ALL 54 modules via REST APIs
