@@ -645,8 +645,160 @@ Finance module provides financial reports, audit findings, and budget performanc
 
 ---
 
+## BOARD PERFORMANCE EVALUATION
+
+### Annual Board Self-Assessment
+
+**Evaluation Framework:**
+- Frequency: Annual (conducted in December)
+- Method: Anonymous survey + facilitated discussion
+- Areas assessed: Leadership, strategy, oversight, stakeholder engagement
+- Participants: All 9 board members
+
+**2024 Assessment Results:**
+- Overall effectiveness: 4.2/5.0
+- Strategic planning: 4.5/5.0
+- Financial oversight: 4.3/5.0
+- Stakeholder engagement: 4.0/5.0
+- Areas for improvement: Technology adoption, innovation
+
+**Action Items (2025):**
+- Establish technology committee
+- Increase parent engagement sessions
+- Enhance board training on digital transformation
+
+### Individual Board Member Evaluation
+
+**Evaluation Criteria:**
+- Meeting attendance (target: 90%)
+- Committee participation
+- Strategic contribution
+- Stakeholder representation
+
+**2024 Performance:**
+- Average attendance: 92%
+- Committee participation: 100%
+- Members meeting all criteria: 8/9 (89%)
+
+---
+
+## CRISIS MANAGEMENT & RESPONSE
+
+### Crisis Management Framework
+
+**Crisis Response Team:**
+- Chairperson: Overall coordination
+- Principal: Operational response
+- Legal counsel: Legal implications
+- Communications lead: Stakeholder communication
+- Board members: Strategic guidance
+
+**Crisis Categories:**
+1. **Academic Crisis:** Exam paper leak, mass failure
+2. **Financial Crisis:** Major funding shortfall
+3. **Reputational Crisis:** Negative media coverage
+4. **Safety Crisis:** Major accident, security threat
+5. **Legal Crisis:** Lawsuit, regulatory violation
+
+### Crisis Response Protocol
+
+**Phase 1: Immediate Response (0-24 hours):**
+- Activate crisis team
+- Assess situation severity
+- Implement containment measures
+- Initial stakeholder communication
+
+**Phase 2: Investigation (24-72 hours):**
+- Gather facts and evidence
+- Identify root causes
+- Assess impact and liability
+- Develop action plan
+
+**Phase 3: Resolution (1-4 weeks):**
+- Implement corrective actions
+- Communicate with stakeholders
+- Monitor progress
+- Document lessons learned
+
+**Phase 4: Recovery (1-6 months):**
+- Restore normal operations
+- Rebuild stakeholder trust
+- Update policies and procedures
+- Conduct post-crisis review
+
+### Crisis Simulation Exercise (2024)
+
+**Scenario:** Hypothetical data breach affecting student records
+
+**Participants:** Board members, senior management
+**Duration:** 4 hours
+**Outcome:**
+- Response time: 2 hours (target: 4 hours)
+- Communication effectiveness: 4.0/5.0
+- Decision quality: 4.2/5.0
+- Lessons learned: 12 action items identified
+
+---
+
+## BOARD SUCCESSION PLANNING
+
+### Succession Planning Framework
+
+**Board Composition Goals:**
+- Diversity: Gender (40% female), age (mix of 30-70), expertise (varied backgrounds)
+- Term limits: Maximum 2 consecutive 3-year terms
+- Staggered terms: 3 members rotate each year
+- Continuity: Minimum 6 experienced members at all times
+
+**Talent Pipeline:**
+- Prospective members identified: 15
+- Orientation sessions: Quarterly for prospects
+- Committee participation: Invite prospects to observe
+- Formal nomination: Annual process
+
+### 2024 Board Transitions
+
+**Outgoing Members (2024):**
+- Mr. Anil Mehta (Treasurer): Completed 2 terms (6 years)
+- Ms. Kavita Gupta (Member): Relocated to another city
+
+**New Members (2024):**
+- Dr. Rajesh Kumar: Education technology expert
+- Ms. Priya Sharma: Finance professional (new Treasurer)
+
+**Onboarding Process:**
+- Orientation: 2-day comprehensive program
+- Mentorship: Paired with experienced board member
+- Committee assignment: Based on expertise
+- First-year evaluation: Progress review after 6 months
+
+---
+
+## BOARD GOVERNANCE METRICS SUMMARY
+
+**Meeting Metrics:**
+- Quarterly meetings: 4 (100% held)
+- Average attendance: 92%
+- Decisions made: 45
+- Action items completed: 90%
+
+**Financial Oversight:**
+- Budget approved: ₹72Cr
+- Surplus maintained: ₹7Cr
+- Audit findings: 0 major, 3 minor (all resolved)
+- Financial health: Excellent
+
+**Strategic Impact:**
+- Strategic goals achieved: 85%
+- Stakeholder satisfaction: 4.5/5.0
+- Compliance score: 98%
+- Governance rating: Excellent (external audit)
+
+---
+
 **Status:** Production-Ready  
 **Last Updated:** January 16, 2026  
 **Version:** 2.0  
 **Compliance:** RTE Act, CBSE Norms, Tax Regulations, Corporate Governance
+
 
