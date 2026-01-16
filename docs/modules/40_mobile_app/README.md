@@ -19,9 +19,54 @@
 - Camera Integration - Upload photos, scan documents, QR codes
 - Location Services - Campus check-in, bus tracking
 
+
+---
+
+## OUTBOUND CONNECTIONS (Mobile App → Other Modules)
+
+### 1. TO STUDENT MANAGEMENT MODULE
+
+**WHY:** App displays student profile, attendance, grades in real-time.
+
+**DATA FLOW:** Student profile, attendance %, grades, achievements  
+**TRIGGER:** App opened, pull-to-refresh  
+**IMPACT:** Student sees attendance 92%, latest grades instantly
+
+**BUSINESS LOGIC:**
+```
+FUNCTION load_mobile_dashboard(student_id):
+  data = STUDENT_MANAGEMENT.get_dashboard(student_id)
+  CACHE_DATA(data, ttl=5_MINUTES)
+  RETURN data
+END FUNCTION
+```
+
+---
+
+### 2. TO ATTENDANCE MODULE
+
+**WHY:** Students mark attendance via QR code scanning at school gate.
+
+**DATA FLOW:** QR code data, timestamp, location, student ID  
+**TRIGGER:** Student scans QR code  
+**IMPACT:** Attendance marked automatically, parent notified
+
+---
+
+## INBOUND CONNECTIONS (Other Modules → Mobile App)
+
+### FROM COMMUNICATION MODULE
+
+**WHY:** Push notifications sent to app for real-time alerts.
+
+**DATA RECEIVED:** Notification title, body, action URL  
+**IMPACT:** Student receives "Assignment due tomorrow" notification  
+**TRIGGER:** Communication module sends notification
+
 ---
 
 ## APP ARCHITECTURE
+
 
 ### Platform Support
 
