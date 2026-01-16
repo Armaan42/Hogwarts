@@ -21,6 +21,34 @@
 
 ---
 
+## OUTBOUND CONNECTIONS (Communication → Other Modules)
+
+### 1. TO INTEGRATION HUB
+
+**WHY:** Send SMS/email via third-party providers (Twilio, SendGrid).  
+**DATA FLOW:** Message content, recipient, delivery status  
+**TRIGGER:** Notification requested  
+**IMPACT:** 150,000 messages/month sent via Integration Hub
+
+### 2. TO STUDENT/PARENT MANAGEMENT
+
+**WHY:** Fetch recipient contact details for notifications.  
+**DATA FLOW:** Phone numbers, email addresses  
+**TRIGGER:** Message send requested  
+**IMPACT:** Accurate delivery to 3,600 parents, 1,800 students
+
+---
+
+## INBOUND CONNECTIONS (Other Modules → Communication)
+
+### FROM ALL MODULES
+
+**WHY:** Every module sends notifications (fees, attendance, grades, events).  
+**DATA RECEIVED:** Notification requests from 50+ modules  
+**IMPACT:** Centralized communication hub for all school notifications
+
+---
+
 ## COMMUNICATION CHANNELS
 
 ### 1. SMS (Text Messages)
