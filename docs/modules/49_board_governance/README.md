@@ -463,6 +463,190 @@ Finance module provides financial reports, audit findings, and budget performanc
 
 ---
 
+## BOARD COMMITTEES
+
+### 1. Finance Committee
+
+**Members:** 4 board members (including Treasurer)
+**Frequency:** Monthly
+
+**Responsibilities:**
+- Review monthly financial statements
+- Approve budgets and major expenditures
+- Monitor fee collection and expenses
+- Ensure financial compliance
+
+**Achievements (2024):**
+- Approved ₹72Cr annual budget
+- Monitored 12 monthly reviews
+- Identified ₹50L cost savings
+- Maintained ₹7Cr surplus
+
+### 2. Academic Committee
+
+**Members:** 5 board members (including educationists)
+**Frequency:** Quarterly
+
+**Responsibilities:**
+- Review academic performance
+- Approve curriculum changes
+- Monitor teacher quality
+- Set academic policies
+
+**Achievements (2024):**
+- Approved new STEM curriculum
+- Reviewed 4 quarterly reports
+- Improved pass rate: 95% → 97%
+- Teacher training: 15 workshops approved
+
+### 3. HR Committee
+
+**Members:** 3 board members
+**Frequency:** Bi-monthly
+
+**Responsibilities:**
+- Approve senior appointments
+- Review compensation policies
+- Monitor employee satisfaction
+- Handle grievances
+
+**Achievements (2024):**
+- Approved 5 senior appointments
+- Revised salary structure (+8% average)
+- Employee satisfaction: 4.2/5.0
+- Grievances resolved: 12/12 (100%)
+
+---
+
+## GOVERNANCE COMPLIANCE FRAMEWORK
+
+### Regulatory Compliance
+
+**RTE Act 2009:**
+- 25% EWS quota: Maintained (450 students)
+- No capitation fees: Compliant
+- Infrastructure norms: Met (100%)
+- Teacher qualifications: 100% qualified
+
+**CBSE Affiliation:**
+- Annual inspection: Passed (Grade A)
+- Infrastructure: Compliant
+- Safety norms: Met
+- Affiliation renewed: Valid till 2029
+
+**Tax Compliance:**
+- 80G registration: Active
+- 12A registration: Active
+- Annual filings: On-time (100%)
+- Audits: Clean (no findings)
+
+### Internal Compliance
+
+**Policies & Procedures:**
+- 25 policies documented
+- Annual policy review: Completed
+- Staff training: 100% completion
+- Compliance rate: 98%
+
+**Risk Management:**
+- Risk register: 15 risks identified
+- Mitigation plans: All risks covered
+- Insurance: ₹50Cr coverage
+- Incident rate: 0.5% (minimal)
+
+---
+
+## STRATEGIC PLANNING
+
+### 5-Year Strategic Plan (2024-2029)
+
+**Vision:** To be the top-ranked school in the city
+
+**Strategic Goals:**
+1. **Academic Excellence:** Achieve 98% pass rate, 90% distinction
+2. **Infrastructure:** Build new science block (₹15Cr)
+3. **Technology:** 100% digital classrooms
+4. **Enrollment:** Increase from 1,800 to 2,200 students
+5. **Financial:** Maintain ₹10Cr annual surplus
+
+**Year 1 (2024-25) Targets:**
+- Pass rate: 97% (achieved 97%)
+- New admissions: 400 (target met)
+- Digital classrooms: 50% (on track)
+- Surplus: ₹7Cr (achieved)
+
+### Board Performance Metrics
+
+**Meeting Effectiveness:**
+- Attendance rate: 92%
+- Decision-making speed: 85% decisions in first meeting
+- Action item completion: 90%
+- Stakeholder satisfaction: 4.5/5.0
+
+**Governance Quality:**
+- External audit rating: Excellent
+- Compliance score: 98%
+- Risk management: Robust
+- Transparency: High
+
+---
+
+## STAKEHOLDER ENGAGEMENT
+
+### Parent Engagement
+
+**Mechanisms:**
+- Annual General Meeting: 500+ parents attend
+- Parent surveys: Quarterly (response rate 60%)
+- Grievance redressal: 48-hour response time
+- Communication: Monthly newsletter
+
+**Satisfaction (2024):**
+- Overall: 4.3/5.0
+- Governance transparency: 4.5/5.0
+- Decision-making: 4.2/5.0
+
+### Teacher Engagement
+
+**Mechanisms:**
+- Teacher representation: 2 teachers attend board meetings (observers)
+- Feedback sessions: Bi-annual
+- Policy input: Teachers consulted on academic policies
+
+**Satisfaction (2024):**
+- Governance: 4.0/5.0
+- Decision-making: 3.9/5.0
+- Communication: 4.1/5.0
+
+---
+
+## GOVERNANCE BEST PRACTICES
+
+### Top 10 Strategies
+
+1. **Clear Roles:** Well-defined board member responsibilities
+2. **Regular Meetings:** Quarterly board, monthly committees
+3. **Strategic Planning:** 5-year plan with annual reviews
+4. **Financial Oversight:** Monthly financial reviews
+5. **Compliance Focus:** Dedicated compliance monitoring
+6. **Stakeholder Engagement:** Regular parent/teacher feedback
+7. **Risk Management:** Comprehensive risk assessment
+8. **Transparency:** Open communication, published reports
+9. **Professional Development:** Board member training
+10. **Performance Metrics:** Track and measure governance effectiveness
+
+### Future Enhancements (2025-26)
+
+- **Digital Governance:** Online board portal for documents
+- **External Advisors:** Engage education consultants
+- **Benchmarking:** Compare with top schools
+- **Succession Planning:** Identify future board members
+- **Impact Measurement:** Quantify governance impact on outcomes
+
+---
+
 **Status:** Production-Ready  
 **Last Updated:** January 16, 2026  
-**Version:** 1.0
+**Version:** 2.0  
+**Compliance:** RTE Act, CBSE Norms, Tax Regulations, Corporate Governance
+
