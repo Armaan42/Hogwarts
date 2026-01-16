@@ -21,6 +21,127 @@
 
 ---
 
+## OUTBOUND CONNECTIONS (User Portals → Other Modules)
+
+### 1. TO STUDENT MANAGEMENT MODULE
+
+**WHY This Connection Exists:**
+Student portal displays student profile, academic records, attendance. Parent portal shows child's information. Data must be fetched from Student Management in real-time for accuracy.
+
+**DATA FLOW:**
+- Student profile (name, photo, class, section)
+- Academic records (grades, report cards)
+- Attendance percentage, leave requests
+- Achievements, certificates
+- **Data Volume:** 1,800 students, 3,600 parents
+- **Frequency:** Real-time on portal access
+- **Direction:** One-way (read-only)
+
+**TRIGGER EVENT:**
+- Student/parent logs into portal
+- Profile page accessed
+- Dashboard loaded
+
+**IMPACT:**
+- Student sees real-time attendance: 92%
+- Parent views child's latest grades
+- Profile updates reflect immediately
+
+**BUSINESS LOGIC:**
+```
+FUNCTION load_student_dashboard(student_id):
+  student = STUDENT_MANAGEMENT.get_student(student_id)
+  attendance = STUDENT_MANAGEMENT.get_attendance(student_id)
+  grades = STUDENT_MANAGEMENT.get_grades(student_id)
+  
+  dashboard = {
+    profile: student.profile,
+    attendance: attendance.percentage,
+    latest_grades: grades.current_term,
+    upcoming_events: EVENTS.get_upcoming()
+  }
+  
+  RETURN dashboard
+END FUNCTION
+```
+
+**REAL-WORLD EXAMPLE:**
+```
+Rohan logs into student portal at 8 PM
+→ Portal fetches data from Student Management
+→ Displays: Attendance 92%, Latest grade: Math 85%
+→ Load time: 1.2 seconds
+```
+
+---
+
+### 2. TO FEE MANAGEMENT MODULE
+
+**WHY This Connection Exists:**
+Parent portal must show fee invoices, payment history, pending dues. Parents initiate online payments through portal. Real-time fee status prevents confusion.
+
+**DATA FLOW:**
+- Pending invoices, due dates
+- Payment history, receipts
+- Outstanding balance
+- Payment initiation requests
+- **Data Volume:** 5,000 payments/month
+- **Frequency:** Real-time
+- **Direction:** Bidirectional
+
+**TRIGGER EVENT:**
+- Parent views fee section
+- Payment initiated
+- Receipt downloaded
+
+**IMPACT:**
+- Parent sees ₹50,000 pending invoice
+- Clicks "Pay Now" → redirected to payment gateway
+- Payment successful → invoice updated in 5 seconds
+- Receipt available for download immediately
+
+**BUSINESS LOGIC:**
+```
+FUNCTION initiate_payment_from_portal(invoice_id, parent_id):
+  invoice = FEE_MANAGEMENT.get_invoice(invoice_id)
+  
+  // Create payment order
+  payment_order = INTEGRATION_HUB.create_payment_order({
+    amount: invoice.amount,
+    invoice_id: invoice_id,
+    parent_id: parent_id
+  })
+  
+  // Return payment URL
+  RETURN payment_order.payment_url
+END FUNCTION
+```
+
+---
+
+## INBOUND CONNECTIONS (Other Modules → User Portals)
+
+### FROM ALL MODULES
+
+**WHY This Connection Exists:**
+Portals aggregate data from all modules to provide unified view. Every module sends data to portals for display.
+
+**DATA RECEIVED:**
+- Student data, attendance, grades
+- Fee invoices, payment history
+- Timetable, assignments, exam schedules
+- Notifications, announcements
+- **Data Volume:** 50+ data sources
+
+**IMPACT:**
+- Single dashboard shows all information
+- No need to check multiple systems
+- Real-time updates across all modules
+
+**TRIGGER:** Any module updates data
+
+---
+
 ## PORTAL ARCHITECTURE
 
 ### Multi-Portal Platform
