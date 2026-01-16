@@ -487,6 +487,467 @@ Board resolutions, policy decisions, and strategic plans must be legally documen
 
 ---
 
+## CONTRACT LIFECYCLE MANAGEMENT
+
+### Phase 1: Contract Initiation
+
+**Step 1: Requirement Identification**
+- Department identifies need (e.g., new canteen vendor)
+- Budget approval obtained
+- Specifications documented
+
+**Step 2: Vendor Selection**
+- RFP/RFQ issued (Request for Proposal/Quotation)
+- Vendor proposals evaluated
+- Best vendor shortlisted
+
+**Step 3: Contract Drafting**
+- Legal team uses standard template
+- Custom clauses added as needed
+- Terms negotiated with vendor
+
+---
+
+### Phase 2: Contract Review & Approval
+
+**Legal Review Checklist:**
+```
+CONTRACT REVIEW CHECKLIST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+☐ Parties clearly identified (legal names, addresses)
+☐ Scope of work/services defined
+☐ Payment terms specified (amount, schedule, method)
+☐ Contract period defined (start date, end date)
+☐ Service Level Agreements (SLAs) included
+☐ Penalty clauses for non-performance
+☐ Insurance requirements specified
+☐ Indemnity clause included
+☐ Termination clause (notice period, conditions)
+☐ Dispute resolution mechanism (arbitration/court)
+☐ Force majeure clause
+☐ Confidentiality/NDA (if applicable)
+☐ Governing law specified (usually Indian law)
+☐ Signatures & witness requirements
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+
+**Approval Workflow:**
+1. Legal review (2-3 days)
+2. Finance approval (budget verification)
+3. Principal approval (final authority)
+4. Board approval (if >₹10L)
+
+---
+
+### Phase 3: Contract Execution
+
+**Signing Process:**
+- Both parties sign (school + vendor)
+- Witness signatures (2 witnesses)
+- Date stamped
+- Seal affixed (school seal)
+
+**Distribution:**
+- Original: Legal repository (fireproof safe)
+- Copy 1: Vendor
+- Copy 2: Concerned department (e.g., Procurement)
+- Digital copy: Cloud storage + local server
+
+---
+
+### Phase 4: Contract Monitoring
+
+**Performance Tracking:**
+- Monthly vendor performance review
+- SLA compliance monitoring
+- Quality checks
+- Penalty invocation (if needed)
+
+**Example: Transport Vendor Monitoring**
+```
+Vendor: ABC Transport
+Contract: ₹5L/year (50 buses, 1,800 students)
+SLA: 99% on-time arrival
+
+Monthly Performance (October 2024):
+- Total trips: 600 (20 school days × 30 buses)
+- On-time: 594 (99%)
+- Late: 6 (1%)
+- SLA: MET ✓
+
+Monthly Performance (November 2024):
+- Total trips: 600
+- On-time: 570 (95%)
+- Late: 30 (5%)
+- SLA: BREACHED ✗
+
+Penalty Invoked:
+- Penalty clause: ₹1,000/late trip
+- Total penalty: ₹30,000 (30 late trips)
+- Deducted from November payment
+
+Vendor Response:
+- Explanation: 2 buses broke down (maintenance issue)
+- Corrective action: Hired 2 backup buses
+- December performance: 99.5% (back to normal)
+```
+
+---
+
+### Phase 5: Contract Renewal/Termination
+
+**Renewal Process:**
+- Alert sent 90 days before expiry
+- Performance review conducted
+- Renewal decision made
+  - If satisfactory: Renew with/without changes
+  - If unsatisfactory: Terminate, find new vendor
+
+**Termination Process:**
+- Notice period: 30-90 days (as per contract)
+- Outstanding payments settled
+- Handover to new vendor (if applicable)
+- Exit formalities completed
+
+---
+
+## VENDOR ONBOARDING PROCESS
+
+### Step-by-Step Vendor Onboarding
+
+**Step 1: Vendor Registration (Day 1-3)**
+- Vendor submits registration form
+- Documents required:
+  - Company registration certificate
+  - PAN card
+  - GST registration
+  - Bank details (cancelled cheque)
+  - Insurance certificates (if applicable)
+  - Previous client references (3 minimum)
+
+**Step 2: Vendor Verification (Day 4-7)**
+- Legal team verifies documents
+- Background check conducted
+- Reference calls made
+- Site visit (if required)
+
+**Step 3: Contract Negotiation (Day 8-14)**
+- Terms discussed
+- Pricing finalized
+- SLAs agreed upon
+- Contract drafted
+
+**Step 4: Legal Review (Day 15-17)**
+- Legal team reviews contract
+- Feedback provided
+- Contract revised
+
+**Step 5: Approval & Signing (Day 18-21)**
+- Approvals obtained
+- Contract signed
+- Vendor onboarded
+
+**Step 6: Vendor Activation (Day 22+)**
+- Vendor added to system
+- Payment terms configured
+- Service commencement
+
+**Total Onboarding Time:** 21-30 days
+
+---
+
+## EMPLOYMENT CONTRACT TEMPLATES
+
+### Teacher Employment Contract (Sample)
+
+```
+EMPLOYMENT AGREEMENT
+
+This Agreement is made on [Date] between:
+
+EMPLOYER: Hogwarts School
+Address: [School Address]
+Represented by: Principal, Mr. Rajesh Verma
+
+AND
+
+EMPLOYEE: [Teacher Name]
+Address: [Teacher Address]
+PAN: [PAN Number]
+
+TERMS OF EMPLOYMENT:
+
+1. POSITION & DUTIES
+   - Designation: [Subject] Teacher
+   - Grade/Class: [Assigned Classes]
+   - Duties: Teaching, exam supervision, co-curricular activities
+
+2. EMPLOYMENT PERIOD
+   - Start Date: [Date]
+   - Probation: 6 months
+   - Confirmation: Subject to satisfactory performance
+
+3. WORKING HOURS
+   - School Hours: 8:00 AM - 3:00 PM (Monday-Saturday)
+   - Teaching Load: 30 periods/week (40 minutes each)
+   - Additional: Meetings, parent-teacher conferences as required
+
+4. COMPENSATION
+   - Basic Salary: ₹[Amount]/month
+   - HRA: ₹[Amount]/month
+   - Total CTC: ₹[Amount]/year
+   - Increment: Annual (performance-based, 5-10%)
+
+5. BENEFITS
+   - Provident Fund (PF): 12% employee + 12% employer
+   - Medical Insurance: ₹5L coverage (employee + family)
+   - Leave: 12 days casual, 12 days sick, 30 days summer vacation
+   - Gratuity: As per Gratuity Act (after 5 years)
+
+6. NOTICE PERIOD
+   - Employee: 3 months notice or salary in lieu
+   - Employer: 3 months notice or salary in lieu
+
+7. TERMINATION
+   - Grounds: Misconduct, poor performance, breach of contract
+   - Process: Show cause notice, inquiry, termination order
+
+8. CONFIDENTIALITY
+   - Student data, exam papers, school policies confidential
+   - Breach: Grounds for termination
+
+9. NON-COMPETE (Senior Staff Only)
+   - Cannot join competing school within 50 km for 1 year
+   - Applicable to: Principal, Vice Principal, HODs
+
+10. GOVERNING LAW
+    - Indian law, Mumbai jurisdiction
+
+SIGNATURES:
+
+_____________________          _____________________
+Principal (Employer)           Teacher (Employee)
+
+Date: _______________          Date: _______________
+
+Witnesses:
+1. _____________________
+2. _____________________
+```
+
+---
+
+## DISPUTE RESOLUTION PROCEDURES
+
+### Internal Dispute Resolution
+
+**Step 1: Informal Resolution (Week 1)**
+- Parties discuss issue directly
+- Attempt amicable settlement
+- Document discussions
+
+**Step 2: Mediation (Week 2-3)**
+- Neutral mediator appointed (Principal/HR Head)
+- Mediation sessions conducted
+- Settlement agreement drafted (if successful)
+
+**Step 3: Grievance Committee (Week 4-5)**
+- Formal complaint filed
+- Committee formed (3 members)
+- Hearing conducted
+- Decision issued
+
+**Step 4: External Resolution (Week 6+)**
+- If internal resolution fails
+- Options:
+  - Arbitration (as per contract)
+  - Labor court (employment disputes)
+  - Civil court (other disputes)
+
+---
+
+### Real-World Dispute Case Study
+
+```
+Case: Teacher Salary Dispute
+
+Date: August 2024
+Employee: Ms. Sneha Nair (Math Teacher, 3 years experience)
+Issue: Claims promised increment not given
+
+Background:
+- Ms. Nair joined in 2021 at ₹40,000/month
+- Annual increments: 2022 (10% → ₹44,000), 2023 (8% → ₹47,520)
+- 2024: Expected 10%, received 5% (₹49,896 vs ₹52,272)
+- Difference: ₹2,376/month (₹28,512/year)
+
+Ms. Nair's Claim:
+- Principal verbally promised 10% increment (June 2024)
+- Performance excellent (4.8/5.0 rating)
+- Feels cheated, considering resignation
+
+School's Position:
+- Budget constraints (overall increment budget: 8% average)
+- No written promise made
+- 5% increment fair given budget
+
+Resolution Process:
+
+Week 1 (Aug 5-11): Informal Discussion
+- Ms. Nair meets Principal
+- Principal explains budget constraints
+- No resolution
+
+Week 2-3 (Aug 12-25): Mediation
+- HR Head (Ms. Priya) mediates
+- Reviews performance records (excellent)
+- Reviews budget (tight but manageable)
+
+Mediation Proposal:
+- Increment: 7.5% (₹51,084/month)
+- One-time bonus: ₹25,000 (to compensate difference)
+- Written apology from Principal (miscommunication)
+
+Ms. Nair's Response: ACCEPTED
+
+Settlement Agreement (Aug 26, 2024):
+- Increment: 7.5% (₹51,084/month, backdated to July)
+- Bonus: ₹25,000 (paid in September salary)
+- Principal's letter: "Regret miscommunication, value your contribution"
+
+Outcome:
+- Dispute resolved amicably
+- Ms. Nair satisfied, continues employment
+- School retains excellent teacher
+- Cost: ₹1.5L/year (7.5% vs 5%) + ₹25K bonus = ₹1.75L
+- Alternative cost: Hiring new teacher (₹2L recruitment + training)
+- Resolution: WIN-WIN ✓
+```
+
+---
+
+## INTELLECTUAL PROPERTY MANAGEMENT
+
+### School IP Assets
+
+**1. Trademarks:**
+- School name: "Hogwarts School" (registered)
+- School logo (registered)
+- Tagline: "Excellence in Education" (registered)
+- Registration: Indian Trademark Registry
+- Validity: 10 years (renewable)
+
+**2. Copyrights:**
+- School anthem (lyrics + music)
+- Curriculum materials (worksheets, notes)
+- School magazine (annual publication)
+- Website content
+
+**3. Domain Names:**
+- hogwartsschool.edu.in (primary)
+- hogwartsschool.com (redirect)
+- Renewal: Annual
+
+**IP Protection:**
+- Trademark infringement monitoring
+- Copyright notices on all materials
+- Legal action against unauthorized use
+
+---
+
+## INSURANCE & LIABILITY MANAGEMENT
+
+### Insurance Policies
+
+**1. Student Accident Insurance:**
+- Coverage: ₹1 Cr per student
+- Premium: ₹50/student/year (₹90,000 total)
+- Covers: Accidents during school hours, transport, trips
+
+**2. Public Liability Insurance:**
+- Coverage: ₹5 Cr
+- Premium: ₹2L/year
+- Covers: Third-party injuries, property damage
+
+**3. Fire & Property Insurance:**
+- Coverage: ₹10 Cr (building + contents)
+- Premium: ₹3L/year
+- Covers: Fire, earthquake, floods
+
+**4. Employee Group Insurance:**
+- Coverage: ₹5L per employee (165 employees)
+- Premium: ₹1,000/employee/year (₹1.65L total)
+- Covers: Medical expenses, hospitalization
+
+**Total Insurance Premium:** ₹6.55L/year
+
+**Claims (2024):**
+- Student accident: 2 claims (₹50,000 paid)
+- Property damage: 0 claims
+- Employee medical: 15 claims (₹2L paid)
+
+---
+
+## SUMMARY
+
+**Legal & Contract Management Module - Key Metrics:**
+
+**Contracts:**
+- Total Active: 200 (vendor: 35, employment: 165)
+- Total Value: ₹60L/year (vendor contracts)
+- Renewal Rate: 95% (on-time renewals)
+- Dispute Rate: 1% (2 disputes/year)
+
+**Compliance:**
+- Regulatory Compliance: 100%
+- License Validity: 100% (all licenses current)
+- Audit Findings: 0 major, 2 minor (2024)
+- Compliance Score: 98/100
+
+**Legal Cases:**
+- Active Cases: 2
+- Resolved (2024): 4
+- Win Rate: 75%
+- Average Resolution Time: 6 months
+
+**Risk Management:**
+- High-Risk Areas: 1 (student safety - mitigated)
+- Medium-Risk Areas: 2 (employment, vendors - managed)
+- Low-Risk Areas: 1 (compliance - controlled)
+- Insurance Coverage: ₹16.65 Cr (comprehensive)
+
+**Document Management:**
+- Total Documents: 500+
+- Digital Storage: 100%
+- Backup: Daily
+- Retention Compliance: 100%
+
+**Vendor Management:**
+- Active Vendors: 35
+- Onboarding Time: 21-30 days
+- Performance Monitoring: Monthly
+- Penalty Invocations: 3 (2024)
+
+**Employment:**
+- Employment Contracts: 165
+- Contract Template: Standardized
+- Dispute Resolution: 95% internal resolution
+- Terminations (2024): 5 (3 voluntary, 2 performance)
+
+**Intellectual Property:**
+- Trademarks: 3 (school name, logo, tagline)
+- Copyrights: 50+ (curriculum, publications)
+- Domain names: 2 (active, renewed)
+
+**Insurance:**
+- Total Coverage: ₹16.65 Cr
+- Annual Premium: ₹6.55L
+- Claims (2024): 17 (₹2.5L paid)
+- Claim Settlement: 100%
+
+---
+
 **Status:** Production-Ready  
 **Last Updated:** January 16, 2026  
-**Version:** 1.0
+**Version:** 2.0
+
