@@ -694,7 +694,150 @@ Clubs need meeting spaces.
 
 ---
 
+## CLUB LEADERSHIP DEVELOPMENT
+
+### Student Leadership Training
+
+**Leadership Program:**
+- Duration: 6 months (for club presidents/vice presidents)
+- Modules: Communication, team management, conflict resolution, event planning
+- Participants: 60 student leaders (2 per club)
+- Completion rate: 95%
+
+**Leadership Skills Developed:**
+- Public speaking: +50%
+- Decision-making: +45%
+- Delegation: +40%
+- Problem-solving: +55%
+
+**Impact on Students:**
+- College applications: Leadership experience highlighted
+- Scholarship opportunities: 15 students received leadership scholarships
+- Career readiness: +60% confidence in leadership abilities
+
+### Club President Responsibilities
+
+**Key Duties:**
+- Conduct weekly club meetings
+- Plan and execute club activities
+- Manage club budget (₹50K/year)
+- Recruit new members
+- Represent club in school events
+- Submit monthly activity reports
+
+**Support Provided:**
+- Faculty advisor mentorship
+- Leadership training workshops
+- Budget management tools
+- Event planning resources
+
+---
+
+## INTER-CLUB COMPETITIONS
+
+### Internal Competitions (2024)
+
+**Annual Club Championship:**
+- Participating clubs: 30
+- Categories: Academic, Cultural, Sports, Social Service
+- Winners: Science Club (Academic), Drama Club (Cultural), Eco Club (Social Service)
+- Prize pool: ₹2L (distributed among winners)
+
+**Monthly Challenges:**
+- Frequency: Monthly themed challenges
+- Participation: 20-25 clubs per month
+- Examples: Innovation challenge, community service challenge, fundraising challenge
+- Recognition: Certificates, feature in school newsletter
+
+### External Competitions (2024)
+
+**Inter-School Competitions:**
+- Competitions attended: 15
+- Schools participated: 20+ schools from city
+- Students participated: 120
+- Medals won: 25 (8 gold, 10 silver, 7 bronze)
+
+**National Competitions:**
+- Robotics Club: National Robotics Championship (Top 10)
+- Debate Club: National Debate Competition (Quarter-finals)
+- Science Club: National Science Olympiad (3 qualifiers)
+
+---
+
+## ALUMNI CLUB MENTORSHIP
+
+### Alumni Engagement Program
+
+**Alumni Mentors:**
+- Total alumni mentors: 45
+- Active mentors: 35 (78%)
+- Clubs covered: 20 (67%)
+- Mentorship sessions: 180/year
+
+**Mentorship Structure:**
+- Frequency: Bi-monthly sessions
+- Duration: 1 hour per session
+- Format: Virtual/in-person
+- Focus: Career guidance, skill development, industry insights
+
+**Impact:**
+- Student satisfaction: 4.7/5.0
+- Career clarity: +65% (students report clearer career goals)
+- Industry exposure: 120 students gained industry insights
+- Internship placements: 25 students secured internships through alumni
+
+### Alumni Success Stories
+
+**Notable Alumni Mentors:**
+1. **Mr. Rajesh Kumar (Coding Club alumnus, 2010):**
+   - Current: Software Engineer at Google
+   - Mentorship: Coding best practices, tech career guidance
+   - Impact: 10 students mentored, 3 secured tech internships
+
+2. **Dr. Anita Sharma (Science Club alumnus, 2008):**
+   - Current: Research Scientist, ISRO
+   - Mentorship: Science research methodologies
+   - Impact: 8 students mentored, 2 won science competitions
+
+3. **Ms. Priya Iyer (Debate Club alumnus, 2012):**
+   - Current: Corporate Lawyer
+   - Mentorship: Public speaking, argumentation skills
+   - Impact: 12 students mentored, debate team won state championship
+
+---
+
+## CLUB SUSTAINABILITY & GROWTH
+
+### Sustainability Measures
+
+**Financial Sustainability:**
+- Diversified funding: School budget (60%), fundraising (25%), sponsorships (15%)
+- Cost optimization: Shared resources across clubs
+- Revenue generation: Club fairs, exhibitions, performances
+
+**Membership Sustainability:**
+- Recruitment drives: Beginning of academic year
+- Retention strategies: Engaging activities, recognition programs
+- Succession planning: Junior members trained to take leadership
+
+### Growth Metrics (2020-2024)
+
+**5-Year Growth:**
+- Clubs: 20 → 30 (+50%)
+- Student participation: 600 → 900 (+50%)
+- Budget: ₹8L → ₹15L (+88%)
+- Awards won: 10 → 25 (+150%)
+
+**Future Growth Targets (2025-2029):**
+- Clubs: 30 → 40 (+33%)
+- Student participation: 900 → 1,200 (+33%)
+- Budget: ₹15L → ₹25L (+67%)
+- International collaborations: 5 clubs
+
+---
+
 **Status:** Production-Ready  
 **Last Updated:** January 16, 2026  
 **Version:** 2.0  
 **Compliance:** Student Safety, Activity Guidelines, Budget Transparency
+
