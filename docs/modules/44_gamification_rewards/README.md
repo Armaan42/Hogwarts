@@ -21,7 +21,35 @@
 
 ---
 
-## POINTS SYSTEM
+## OUTBOUND CONNECTIONS (Gamification → Other Modules)
+
+### 1. TO STUDENT MANAGEMENT
+
+**WHY:** Store points, badges, achievements in student profile.  
+**DATA FLOW:** Total points, badges earned, leaderboard rank  
+**TRIGGER:** Student earns points/badge  
+**IMPACT:** Rohan's profile shows 1,250 points, 15 badges
+
+### 2. TO COMMUNICATION
+
+**WHY:** Notify students of achievements, leaderboard updates.  
+**DATA FLOW:** Achievement notifications, weekly leaderboard  
+**TRIGGER:** Badge unlocked, rank improved  
+**IMPACT:** "Congratulations! You earned 'Perfect Attendance' badge"
+
+---
+
+## INBOUND CONNECTIONS (Other Modules → Gamification)
+
+### FROM ACADEMIC, ATTENDANCE, BEHAVIOR
+
+**WHY:** Activities earn points (attendance, grades, good behavior).  
+**DATA RECEIVED:** Attendance marked, assignment submitted, behavior points  
+**IMPACT:** Student earns 10 points for 100% weekly attendance
+
+---
+
+## GAMIFICATION SYSTEM
 
 ### How to Earn Points
 

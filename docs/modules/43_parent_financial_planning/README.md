@@ -515,6 +515,34 @@ EMI = ₹20,758
 
 ---
 
+## OUTBOUND CONNECTIONS (Financial Planning → Other Modules)
+
+### 1. TO FEE MANAGEMENT
+
+**WHY:** Payment plans, EMI options, scholarship applications.  
+**DATA FLOW:** Payment schedules, EMI terms, scholarship eligibility  
+**TRIGGER:** Parent requests payment plan  
+**IMPACT:** 40% parents opt for EMI (₹50K/term → ₹17K/month)
+
+### 2. TO ADMISSIONS
+
+**WHY:** Financial aid for new admissions, scholarship offers.  
+**DATA FLOW:** Need-based aid eligibility, merit scholarships  
+**TRIGGER:** Admission application  
+**IMPACT:** ₹1.2Cr/year in financial aid to 150 students
+
+---
+
+## INBOUND CONNECTIONS (Other Modules → Financial Planning)
+
+### FROM FEE MANAGEMENT
+
+**WHY:** Fee structure, payment history for planning.  
+**DATA RECEIVED:** Total K-12 cost (₹60L), payment history  
+**IMPACT:** Parents plan 12-year education budget
+
+---
+
 ## FINANCIAL COUNSELING CASE STUDIES
 
 ### Case Study 1: Single Parent

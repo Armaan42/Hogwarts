@@ -296,7 +296,35 @@ Dec | 40,000 kWh | ₹3.2L
 
 ---
 
-## SUSTAINABILITY REPORTING
+## OUTBOUND CONNECTIONS (Sustainability → Other Modules)
+
+### 1. TO FACILITIES MANAGEMENT
+
+**WHY:** Track energy consumption, water usage, waste management.  
+**DATA FLOW:** Energy meters, water meters, waste collection data  
+**TRIGGER:** Daily automated readings  
+**IMPACT:** Monthly report shows 20% energy reduction
+
+### 2. TO FINANCE MODULE
+
+**WHY:** Budget allocation for green initiatives, cost savings tracking.  
+**DATA FLOW:** Green initiative costs, savings from solar/LED  
+**TRIGGER:** Monthly budget review  
+**IMPACT:** ₹5L annual savings from solar panels
+
+---
+
+## INBOUND CONNECTIONS (Other Modules → Sustainability)
+
+### FROM FACILITIES
+
+**WHY:** Facility upgrades (solar panels, LED lights) tracked.  
+**DATA RECEIVED:** Installation dates, equipment specs  
+**IMPACT:** Solar capacity: 300kW, LED conversion: 100%
+
+---
+
+## SUSTAINABILITY METRICSEPORTING
 
 ### Annual Sustainability Report
 
