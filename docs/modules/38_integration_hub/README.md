@@ -21,6 +21,272 @@
 
 ---
 
+## OUTBOUND CONNECTIONS (Integration Hub → Other Modules)
+
+### 1. TO FEE MANAGEMENT MODULE
+
+**WHY This Connection Exists:**
+Payment gateway integrations (Razorpay, Paytm) process online fee payments. Integration Hub receives payment confirmations and must update fee records in real-time. Payment status synchronization ensures accurate fee tracking and prevents duplicate payments.
+
+**DATA FLOW:**
+- **Payment Initiation:**
+  - Student ID, invoice ID, amount
+  - Payment method (credit card, debit card, UPI, net banking)
+  - Parent contact details
+- **Payment Confirmation:**
+  - Transaction ID, payment ID
+  - Payment status (success, failed, pending)
+  - Amount paid, timestamp
+  - Payment gateway response
+- **Webhook Data:**
+  - Event type (payment.captured, payment.failed)
+  - Order ID, payment ID
+  - Error codes (if failed)
+- **Data Volume:** 5,000 payments/month (₹6 crores)
+- **Frequency:** Real-time webhooks
+- **Direction:** Bidirectional
+
+**TRIGGER EVENT:**
+- Parent initiates payment
+- Payment gateway webhook received
+- Payment status changes
+- **Timing:** Real-time (< 5 seconds)
+
+**IMPACT:**
+- **Successful Payment:**
+  - Parent pays ₹50,000 term fee via Razorpay
+  - Razorpay webhook: payment.captured
+  - Integration Hub receives webhook in 2 seconds
+  - Fee Management updated: Invoice marked PAID
+  - Receipt generated automatically
+  - SMS sent to parent: "Payment successful ₹50,000"
+  - Email with receipt PDF
+- **Failed Payment:**
+  - Payment attempt fails (insufficient funds)
+  - Razorpay webhook: payment.failed
+  - Integration Hub logs failure
+  - Fee Management: Invoice remains UNPAID
+  - Parent notified: "Payment failed. Please retry."
+  - Retry link sent via SMS
+
+**BUSINESS LOGIC:**
+```
+FUNCTION handle_payment_webhook(webhook_data):
+  // Verify webhook signature
+  IF NOT VERIFY_SIGNATURE(webhook_data, RAZORPAY_SECRET):
+    RETURN {error: "Invalid webhook signature"}
+  END IF
+  
+  // Extract payment details
+  event_type = webhook_data.event
+  payment = webhook_data.payload.payment
+  order = webhook_data.payload.order
+  
+  // Find invoice
+  invoice = FIND_INVOICE_BY_ORDER_ID(order.id)
+  IF NOT invoice:
+    LOG_ERROR("Invoice not found for order: {order.id}")
+    RETURN {error: "Invoice not found"}
+  END IF
+  
+  // Update fee record based on event
+  IF event_type = "payment.captured":
+    // Payment successful
+    fee_payment = CREATE_FEE_PAYMENT
+    fee_payment.invoice = invoice
+    fee_payment.amount = payment.amount / 100 // Convert paise to rupees
+    fee_payment.payment_method = payment.method
+    fee_payment.transaction_id = payment.id
+    fee_payment.payment_date = payment.created_at
+    fee_payment.status = "SUCCESS"
+    
+    // Update invoice
+    invoice.status = "PAID"
+    invoice.paid_amount += fee_payment.amount
+    invoice.payment_date = TODAY
+    
+    // Save to Fee Management
+    FEE_MANAGEMENT.record_payment(fee_payment)
+    
+    // Generate receipt
+    receipt = GENERATE_RECEIPT(invoice, fee_payment)
+    
+    // Notify parent
+    SEND_SMS(invoice.parent, "Payment successful: ₹{fee_payment.amount}. Receipt: {receipt.url}")
+    SEND_EMAIL(invoice.parent, "Payment Receipt", receipt.pdf)
+    
+  ELSE IF event_type = "payment.failed":
+    // Payment failed
+    LOG_PAYMENT_FAILURE(invoice, payment.error_code, payment.error_description)
+    
+    // Notify parent
+    SEND_SMS(invoice.parent, "Payment failed: {payment.error_description}. Retry: {invoice.payment_url}")
+  END IF
+  
+  RETURN {status: "SUCCESS", invoice_id: invoice.id}
+END FUNCTION
+```
+
+**REAL-WORLD EXAMPLE:**
+```
+Scenario: Mrs. Sharma pays ₹1,50,000 annual fee for Rohan (Grade 10)
+
+Timeline:
+10:00 AM - Mrs. Sharma logs into parent portal
+10:01 AM - Selects invoice: Annual Fee ₹1,50,000
+10:02 AM - Clicks "Pay Now"
+10:02 AM - Portal → Integration Hub: POST /api/v1/fees/initiate-payment
+10:02 AM - Integration Hub → Razorpay: Create order
+10:02 AM - Razorpay returns: order_MNO123456
+10:02 AM - Integration Hub → Portal: Payment URL
+10:03 AM - Mrs. Sharma redirected to Razorpay page
+10:05 AM - Mrs. Sharma enters card details, completes payment
+10:05 AM - Razorpay → Integration Hub: Webhook (payment.captured)
+10:05 AM - Integration Hub processes webhook:
+  - Verifies signature ✓
+  - Finds invoice for order_MNO123456 ✓
+  - Creates fee payment record
+  - Updates invoice status: PAID
+  - Generates receipt: REC-2024-001234
+10:05 AM - Integration Hub → Fee Management: Payment recorded
+10:05 AM - Fee Management → Communication: Send receipt
+10:06 AM - Mrs. Sharma receives SMS: "Payment successful ₹1,50,000. Receipt: https://erp.school.com/receipts/REC-2024-001234"
+10:06 AM - Email with PDF receipt sent
+
+Result: Payment processed in 6 minutes, fully automated, zero manual intervention
+```
+
+---
+
+### 2. TO COMMUNICATION MODULE
+
+**WHY This Connection Exists:**
+Third-party communication services (Twilio SMS, SendGrid Email, WhatsApp Business API) handle all outbound notifications. Integration Hub manages API credentials, rate limiting, delivery tracking, and failover between providers.
+
+**DATA FLOW:**
+- **SMS Messages:**
+  - Recipient phone number
+  - Message content (160 chars)
+  - Sender ID, priority
+  - Delivery status, timestamp
+- **Email Messages:**
+  - Recipient email, subject, body
+  - Attachments (PDFs, images)
+  - Template ID, variables
+  - Open/click tracking
+- **WhatsApp Messages:**
+  - Recipient WhatsApp number
+  - Template message, parameters
+  - Media attachments
+  - Read receipts
+- **Data Volume:** 150,000 messages/month (100K SMS, 40K email, 10K WhatsApp)
+- **Frequency:** Real-time + batch processing
+- **Direction:** Bidirectional
+
+**TRIGGER EVENT:**
+- Communication module requests message send
+- Delivery status webhook received
+- Message failed (retry needed)
+- **Timing:** Real-time for urgent, batched for bulk
+
+**IMPACT:**
+- **Exam Result SMS:**
+  - 200 parents need result notification
+  - Communication module → Integration Hub: Bulk SMS request
+  - Integration Hub → Twilio: Send 200 SMS
+  - Twilio delivery rate: 98% (196 delivered, 4 failed)
+  - Integration Hub tracks: 196 delivered, 4 failed
+  - Failed numbers retried via alternate provider
+  - Total delivery: 99.5% within 5 minutes
+
+**BUSINESS LOGIC:**
+```
+FUNCTION send_sms_via_integration_hub(recipient, message, priority):
+  // Rate limiting check
+  IF RATE_LIMIT_EXCEEDED(recipient):
+    RETURN {error: "Rate limit exceeded for {recipient}"}
+  END IF
+  
+  // Select provider based on priority and availability
+  IF priority = "HIGH":
+    provider = "TWILIO" // Primary for high priority
+  ELSE:
+    provider = SELECT_LEAST_LOADED_PROVIDER(["TWILIO", "MSG91"])
+  END IF
+  
+  // Send SMS
+  TRY:
+    response = SEND_SMS(provider, recipient, message)
+    
+    // Log success
+    LOG_MESSAGE_SENT({
+      provider: provider,
+      recipient: recipient,
+      message_id: response.message_id,
+      status: "SENT",
+      timestamp: NOW
+    })
+    
+    RETURN {status: "SUCCESS", message_id: response.message_id}
+    
+  CATCH error:
+    // Failover to backup provider
+    IF provider = "TWILIO":
+      backup_provider = "MSG91"
+      response = SEND_SMS(backup_provider, recipient, message)
+      
+      LOG_MESSAGE_SENT({
+        provider: backup_provider,
+        recipient: recipient,
+        message_id: response.message_id,
+        status: "SENT_VIA_BACKUP",
+        original_error: error
+      })
+      
+      RETURN {status: "SUCCESS", message_id: response.message_id, provider: backup_provider}
+    ELSE:
+      // Both providers failed
+      LOG_MESSAGE_FAILED({
+        recipient: recipient,
+        error: error,
+        retry_scheduled: TRUE
+      })
+      
+      SCHEDULE_RETRY(recipient, message, delay=5_MINUTES)
+      
+      RETURN {status: "FAILED", error: error, retry_scheduled: TRUE}
+    END IF
+  END TRY
+END FUNCTION
+```
+
+---
+
+## INBOUND CONNECTIONS (Other Modules → Integration Hub)
+
+### FROM ALL 54 MODULES
+
+**WHY This Connection Exists:**
+Every module needs external integrations (payments, SMS, email, storage, etc.). Instead of each module integrating directly with external services, they route through Integration Hub for centralized management, security, monitoring, and failover.
+
+**DATA RECEIVED:**
+- **Payment Requests:** From Fee Management (5,000/month)
+- **SMS Requests:** From Communication (100,000/month)
+- **Email Requests:** From Communication (40,000/month)
+- **File Upload Requests:** From Document Management (10,000/month)
+- **API Calls:** From Mobile App, Parent Portal (500,000/month)
+
+**IMPACT:**
+- **Centralized Security:** All API keys stored in Integration Hub
+- **Rate Limiting:** Prevents abuse, manages quotas
+- **Monitoring:** Single dashboard for all integrations
+- **Cost Optimization:** Bulk pricing, provider switching
+- **Reliability:** Automatic failover, retry logic
+
+**TRIGGER:** Any module needs external service
+
+---
+
 ## INTEGRATION ARCHITECTURE
 
 ### Hub-and-Spoke Model
