@@ -1120,7 +1120,7 @@ This module is the **"campus safety shield"** - ensuring secure access control, 
 
 ## Submodule Breakdown
 
-This module is divided into **7 submodules**, each handling a specific aspect of visitor & campus security management:
+This module is divided into **10 submodules**, each handling a specific aspect of visitor & campus security management:
 
 ### 1. Visitor Registration & Badge Issuance
 **Code:** SEC-001  
@@ -1142,10 +1142,10 @@ This module is divided into **7 submodules**, each handling a specific aspect of
 **File:** `04_access_control_biometric_rfid.md`  
 **Purpose:** Access Control (Biometric/RFID) functionality  
 
-### 5. Incident Reporting
-**Code:** SEC-005  
-**File:** `05_incident_reporting.md`  
-**Purpose:** Incident Reporting functionality  
+### 5. Vehicle Entry/Exit Tracking
+**Code:** SEC-007  
+**File:** `07_vehicle_entry_exit_tracking.md`  
+**Purpose:** Vehicle Entry/Exit Tracking functionality  
 
 ### 6. Emergency Response System
 **Code:** SEC-006  
