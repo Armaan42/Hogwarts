@@ -1160,3 +1160,96 @@ Library clearance is required for TC and No Dues Certificate. Document module ve
 **Last Updated:** January 16, 2026  
 **Version:** 1.0  
 **Compliance:** IT Act 2000 (Digital Signatures), CBSE/CISCE/IB Certificate Standards, Data Privacy Laws (GDPR, DPDPA)
+
+---
+
+# Submodule Breakdown
+
+# DOCUMENT & CERTIFICATE MODULE - SUBMODULE OVERVIEW
+
+**Module Code:** DOC-028  
+**Category:** Document Management  
+**Priority:** P1  
+**Owner:** Administration
+
+## Submodule Breakdown
+
+This module is divided into **10 submodules**, each handling a specific aspect of document & certificate management:
+
+### 1. Document Vault & Storage
+**Code:** DOC-001  
+**File:** `01_document_vault_storage.md`  
+**Purpose:** Secure document storage and management  
+**Key Features:** Cloud storage, encryption, access control, folder structure, search functionality, version control
+
+### 2. Certificate Generation Engine
+**Code:** DOC-002  
+**File:** `02_certificate_generation_engine.md`  
+**Purpose:** Automated certificate generation  
+**Key Features:** Template designer, merge fields, bulk generation, PDF creation, certificate numbering, QR codes
+
+### 3. Digital Signature Integration
+**Code:** DOC-003  
+**File:** `03_digital_signature_integration.md`  
+**Purpose:** Digital signature for documents  
+**Key Features:** E-signature integration, signature verification, certificate authentication, compliance tracking, audit trail
+
+### 4. Blockchain Verification
+**Code:** DOC-004  
+**File:** `04_blockchain_verification.md`  
+**Purpose:** Blockchain-based document verification  
+**Key Features:** Hash generation, blockchain recording, verification portal, tamper-proof certificates, public verification
+
+### 5. Document Request Management
+**Code:** DOC-005  
+**File:** `05_document_request_management.md`  
+**Purpose:** Handle document requests and approvals  
+**Key Features:** Request submission, approval workflow, status tracking, notification system, request history
+
+### 6. Bulk Certificate Generation
+**Code:** DOC-006  
+**File:** `06_bulk_certificate_generation.md`  
+**Purpose:** Mass certificate generation for batches  
+**Key Features:** Batch processing, CSV import, template selection, progress tracking, error handling, download management
+
+### 7. Document Templates
+**Code:** DOC-007  
+**File:** `07_document_templates.md`  
+**Purpose:** Template library and management  
+**Key Features:** Template creation, category management, merge field mapping, preview functionality, template versioning
+
+### 8. Version Control
+**Code:** DOC-008  
+**File:** `08_version_control.md`  
+**Purpose:** Document version tracking  
+**Key Features:** Version history, change tracking, rollback capability, comparison tools, approval workflows
+
+### 9. Document Sharing & Distribution
+**Code:** DOC-009  
+**File:** `09_document_sharing_distribution.md`  
+**Purpose:** Secure document sharing  
+**Key Features:** Share links, access permissions, expiry dates, download tracking, email distribution, bulk sharing
+
+### 10. Archive Management
+**Code:** DOC-010  
+**File:** `10_archive_management.md`  
+**Purpose:** Long-term document archival  
+**Key Features:** Archival policies, retention management, archive search, compliance tracking, secure deletion
+
+## Integration Points
+
+Document & Certificate connects to Student Management, HR, Academics, and Compliance modules.
+
+## Development Priority
+
+**Phase 1 (Critical):** Submodules 1-3, 5  
+**Phase 2 (High):** Submodules 6-7, 9  
+**Phase 3 (Medium):** Submodules 4, 8, 10  
+
+---
+
+**Status:** Production-Ready Documentation  
+**Last Updated:** January 17, 2026  
+**Version:** 1.1  
+**Compliance:** Digital Signature Laws, Data Protection, Record Retention Policies
+
