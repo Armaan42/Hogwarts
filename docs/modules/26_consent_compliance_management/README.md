@@ -1137,3 +1137,84 @@ Every module that processes personal data must check consent before processing. 
 **Last Updated:** January 16, 2026  
 **Version:** 1.0  
 **Compliance:** GDPR, DPDPA, FERPA, COPPA, ISO 27001, SOC 2
+
+---
+
+# Submodule Breakdown
+
+# CONSENT & COMPLIANCE MANAGEMENT MODULE - SUBMODULE OVERVIEW
+
+**Module Code:** CONSENT-026  
+**Category:** Privacy & Compliance  
+**Priority:** P1  
+**Owner:** Compliance Officer
+
+## Submodule Breakdown
+
+This module is divided into **8 submodules**, each handling a specific aspect of consent & compliance management:
+
+### 1. Consent Collection & Tracking
+**Code:** CONSENT-001  
+**File:** `01_consent_collection_tracking.md`  
+**Purpose:** Collect and track user consents  
+**Key Features:** Consent forms, digital signatures, consent versioning, consent history, multi-purpose consents, consent dashboard
+
+### 2. GDPR/DPDPA Compliance
+**Code:** CONSENT-002  
+**File:** `02_gdpr_dpdpa_compliance.md`  
+**Purpose:** Ensure GDPR and DPDPA compliance  
+**Key Features:** Data mapping, privacy policies, compliance audits, breach management, regulatory reporting, compliance dashboard
+
+### 3. Data Subject Rights Management
+**Code:** CONSENT-003  
+**File:** `03_data_subject_rights_management.md`  
+**Purpose:** Handle data subject access requests  
+**Key Features:** Access requests, rectification, erasure (right to be forgotten), data portability, objection handling, request tracking
+
+### 4. Privacy Policy Management
+**Code:** CONSENT-004  
+**File:** `04_privacy_policy_management.md`  
+**Purpose:** Manage privacy policies and notices  
+**Key Features:** Policy creation, version control, policy distribution, acceptance tracking, policy updates, multi-language support
+
+### 5. Consent Audit Trail
+**Code:** CONSENT-005  
+**File:** `05_consent_audit_trail.md`  
+**Purpose:** Complete audit trail of consent activities  
+**Key Features:** Consent logs, change history, user activity tracking, compliance reports, audit exports, timestamp verification
+
+### 6. Third-party Data Sharing Consent
+**Code:** CONSENT-006  
+**File:** `06_third_party_data_sharing_consent.md`  
+**Purpose:** Manage third-party data sharing consents  
+**Key Features:** Vendor consent tracking, data sharing agreements, purpose limitation, consent renewal, vendor compliance monitoring
+
+### 7. Parental Consent Management
+**Code:** CONSENT-007  
+**File:** `07_parental_consent_management.md`  
+**Purpose:** Manage parental consents for minors  
+**Key Features:** Parent verification, minor protection, age-appropriate consents, parental controls, consent delegation
+
+### 8. Consent Withdrawal Processing
+**Code:** CONSENT-008  
+**File:** `08_consent_withdrawal_processing.md`  
+**Purpose:** Process consent withdrawal requests  
+**Key Features:** Withdrawal requests, data deletion workflows, impact analysis, notification management, compliance verification
+
+## Integration Points
+
+Consent & Compliance connects to all modules handling personal data.
+
+## Development Priority
+
+**Phase 1 (Critical):** Submodules 1-3  
+**Phase 2 (High):** Submodules 4-5, 7  
+**Phase 3 (Medium):** Submodules 6, 8  
+
+---
+
+**Status:** Production-Ready Documentation  
+**Last Updated:** January 17, 2026  
+**Version:** 1.1  
+**Compliance:** GDPR, DPDPA, COPPA, Privacy Laws
+
