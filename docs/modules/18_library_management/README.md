@@ -1230,7 +1230,7 @@ This module is the **"knowledge resource hub"** - fostering reading culture, sup
 
 ## Submodule Breakdown
 
-This module is divided into **7 submodules**, each handling a specific aspect of library management management:
+This module is divided into **10 submodules**, each handling a specific aspect of library management management:
 
 ### 1. Book Cataloging & Classification
 **Code:** LIB-001  
@@ -1262,10 +1262,28 @@ This module is divided into **7 submodules**, each handling a specific aspect of
 **File:** `06_reservation_renewal.md`  
 **Purpose:** Reservation & Renewal functionality  
 
-### 7. Library Analytics
+### 7. Library Reports & Analytics
 **Code:** LIB-007  
-**File:** `07_library_analytics.md`  
-**Purpose:** Library Analytics functionality  
+**File:** `07_library_reports_analytics.md`  
+**Purpose:** Library Reports & Analytics functionality  
+
+### 8. Digital Library & E-Resources
+**Code:** LIB-008  
+**File:** `08_digital_library_e_resources.md`  
+**Purpose:** Digital library and e-book management  
+**Key Features:** E-book catalog, digital resource access, online reading, DRM management, e-resource subscriptions, digital lending
+
+### 9. Book Recommendation Engine
+**Code:** LIB-009  
+**File:** `09_book_recommendation_engine.md`  
+**Purpose:** AI-powered book recommendations  
+**Key Features:** Personalized recommendations, reading history analysis, genre preferences, age-appropriate suggestions, trending books, reading challenges
+
+### 10. Overdue Management & Fines
+**Code:** LIB-010  
+**File:** `10_overdue_management_fines.md`  
+**Purpose:** Overdue book tracking and fine management  
+**Key Features:** Overdue alerts, automated reminders, fine calculation, fine collection, fine waivers, lost book charges  
 
 ## Integration Points
 
