@@ -1223,7 +1223,7 @@ This module is the **"student safety & logistics backbone"** - ensuring safe, re
 
 ## Submodule Breakdown
 
-This module is divided into **7 submodules**, each handling a specific aspect of transport management management:
+This module is divided into **10 submodules**, each handling a specific aspect of transport management management:
 
 ### 1. Route Planning & Optimization
 **Code:** TRANS-001  
@@ -1245,20 +1245,47 @@ This module is divided into **7 submodules**, each handling a specific aspect of
 **File:** `04_rfid_gps_tracking.md`  
 **Purpose:** RFID/GPS Tracking functionality  
 
-### 5. Parent Notifications (Boarding/Deboarding)
-**Code:** TRANS-005  
-**File:** `05_parent_notifications_boarding_deboarding.md`  
-**Purpose:** Parent Notifications (Boarding/Deboarding) functionality  
+**Code:** TRANS-003
+**File:** `03_student_enrollment_allocation.md`
+**Purpose:** Student Enrollment & Allocation functionality
 
-### 6. Transport Fee Management
-**Code:** TRANS-006  
-**File:** `06_transport_fee_management.md`  
-**Purpose:** Transport Fee Management functionality  
+### 4. RFID Tracking & Attendance
+**Code:** TRANS-004
+**File:** `04_rfid_tracking_attendance.md`
+**Purpose:** RFID-based student boarding/deboarding tracking and attendance management
 
-### 7. Vehicle Maintenance Tracking
-**Code:** TRANS-007  
-**File:** `07_vehicle_maintenance_tracking.md`  
-**Purpose:** Vehicle Maintenance Tracking functionality  
+### 5. Transport Fee Management
+**Code:** TRANS-005
+**File:** `05_transport_fee_management.md`
+**Purpose:** Transport Fee Management functionality
+
+### 6. Vehicle Maintenance Tracking
+**Code:** TRANS-006
+**File:** `06_vehicle_maintenance_tracking.md`
+**Purpose:** Vehicle Maintenance Tracking functionality
+
+### 7. Transport Reports & Analytics
+**Code:** TRANS-007
+**File:** `07_transport_reports_analytics.md`
+**Purpose:** Transport Reports & Analytics functionality
+
+### 8. GPS Tracking & Live Monitoring
+**Code:** TRANS-008
+**File:** `08_gps_tracking_live_monitoring.md`
+**Purpose:** Real-time GPS tracking and live bus monitoring
+**Key Features:** Live bus location tracking, route deviation alerts, speed monitoring, geofencing, estimated arrival time (ETA), parent live tracking app
+
+### 9. Route Optimization Engine
+**Code:** TRANS-009
+**File:** `09_route_optimization_engine.md`
+**Purpose:** AI-powered route optimization and planning
+**Key Features:** Automated route planning, distance optimization, traffic-aware routing, pickup time calculation, capacity planning, route efficiency reports
+
+### 10. Parent Notification System
+**Code:** TRANS-010
+**File:** `10_parent_notification_system.md`
+**Purpose:** Automated parent notifications for transport events
+**Key Features:** Boarding/deboarding alerts, delay notifications, route change alerts, emergency notifications, daily transport summary
 
 ## Integration Points
 
