@@ -1244,8 +1244,93 @@ School bus accidents require immediate crisis response (medical care, parent not
 
 ---
 
+# Submodule Breakdown
+
+# INCIDENT & CRISIS MANAGEMENT MODULE - SUBMODULE OVERVIEW
+
+**Module Code:** CRISIS-020  
+**Category:** Safety & Emergency Response  
+**Priority:** P0  
+**Owner:** Crisis Management Team
+
+## Submodule Breakdown
+
+This module is divided into **10 submodules**, each handling a specific aspect of incident & crisis management:
+
+### 1. Incident Reporting & Logging
+**Code:** CRISIS-001  
+**File:** `01_incident_reporting_logging.md`  
+**Purpose:** Centralized incident reporting and logging system  
+**Key Features:** Incident report forms, severity classification, incident categorization, photo/video evidence upload, witness statements, real-time alerts, incident tracking dashboard
+
+### 2. Emergency Contact & Notification System
+**Code:** CRISIS-002  
+**File:** `02_emergency_contact_notification_system.md`  
+**Purpose:** Rapid multi-channel emergency notifications  
+**Key Features:** Mass SMS alerts, automated phone calls, email notifications, push notifications, PA system integration, emergency contact database, delivery tracking
+
+### 3. Evacuation Management
+**Code:** CRISIS-003  
+**File:** `03_evacuation_management.md`  
+**Purpose:** Emergency evacuation procedures and tracking  
+**Key Features:** Evacuation route planning, assembly point management, roll call tracking, evacuation drills, real-time headcount, missing person alerts, evacuation completion reports
+
+### 4. Crisis Communication & Media Management
+**Code:** CRISIS-004  
+**File:** `04_crisis_communication_media_management.md`  
+**Purpose:** Stakeholder communication and media relations during crisis  
+**Key Features:** Crisis communication templates, media statement preparation, social media monitoring, stakeholder updates, rumor control, spokesperson coordination, communication logs
+
+### 5. Medical Emergency Response
+**Code:** CRISIS-005  
+**File:** `05_medical_emergency_response.md`  
+**Purpose:** Medical emergency coordination and response  
+**Key Features:** Emergency medical protocols, ambulance coordination, hospital liaison, medical history access, parent notification, injury documentation, insurance claim initiation
+
+### 6. Security Incident Management
+**Code:** CRISIS-006  
+**File:** `06_security_incident_management.md`  
+**Purpose:** Security threats and lockdown procedures  
+**Key Features:** Lockdown activation, threat assessment, police coordination, CCTV monitoring, access control integration, security breach protocols, all-clear procedures
+
+### 7. Drill & Preparedness Tracking
+**Code:** CRISIS-007  
+**File:** `07_drill_preparedness_tracking.md`  
+**Purpose:** Emergency drill scheduling and performance tracking  
+**Key Features:** Drill scheduling (fire, earthquake, lockdown), drill execution tracking, performance metrics, timing analysis, feedback collection, improvement recommendations
+
+### 8. Post-Incident Analysis & Investigation
+**Code:** CRISIS-008  
+**File:** `08_post_incident_analysis_investigation.md`  
+**Purpose:** Incident investigation and root cause analysis  
+**Key Features:** Investigation workflows, witness interviews, evidence collection, root cause analysis tools, corrective action planning, lessons learned documentation
+
+### 9. Insurance Claim Management
+**Code:** CRISIS-009  
+**File:** `09_insurance_claim_management.md`  
+**Purpose:** Insurance claim documentation and processing  
+**Key Features:** Claim documentation, damage assessment, claim submission, claim tracking, insurance liaison, settlement management, claim history
+
+### 10. Pandemic & Disease Outbreak Management
+**Code:** CRISIS-010  
+**File:** `10_pandemic_disease_outbreak_management.md`  
+**Purpose:** Pandemic protocols and disease outbreak response  
+**Key Features:** Health screening protocols, quarantine management, contact tracing, vaccination tracking, remote learning coordination, sanitization schedules, outbreak alerts
+
+## Integration Points
+
+Incident & Crisis Management connects to multiple modules across the Hogwarts ERP system.
+
+## Development Priority
+
+**Phase 1 (Critical):** Submodules 1-3, 5  
+**Phase 2 (High):** Submodules 4, 6-7  
+**Phase 3 (Medium):** Submodules 8-10  
+
+---
+
 **Status:** Production-Ready Documentation  
-**Last Updated:** January 16, 2026  
-**Version:** 1.0  
+**Last Updated:** January 17, 2026  
+**Version:** 1.1  
 **Compliance:** Disaster Management Act, Child Safety Regulations, Emergency Response Standards, Insurance Requirements, Privacy Laws (GDPR, DPDPA)
 
