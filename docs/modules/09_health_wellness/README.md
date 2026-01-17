@@ -1509,7 +1509,7 @@ This module is the **"health & safety backbone"** - ensuring student and staff w
 
 ## Submodule Breakdown
 
-This module is divided into **7 submodules**, each handling a specific aspect of health & wellness management:
+This module is divided into **11 submodules**, each handling a specific aspect of health & wellness management:
 
 ### 1. Medical Records Management
 **Code:** HEALTH-001  
@@ -1545,6 +1545,30 @@ This module is divided into **7 submodules**, each handling a specific aspect of
 **Code:** HEALTH-007  
 **File:** `07_sports_injury_management.md`  
 **Purpose:** Sports Injury Management functionality  
+
+### 8. Telemedicine Integration
+**Code:** HEALTH-008  
+**File:** `08_telemedicine_integration.md`  
+**Purpose:** Virtual doctor consultations and telemedicine services  
+**Key Features:** Video consultation scheduling, online prescriptions, remote health monitoring, doctor availability, consultation history
+
+### 9. Mental Health Counseling Tracking
+**Code:** HEALTH-009  
+**File:** `09_mental_health_counseling_tracking.md`  
+**Purpose:** Track mental health counseling sessions and student wellbeing  
+**Key Features:** Counseling session scheduling, session notes, mental health assessments, crisis intervention tracking, referral management
+
+### 10. Health Insurance Management
+**Code:** HEALTH-010  
+**File:** `10_health_insurance_management.md`  
+**Purpose:** Manage student health insurance policies and claims  
+**Key Features:** Insurance policy tracking, claim submission, cashless treatment coordination, policy renewal reminders, coverage verification
+
+### 11. COVID-19 & Pandemic Protocols
+**Code:** HEALTH-011  
+**File:** `11_covid19_pandemic_protocols.md`  
+**Purpose:** Pandemic management and health screening protocols  
+**Key Features:** Daily health screening, temperature checks, symptom tracking, quarantine management, vaccination records, contact tracing  
 
 ## Integration Points
 
