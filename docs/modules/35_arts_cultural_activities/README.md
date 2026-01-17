@@ -887,9 +887,23 @@ Arts programs need facilities. Facilities module sends availability.
 
 ---
 
+## ARTS PROGRAM FUTURE ROADMAP (2025-2030)
+
+**Expansion Plans:**
+- Add photography club and film-making program
+- Establish school art gallery (permanent exhibition space)
+- Launch annual inter-school arts festival
+- Develop digital arts curriculum (graphic design, animation)
+
+**Infrastructure Investment:**
+- New performing arts center (₹50L budget)
+- Professional recording studio for music students
+- Dance studio expansion (additional 500 sq ft)
+
+---
+
 **Status:** Production-Ready  
 **Last Updated:** January 17, 2026  
 **Version:** 2.0  
 **Compliance:** Child Safety, Copyright, Performance Rights
-
 
