@@ -1257,8 +1257,92 @@ School buses and vehicles require regular maintenance and repairs. Transport mod
 
 ---
 
+# Submodule Breakdown
+
+# FACILITIES & INFRASTRUCTURE MANAGEMENT MODULE - SUBMODULE OVERVIEW
+
+**Module Code:** FAC-021  
+**Category:** Operations & Maintenance  
+**Priority:** P1  
+**Owner:** Facilities Management Team
+
+## Submodule Breakdown
+
+This module is divided into **10 submodules**, each handling a specific aspect of facilities & infrastructure management:
+
+### 1. Building & Room Management
+**Code:** FAC-001  
+**File:** `01_building_room_management.md`  
+**Purpose:** Building and room inventory and allocation  
+**Key Features:** Room catalog, space allocation, room booking, occupancy tracking, room utilization reports, floor plans, room capacity management
+
+### 2. Maintenance Request & Work Order System
+**Code:** FAC-002  
+**File:** `02_maintenance_request_work_order_system.md`  
+**Purpose:** Centralized maintenance request and work order management  
+**Key Features:** Request submission, work order creation, technician assignment, SLA tracking, status updates, completion verification, request history
+
+### 3. Preventive Maintenance Scheduling
+**Code:** FAC-003  
+**File:** `03_preventive_maintenance_scheduling.md`  
+**Purpose:** Scheduled preventive maintenance for equipment and facilities  
+**Key Features:** Maintenance schedules, equipment servicing, inspection checklists, maintenance calendar, automated reminders, compliance tracking
+
+### 4. Utility Management & Monitoring
+**Code:** FAC-004  
+**File:** `04_utility_management_monitoring.md`  
+**Purpose:** Utility consumption tracking and bill management  
+**Key Features:** Electricity monitoring, water consumption, gas usage, bill processing, consumption analytics, cost allocation, anomaly detection
+
+### 5. Housekeeping & Cleaning Management
+**Code:** FAC-005  
+**File:** `05_housekeeping_cleaning_management.md`  
+**Purpose:** Housekeeping schedules and cleaning operations  
+**Key Features:** Cleaning schedules, zone allocation, staff assignment, quality inspections, supply inventory, deep cleaning schedules, hygiene audits
+
+### 6. Vendor & Contractor Management
+**Code:** FAC-006  
+**File:** `06_vendor_contractor_management.md`  \n**Purpose:** Vendor contracts and service provider management  
+**Key Features:** Vendor database, AMC contracts, service agreements, performance tracking, vendor ratings, contract renewals, payment tracking
+
+### 7. Energy Management & Sustainability
+**Code:** FAC-007  
+**File:** `07_energy_management_sustainability.md`  
+**Purpose:** Energy efficiency and sustainability initiatives  
+**Key Features:** Energy audits, consumption optimization, solar panel monitoring, green initiatives, carbon footprint tracking, sustainability reports
+
+### 8. Space Utilization & Optimization
+**Code:** FAC-008  
+**File:** `08_space_utilization_optimization.md`  
+**Purpose:** Space usage analysis and optimization  
+**Key Features:** Occupancy tracking, utilization reports, space planning, capacity analysis, room optimization recommendations, heat maps
+
+### 9. Capital Projects & Renovations
+**Code:** FAC-009  
+**File:** `09_capital_projects_renovations.md`  
+**Purpose:** Major construction and renovation project management  
+**Key Features:** Project planning, budget tracking, contractor management, milestone tracking, quality inspections, project completion reports
+
+### 10. Safety & Compliance Management
+**Code:** FAC-010  
+**File:** `10_safety_compliance_management.md`  
+**Purpose:** Safety inspections and regulatory compliance  
+**Key Features:** Fire safety inspections, building code compliance, safety audits, emergency equipment checks, compliance certificates, inspection reports
+
+## Integration Points
+
+Facilities & Infrastructure Management connects to multiple modules across the Hogwarts ERP system.
+
+## Development Priority
+
+**Phase 1 (Critical):** Submodules 1-2, 4-5  
+**Phase 2 (High):** Submodules 3, 6, 10  
+**Phase 3 (Medium):** Submodules 7-9  
+
+---
+
 **Status:** Production-Ready Documentation  
-**Last Updated:** January 16, 2026  
-**Version:** 1.0  
+**Last Updated:** January 17, 2026  
+**Version:** 1.1  
 **Compliance:** National Building Code, Fire Safety Norms, Environmental Regulations, Occupational Safety Standards, Energy Conservation Building Code
 
