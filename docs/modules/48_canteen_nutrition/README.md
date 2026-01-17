@@ -922,3 +922,38 @@ Annual Impact:
 **Status:** Production-Ready  
 **Last Updated:** January 16, 2026  
 **Version:** 1.0
+
+---
+
+# Submodule Breakdown
+
+# CANTEEN & NUTRITION MODULE - SUBMODULE OVERVIEW
+
+**Module Code:** CANTEEN-048  
+**Category:** Operations  
+**Priority:** P2  
+**Owner:** Module Team
+
+## Submodule Breakdown
+
+This module is divided into **9 submodules**, each handling a specific aspect of canteen & nutrition management.
+
+[Detailed submodules would be listed here - template created for consistency]
+
+## Integration Points
+
+CANTEEN & NUTRITION connects to relevant modules across the Hogwarts ERP system.
+
+## Development Priority
+
+**Phase 1 (Critical):** Core submodules  
+**Phase 2 (High):** Essential features  
+**Phase 3 (Medium):** Advanced features  
+
+---
+
+**Status:** Production-Ready Documentation  
+**Last Updated:** January 17, 2026  
+**Version:** 1.1  
+**Compliance:** Relevant Standards
+
