@@ -1302,3 +1302,84 @@ Communication module tracks donor engagement (email opens, clicks, event attenda
 **Version:** 1.0  
 **Compliance:** Income Tax Act (Section 80G, 12A), FCRA (if foreign donations), Companies Act (CSR provisions)
 
+
+---
+
+# Submodule Breakdown
+
+# DONATIONS & FUNDRAISING MODULE - SUBMODULE OVERVIEW
+
+**Module Code:** DON-024  
+**Category:** Revenue & Development  
+**Priority:** P2  
+**Owner:** Development Office
+
+## Submodule Breakdown
+
+This module is divided into **8 submodules**, each handling a specific aspect of donations & fundraising management:
+
+### 1. Donor Management & CRM
+**Code:** DON-001  
+**File:** `01_donor_management_crm.md`  
+**Purpose:** Donor database and relationship management  
+**Key Features:** Donor profiles, contact management, donation history, donor segmentation, communication tracking, donor engagement scores
+
+### 2. Donation Campaign Management
+**Code:** DON-002  
+**File:** `02_donation_campaign_management.md`  
+**Purpose:** Fundraising campaign planning and execution  
+**Key Features:** Campaign creation, goal setting, multi-channel campaigns, progress tracking, campaign analytics, donor targeting
+
+### 3. Online Donation Portal
+**Code:** DON-003  
+**File:** `03_online_donation_portal.md`  
+**Purpose:** Online donation collection platform  
+**Key Features:** Payment gateway integration, recurring donations, donation forms, mobile-friendly interface, social sharing, donation tracking
+
+### 4. Receipt & Tax Certificate Generation
+**Code:** DON-004  
+**File:** `04_receipt_tax_certificate_generation.md`  
+**Purpose:** Automated receipt and 80G certificate generation  
+**Key Features:** Digital receipts, 80G certificates, bulk generation, email delivery, certificate tracking, compliance management
+
+### 5. Pledge Tracking
+**Code:** DON-005  
+**File:** `05_pledge_tracking.md`  
+**Purpose:** Pledge commitment and fulfillment tracking  
+**Key Features:** Pledge recording, payment schedules, reminder notifications, pledge conversion tracking, partial payment handling
+
+### 6. Grant Management
+**Code:** DON-006  
+**File:** `06_grant_management.md`  
+**Purpose:** Grant application and tracking  
+**Key Features:** Grant applications, approval workflows, fund utilization tracking, reporting requirements, compliance documentation
+
+### 7. Fundraising Event Management
+**Code:** DON-007  
+**File:** `07_fundraising_event_management.md`  
+**Purpose:** Fundraising event planning and execution  
+**Key Features:** Event planning, ticket sales, sponsorship management, event expenses, attendee management, event ROI analysis
+
+### 8. Donor Analytics & Reports
+**Code:** DON-008  
+**File:** `08_donor_analytics_reports.md`  
+**Purpose:** Donor insights and fundraising analytics  
+**Key Features:** Donor retention analysis, giving patterns, campaign effectiveness, donor lifetime value, fundraising dashboards, trend analysis
+
+## Integration Points
+
+Donations & Fundraising connects to Accounts, Communication, and Events modules.
+
+## Development Priority
+
+**Phase 1 (Critical):** Submodules 1, 3-4  
+**Phase 2 (High):** Submodules 2, 5, 7  
+**Phase 3 (Medium):** Submodules 6, 8  
+
+---
+
+**Status:** Production-Ready Documentation  
+**Last Updated:** January 17, 2026  
+**Version:** 1.1  
+**Compliance:** Income Tax Act (80G), FCRA Regulations, Charity Regulations
+
