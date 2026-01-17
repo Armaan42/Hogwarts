@@ -897,3 +897,4 @@ Reunions are managed by Events module but targeted at alumni. Events module send
 **Compliance:** Data Privacy, Alumni Consent, Professional Ethics, Tax Regulations (80G certificates), Alumni Data Protection
 
 
+
