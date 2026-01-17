@@ -1207,7 +1207,7 @@ This module is the **"digital learning powerhouse"** - delivering engaging, pers
 
 ## Submodule Breakdown
 
-This module is divided into **8 submodules**, each handling a specific aspect of advanced lms management:
+This module is divided into **12 submodules**, each handling a specific aspect of advanced lms management:
 
 ### 1. Course Content Management
 **Code:** LMS-001  
@@ -1249,15 +1249,39 @@ This module is divided into **8 submodules**, each handling a specific aspect of
 **File:** `08_mobile_learning_app.md`  
 **Purpose:** Mobile Learning App functionality  
 
+### 9. Live Virtual Classes
+**Code:** LMS-009  
+**File:** `09_live_virtual_classes.md`  
+**Purpose:** Conduct and manage live online classes with video conferencing integration  
+**Key Features:** Zoom/Teams/Meet integration, live class scheduling, attendance tracking, screen sharing, breakout rooms, recording and playback, chat and Q&A, whiteboard collaboration, polls and quizzes during class
+
+### 10. AI Co-pilot & Personalization
+**Code:** LMS-010  
+**File:** `10_ai_copilot_personalization.md`  
+**Purpose:** AI-powered learning assistant and personalized learning paths  
+**Key Features:** 24/7 AI tutor (doubt solving), personalized course recommendations, adaptive learning paths, intelligent content suggestions, performance prediction, study time optimization, learning style analysis, automated feedback generation
+
+### 11. Learning Analytics & Reports
+**Code:** LMS-011  
+**File:** `11_learning_analytics_reports.md`  
+**Purpose:** Comprehensive analytics and reporting on learning outcomes  
+**Key Features:** Student engagement dashboards, course completion analytics, performance trend analysis, time-on-task reports, content effectiveness metrics, at-risk student identification, comparative analytics, exportable reports (PDF, Excel)
+
+### 12. Content Library & Resources
+**Code:** LMS-012  
+**File:** `12_content_library_resources.md`  
+**Purpose:** Centralized repository for learning resources and digital content  
+**Key Features:** E-book integration, video library management, document repository, interactive simulations (H5P), external resource linking, content tagging and search, version control, copyright management, resource sharing across courses  
+
 ## Integration Points
 
 Advanced LMS connects to multiple modules across the Hogwarts ERP system.
 
 ## Development Priority
 
-**Phase 1 (Critical):** Submodules 1-3  
-**Phase 2 (High):** Submodules 4-5  
-**Phase 3 (Medium):** Remaining submodules  
+**Phase 1 (Critical):** Submodules 1-3, 6, 9  
+**Phase 2 (High):** Submodules 4-5, 10, 11  
+**Phase 3 (Medium):** Submodules 7-8, 12  
 
 ---
 
