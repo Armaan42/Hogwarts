@@ -1789,7 +1789,7 @@ This module is truly the **"heart"** of the ERP - nearly every other module eith
 
 ## Submodule Breakdown
 
-This module is divided into **16 submodules**, each handling a specific aspect of student lifecycle management:
+This module is divided into **19 submodules**, each handling a specific aspect of student lifecycle management:
 
 ### 1. Student Registration & Admission
 **Code:** STD-REG-001 
@@ -1887,6 +1887,24 @@ This module is divided into **16 submodules**, each handling a specific aspect o
 **Purpose:** Manage communication channels and consent 
 **Key Features:** Channel preferences, quiet hours, marketing consent, GDPR compliance
 
+### 17. Student Transfers & Migration
+**Code:** STD-TRANSFER-017 
+**File:** `17_student_transfers_migration.md` 
+**Purpose:** Handle inter-school transfers, campus changes, and international migrations 
+**Key Features:** Transfer certificate (TC) generation, migration certificate issuance, inter-campus transfer workflow, transfer-in document verification, academic record portability, transfer approval workflow, clearance from all departments (library, fees, hostel, transport)
+
+### 18. Student Groups & Peer Networks
+**Code:** STD-GROUPS-018 
+**File:** `18_student_groups_peer_networks.md` 
+**Purpose:** Manage student cohorts, house systems, peer mentoring, and study groups 
+**Key Features:** House system allocation (Gryffindor, Ravenclaw, Hufflepuff, Slytherin), peer mentoring assignments (senior-junior buddy system), study groups and project teams, student council/prefect assignments, class representatives, student committees (discipline, sports, cultural, academic), leadership roles
+
+### 19. Student Login & Portal Access
+**Code:** STD-PORTAL-019 
+**File:** `19_student_login_portal_access.md` 
+**Purpose:** Manage student authentication, portal access, and digital identity 
+**Key Features:** Student login credentials, password management & reset, multi-factor authentication (MFA), session management, access logs and security audit, portal permissions (LMS, fee portal, library portal), Single Sign-On (SSO) integration, device management (registered devices), biometric authentication integration
+
 ## Integration Points
 
 Student Management connects to **25+ modules:**
@@ -1919,9 +1937,9 @@ Student Management connects to **25+ modules:**
 
 ## Development Priority
 
-**Phase 1 (Critical):** Submodules 1, 2, 3, 4, 6, 7 
-**Phase 2 (High):** Submodules 5, 8, 9, 11 
-**Phase 3 (Medium):** Submodules 10, 12, 13, 15, 16 
+**Phase 1 (Critical):** Submodules 1, 2, 3, 4, 6, 7, 19 
+**Phase 2 (High):** Submodules 5, 8, 9, 11, 17 
+**Phase 3 (Medium):** Submodules 10, 12, 13, 15, 16, 18 
 **Phase 4 (Low):** Submodule 14
 
 ---
