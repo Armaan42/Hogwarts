@@ -1133,7 +1133,7 @@ This module is the **"resource optimization engine"** - tracking every asset fro
 
 ## Submodule Breakdown
 
-This module is divided into **7 submodules**, each handling a specific aspect of inventory & asset management management:
+This module is divided into **10 submodules**, each handling a specific aspect of inventory & asset management management:
 
 ### 1. Asset Register & Tracking
 **Code:** INV-001  
