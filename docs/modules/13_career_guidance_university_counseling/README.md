@@ -1337,7 +1337,7 @@ This module is the **"future readiness engine"** - guiding students through care
 
 ## Submodule Breakdown
 
-This module is divided into **8 submodules**, each handling a specific aspect of career guidance & university counseling management:
+This module is divided into **11 submodules**, each handling a specific aspect of career guidance & university counseling management:
 
 ### 1. Career Assessment & Profiling
 **Code:** CAREER-001  
