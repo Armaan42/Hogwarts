@@ -1804,7 +1804,7 @@ This module is the **"enrollment pipeline engine"** - converting prospective fam
 
 ## Submodule Breakdown
 
-This module is divided into **7 submodules**, each handling a specific aspect of admissions & crm management:
+This module is divided into **11 submodules**, each handling a specific aspect of admissions & crm management:
 
 ### 1. Enquiry Management
 **Code:** ADM-001  
@@ -1831,10 +1831,34 @@ This module is divided into **7 submodules**, each handling a specific aspect of
 **File:** `05_document_collection.md`  
 **Purpose:** Document Collection functionality  
 
-### 6. Admission Confirmation
-**Code:** ADM-006  
-**File:** `06_admission_confirmation.md`  
-**Purpose:** Admission Confirmation functionality  
+### 7. Admission Reports & Analytics
+**Code:** ADM-007  
+**File:** `07_admission_reports_analytics.md`  
+**Purpose:** Admission Reports & Analytics functionality  
+
+### 8. Lead Scoring & Nurturing
+**Code:** ADM-008  
+**File:** `08_lead_scoring_nurturing.md`  
+**Purpose:** Lead qualification and nurturing campaigns  
+**Key Features:** Lead scoring algorithms, automated nurturing emails, follow-up reminders, lead segmentation, conversion tracking, engagement analytics
+
+### 9. Admission Test Management
+**Code:** ADM-009  
+**File:** `09_admission_test_management.md`  
+**Purpose:** Manage admission tests and entrance exams  
+**Key Features:** Test scheduling, question paper management, test conduct, result processing, merit list generation, cutoff management
+
+### 10. Waitlist Management
+**Code:** ADM-010  
+**File:** `10_waitlist_management.md`  
+**Purpose:** Manage admission waitlists and seat allocation  
+**Key Features:** Waitlist creation, priority ranking, seat release notifications, waitlist conversion tracking, automated seat offers
+
+### 11. Sibling & Alumni Preference Tracking
+**Code:** ADM-011  
+**File:** `11_sibling_alumni_preference_tracking.md`  
+**Purpose:** Track sibling and alumni preferences for admissions  
+**Key Features:** Sibling verification, alumni child identification, preference points calculation, priority admission processing, family discount eligibility  
 
 ### 7. CRM & Lead Nurturing
 **Code:** ADM-007  
