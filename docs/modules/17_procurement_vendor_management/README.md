@@ -1182,10 +1182,28 @@ This module is divided into **7 submodules**, each handling a specific aspect of
 **File:** `06_contract_management.md`  
 **Purpose:** Contract Management functionality  
 
-### 7. Payment Processing
+### 7. Procurement Reports & Analytics
 **Code:** PROC-007  
-**File:** `07_payment_processing.md`  
-**Purpose:** Payment Processing functionality  
+**File:** `07_procurement_reports_analytics.md`  
+**Purpose:** Procurement Reports & Analytics functionality  
+
+### 8. Vendor Evaluation & Rating
+**Code:** PROC-008  
+**File:** `08_vendor_evaluation_rating.md`  
+**Purpose:** Vendor performance evaluation and rating system  
+**Key Features:** Vendor scorecards, performance metrics, quality ratings, delivery tracking, vendor comparison, blacklist management
+
+### 9. Purchase Order Management
+**Code:** PROC-009  
+**File:** `09_purchase_order_management.md`  
+**Purpose:** Purchase order creation and tracking  
+**Key Features:** PO generation, PO approval workflow, PO tracking, delivery confirmation, invoice matching, PO amendments
+
+### 10. Approval Workflow Engine
+**Code:** PROC-010  
+**File:** `10_approval_workflow_engine.md`  
+**Purpose:** Multi-level approval workflows for procurement  
+**Key Features:** Configurable approval chains, budget-based routing, approval notifications, escalation management, approval history  
 
 ## Integration Points
 
