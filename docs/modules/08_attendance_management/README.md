@@ -1255,7 +1255,7 @@ This module is the **"daily operations heartbeat"** of the school - attendance d
 
 ## Submodule Breakdown
 
-This module is divided into **7 submodules**, each handling a specific aspect of attendance management management:
+This module is divided into **10 submodules**, each handling a specific aspect of attendance management management:
 
 ### 1. Daily Attendance Marking
 **Code:** ATT-001  
@@ -1282,15 +1282,28 @@ This module is divided into **7 submodules**, each handling a specific aspect of
 **File:** `05_absence_alerts_notifications.md`  
 **Purpose:** Absence Alerts & Notifications functionality  
 
-### 6. Attendance Reports & Analytics
-**Code:** ATT-006  
-**File:** `06_attendance_reports_analytics.md`  
-**Purpose:** Attendance Reports & Analytics functionality  
-
-### 7. Compliance Tracking (75% rule)
+### 7. Attendance Reports
 **Code:** ATT-007  
-**File:** `07_compliance_tracking_75%_rule.md`  
-**Purpose:** Compliance Tracking (75% rule) functionality  
+**File:** `07_attendance_reports.md`  
+**Purpose:** Attendance Reports functionality  
+
+### 8. Biometric Integration & RFID
+**Code:** ATT-008  
+**File:** `08_biometric_integration_rfid.md`  
+**Purpose:** Biometric and RFID-based attendance tracking  
+**Key Features:** Fingerprint/face recognition, RFID card scanning, gate entry/exit tracking, real-time attendance updates, parent SMS notifications
+
+### 9. Leave Management & Approvals
+**Code:** ATT-009  
+**File:** `09_leave_management_approvals.md`  
+**Purpose:** Student leave requests and approval workflows  
+**Key Features:** Leave application submission, parent approval, teacher approval, medical certificate upload, leave balance tracking, authorized absence marking
+
+### 10. Attendance Analytics & Alerts
+**Code:** ATT-010  
+**File:** `10_attendance_analytics_alerts.md`  
+**Purpose:** Attendance analytics and automated alert system  
+**Key Features:** Attendance trend analysis, low attendance alerts, pattern detection, absenteeism reports, intervention recommendations, parent notification automationtics functionality  
 
 ## Integration Points
 
