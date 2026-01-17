@@ -1477,7 +1477,7 @@ This module is the **"character development engine"** - maintaining a safe, resp
 
 ## Submodule Breakdown
 
-This module is divided into **7 submodules**, each handling a specific aspect of discipline & behavior management:
+This module is divided into **10 submodules**, each handling a specific aspect of discipline & behavior management:
 
 ### 1. Incident Reporting & Logging
 **Code:** DISC-001  
