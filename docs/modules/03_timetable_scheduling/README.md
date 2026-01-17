@@ -1003,7 +1003,7 @@ This module is the **"academic operations backbone"** - orchestrating daily scho
 
 ## Submodule Breakdown
 
-This module is divided into **7 submodules**, each handling a specific aspect of timetable & scheduling management:
+This module is divided into **10 submodules**, each handling a specific aspect of timetable & scheduling management:
 
 ### 1. Master Timetable Generation
 **Code:** TIME-001  
@@ -1040,15 +1040,33 @@ This module is divided into **7 submodules**, each handling a specific aspect of
 **File:** `07_conflict_resolution_engine.md`  
 **Purpose:** Conflict Resolution Engine functionality  
 
+### 8. Workload Balancing & Analytics
+**Code:** TIME-008  
+**File:** `08_workload_balancing_analytics.md`  
+**Purpose:** Monitor and optimize teacher workload distribution and resource utilization  
+**Key Features:** Teacher workload tracking (periods/week), daily load balancing, free period optimization, overload detection and alerts, classroom utilization analytics, lab usage statistics, period distribution reports, workload fairness metrics
+
+### 9. Special Schedule Management
+**Code:** TIME-009  
+**File:** `09_special_schedule_management.md`  
+**Purpose:** Manage non-regular schedules for events, holidays, and special occasions  
+**Key Features:** Sports day schedules, annual function timetables, parent-teacher meeting slots, remedial class scheduling, makeup class planning, shortened day schedules, assembly period management, special event calendar integration
+
+### 10. Timetable Publishing & Distribution
+**Code:** TIME-010  
+**File:** `10_timetable_publishing_distribution.md`  
+**Purpose:** Publish and distribute timetables to all stakeholders  
+**Key Features:** Multi-format export (PDF, Excel, iCal), student portal integration, parent portal access, teacher app synchronization, printable formats, mobile-responsive views, real-time update notifications, version control and change tracking  
+
 ## Integration Points
 
 Timetable & Scheduling connects to multiple modules across the Hogwarts ERP system.
 
 ## Development Priority
 
-**Phase 1 (Critical):** Submodules 1-3  
-**Phase 2 (High):** Submodules 4-5  
-**Phase 3 (Medium):** Remaining submodules  
+**Phase 1 (Critical):** Submodules 1-3, 10  
+**Phase 2 (High):** Submodules 4-5, 8  
+**Phase 3 (Medium):** Submodules 6-7, 9  
 
 ---
 
