@@ -1492,7 +1492,7 @@ This module is the **"residential life backbone"** - ensuring safe, comfortable,
 
 ## Submodule Breakdown
 
-This module is divided into **7 submodules**, each handling a specific aspect of hostel & mess management management:
+This module is divided into **11 submodules**, each handling a specific aspect of hostel & mess management management:
 
 ### 1. Room Allocation & Management
 **Code:** HOSTEL-001  
@@ -1524,9 +1524,38 @@ This module is divided into **7 submodules**, each handling a specific aspect of
 **File:** `06_hostel_fee_management.md`  
 **Purpose:** Hostel Fee Management functionality  
 
-### 7. Warden & Staff Management
+### 7. Hostel Reports & Analytics
 **Code:** HOSTEL-007  
-**File:** `07_warden_staff_management.md`  
+**File:** `07_hostel_reports_analytics.md`  
+**Purpose:** Hostel Reports & Analytics functionality  
+
+### 8. Visitor Management for Hostel
+**Code:** HOSTEL-008  
+**File:** `08_visitor_management_hostel.md`  
+**Purpose:** Manage hostel visitor access and parent visits  
+**Key Features:** Visitor registration, parent visit scheduling, gate pass generation, visitor logs, security clearance, visiting hours management
+
+### 9. Mess Menu Planning & Nutrition
+**Code:** HOSTEL-009  
+**File:** `09_mess_menu_planning_nutrition.md`  
+**Purpose:** Weekly menu planning and nutritional tracking  
+**Key Features:** Weekly menu creation, nutritional analysis, dietary requirement tracking, food preference management, menu approval workflow, special diet menus
+
+### 10. Hostel Attendance & Night Roll Call
+**Code:** HOSTEL-010  
+**File:** `10_hostel_attendance_night_roll_call.md`  
+**Purpose:** Track hostel attendance and night roll calls  
+**Key Features:** Night roll call tracking, hostel gate entry/exit logs, leave tracking, overnight absence alerts, weekend home visits, hostel occupancy reports
+
+### 11. Laundry & Housekeeping Management
+**Code:** HOSTEL-011  
+**File:** `11_laundry_housekeeping_management.md`  
+**Purpose:** Manage laundry services and housekeeping operations  
+**Key Features:** Laundry scheduling, item tracking, housekeeping schedules, room inspection, cleanliness reports, maintenance requests  
+
+### 12. Warden & Staff Management
+**Code:** HOSTEL-012  
+**File:** `12_warden_staff_management.md`  
 **Purpose:** Warden & Staff Management functionality  
 
 ## Integration Points
