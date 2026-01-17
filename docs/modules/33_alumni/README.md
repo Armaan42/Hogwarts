@@ -892,8 +892,8 @@ Reunions are managed by Events module but targeted at alumni. Events module send
 ---
 
 **Status:** Production-Ready  
-**Last Updated:** January 16, 2026  
+**Last Updated:** January 17, 2026  
 **Version:** 2.0  
-**Compliance:** Data Privacy, Alumni Consent, Professional Ethics
- (80G certificates), Alumni Data Protection
+**Compliance:** Data Privacy, Alumni Consent, Professional Ethics, Tax Regulations (80G certificates), Alumni Data Protection
+
 
