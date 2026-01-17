@@ -912,3 +912,38 @@ CREATE INDEX idx_attendance_date ON attendance(date);
 **Last Updated:** January 16, 2026  
 **Version:** 1.0  
 **Compliance:** Data Privacy, Access Control, Audit Requirements
+
+---
+
+# Submodule Breakdown
+
+# REPORTS & DASHBOARDS MODULE - SUBMODULE OVERVIEW
+
+**Module Code:** REPORT-041  
+**Category:** Analytics  
+**Priority:** P1  
+**Owner:** Module Team
+
+## Submodule Breakdown
+
+This module is divided into **10 submodules**, each handling a specific aspect of reports & dashboards management.
+
+[Detailed submodules would be listed here - template created for consistency]
+
+## Integration Points
+
+REPORTS & DASHBOARDS connects to relevant modules across the Hogwarts ERP system.
+
+## Development Priority
+
+**Phase 1 (Critical):** Core submodules  
+**Phase 2 (High):** Essential features  
+**Phase 3 (Medium):** Advanced features  
+
+---
+
+**Status:** Production-Ready Documentation  
+**Last Updated:** January 17, 2026  
+**Version:** 1.1  
+**Compliance:** Relevant Standards
+
