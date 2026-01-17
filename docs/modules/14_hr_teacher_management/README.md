@@ -1440,7 +1440,7 @@ This module is the **"human capital backbone"** - managing the school's most val
 
 ## Submodule Breakdown
 
-This module is divided into **7 submodules**, each handling a specific aspect of hr & teacher management management:
+This module is divided into **11 submodules**, each handling a specific aspect of hr & teacher management management:
 
 ### 1. Recruitment & Onboarding
 **Code:** HR-001  
