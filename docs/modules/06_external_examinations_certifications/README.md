@@ -996,7 +996,7 @@ This module is the **"board compliance engine"** - ensuring seamless board exam 
 
 ## Submodule Breakdown
 
-This module is divided into **6 submodules**, each handling a specific aspect of external examinations & certifications management:
+This module is divided into **9 submodules**, each handling a specific aspect of external examinations & certifications management:
 
 ### 1. Board Exam Registration (CBSE/ICSE)
 **Code:** EXTEXAM-001  
@@ -1028,15 +1028,33 @@ This module is divided into **6 submodules**, each handling a specific aspect of
 **File:** `06_certificate_management.md`  
 **Purpose:** Certificate Management functionality  
 
+### 7. Admit Card & Hall Ticket Management
+**Code:** EXTEXAM-007  
+**File:** `07_admit_card_hall_ticket_management.md`  
+**Purpose:** Board exam admit card generation and distribution  
+**Key Features:** Admit card generation, photo/signature verification, hall ticket printing, QR code integration, admit card distribution tracking
+
+### 8. Practical Exam Coordination
+**Code:** EXTEXAM-008  
+**File:** `08_practical_exam_coordination.md`  
+**Purpose:** Coordinate practical exams for board examinations  
+**Key Features:** Practical exam scheduling, lab allocation, external examiner coordination, practical marks upload, viva voce management
+
+### 9. Board Fee Collection & Remittance
+**Code:** EXTEXAM-009  
+**File:** `09_board_fee_collection_remittance.md`  
+**Purpose:** Manage board exam fee collection and remittance to boards  
+**Key Features:** Fee calculation, category-based discounts, late fee penalties, payment tracking, board remittance, reconciliation reports  
+
 ## Integration Points
 
 External Examinations & Certifications connects to multiple modules across the Hogwarts ERP system.
 
 ## Development Priority
 
-**Phase 1 (Critical):** Submodules 1-3  
-**Phase 2 (High):** Submodules 4-5  
-**Phase 3 (Medium):** Remaining submodules  
+**Phase 1 (Critical):** Submodules 1, 5, 7  
+**Phase 2 (High):** Submodules 2-3, 6, 9  
+**Phase 3 (Medium):** Submodules 4, 8  
 
 ---
 
