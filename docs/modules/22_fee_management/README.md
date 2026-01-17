@@ -1195,7 +1195,7 @@ This module is the **"financial backbone"** of the ERP - every service delivery 
 
 ## Submodule Breakdown
 
-This module is divided into **8 submodules**, each handling a specific aspect of fee management management:
+This module is divided into **12 submodules**, each handling a specific aspect of fee management management:
 
 ### 1. Fee Structure Definition
 **Code:** FEE-001  
@@ -1212,17 +1212,17 @@ This module is divided into **8 submodules**, each handling a specific aspect of
 **File:** `03_payment_collection_online_offline.md`  
 **Purpose:** Payment Collection (Online/Offline) functionality  
 
+### 3. Late Fee & Penalties
+**Code:** FEE-005  
+**File:** `05_late_fee_penalties.md`  
+**Purpose:** Late Fee & Penalties functionality  
+
 ### 4. Discount & Scholarship Management
 **Code:** FEE-004  
 **File:** `04_discount_scholarship_management.md`  
 **Purpose:** Discount & Scholarship Management functionality  
 
-### 5. Late Fee & Penalties
-**Code:** FEE-005  
-**File:** `05_late_fee_penalties.md`  
-**Purpose:** Late Fee & Penalties functionality  
-
-### 6. Refund Processing
+### 5. Refund Processing
 **Code:** FEE-006  
 **File:** `06_refund_processing.md`  
 **Purpose:** Refund Processing functionality  
