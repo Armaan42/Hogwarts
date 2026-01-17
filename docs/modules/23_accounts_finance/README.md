@@ -1275,3 +1275,96 @@ Annual budgets are prepared and approved at the start of the financial year. Acc
 **Version:** 1.0  
 **Compliance:** Indian GAAP, GST Act, Income Tax Act, Companies Act, Society/Trust Act
 
+
+---
+
+# Submodule Breakdown
+
+# ACCOUNTS & FINANCE MODULE - SUBMODULE OVERVIEW
+
+**Module Code:** ACC-023  
+**Category:** Core Finance  
+**Priority:** P0  
+**Owner:** Finance Department
+
+## Submodule Breakdown
+
+This module is divided into **10 submodules**, each handling a specific aspect of accounts & finance management:
+
+### 1. General Ledger Management
+**Code:** ACC-001  
+**File:** `01_general_ledger_management.md`  
+**Purpose:** Chart of accounts and general ledger management  
+**Key Features:** COA structure, journal entries, double-entry bookkeeping, account hierarchies, ledger posting, trial balance
+
+### 2. Accounts Payable
+**Code:** ACC-002  
+**File:** `02_accounts_payable.md`  
+**Purpose:** Vendor invoice and payment management  
+**Key Features:** Invoice recording, payment scheduling, vendor ledger, aging analysis, payment approval workflow, vendor reconciliation
+
+### 3. Accounts Receivable
+**Code:** ACC-003  
+**File:** `03_accounts_receivable.md`  
+**Purpose:** Customer billing and collection tracking  
+**Key Features:** Invoice generation, payment tracking, aging reports, collection follow-up, bad debt provisioning
+
+### 4. Bank Reconciliation
+**Code:** ACC-004  
+**File:** `04_bank_reconciliation.md`  
+**Purpose:** Bank statement reconciliation  
+**Key Features:** Auto-matching transactions, manual reconciliation, unmatched items, bank feeds integration, reconciliation reports
+
+### 5. Budget Planning & Allocation
+**Code:** ACC-005  
+**File:** `05_budget_planning_allocation.md`  
+**Purpose:** Annual budget creation and department allocation  
+**Key Features:** Budget templates, department budgets, approval workflow, budget revisions, multi-year planning
+
+### 6. Expense Tracking & Approval
+**Code:** ACC-006  
+**File:** `06_expense_tracking_approval.md`  
+**Purpose:** Expense recording and approval workflows  
+**Key Features:** Expense categorization, approval chains, budget checking, expense reports, reimbursement processing
+
+### 7. Financial Reporting & Statements
+**Code:** ACC-007  
+**File:** `07_financial_reporting_statements.md`  
+**Purpose:** Financial statement generation  
+**Key Features:** Balance sheet, P&L statement, cash flow statement, trial balance, custom reports, comparative analysis
+
+### 8. Audit Trail & Compliance
+**Code:** ACC-008  
+**File:** `08_audit_trail_compliance.md`  
+**Purpose:** Complete audit trail and regulatory compliance  
+**Key Features:** Transaction logs, user activity tracking, compliance reports, audit preparation, document management
+
+### 9. Tax Management (GST, TDS)
+**Code:** ACC-009  
+**File:** `09_tax_management_gst_tds.md`  
+**Purpose:** Tax calculation, filing, and compliance  
+**Key Features:** GST calculation, TDS deduction, tax returns, input credit tracking, tax payment, compliance calendar
+
+### 10. Financial Analytics & Dashboards
+**Code:** ACC-010  
+**File:** `10_financial_analytics_dashboards.md`  
+**Purpose:** Financial KPIs and analytics dashboards  
+**Key Features:** Revenue trends, expense analysis, profitability metrics, cash flow forecasting, variance analysis, executive dashboards
+
+## Integration Points
+
+Accounts & Finance connects to all modules across the Hogwarts ERP system.
+
+## Development Priority
+
+**Phase 1 (Critical):** Submodules 1-4, 7  
+**Phase 2 (High):** Submodules 5-6, 9  
+**Phase 3 (Medium):** Submodules 8, 10  
+
+---
+
+**Status:** Production-Ready Documentation  
+**Last Updated:** January 17, 2026  
+**Version:** 1.1  
+**Compliance:** Indian GAAP, GST Act, Income Tax Act, Companies Act, Society/Trust Act
+
