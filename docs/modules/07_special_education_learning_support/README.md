@@ -1113,7 +1113,7 @@ This module is the **"inclusive education champion"** - ensuring every student r
 
 ## Submodule Breakdown
 
-This module is divided into **7 submodules**, each handling a specific aspect of special education & learning support management:
+This module is divided into **10 submodules**, each handling a specific aspect of special education & learning support management:
 
 ### 1. IEP (Individual Education Plan) Management
 **Code:** SPED-001  
@@ -1140,15 +1140,33 @@ This module is divided into **7 submodules**, each handling a specific aspect of
 **File:** `05_therapy_services_management.md`  
 **Purpose:** Therapy Services Management functionality  
 
-### 6. Progress Monitoring
+### 6. Parent Collaboration
 **Code:** SPED-006  
-**File:** `06_progress_monitoring.md`  
-**Purpose:** Progress Monitoring functionality  
-
-### 7. Parent Collaboration
-**Code:** SPED-007  
-**File:** `07_parent_collaboration.md`  
+**File:** `06_parent_collaboration.md`  
 **Purpose:** Parent Collaboration functionality  
+
+### 7. Assistive Technology
+**Code:** SPED-007  
+**File:** `07_assistive_technology.md`  
+**Purpose:** Assistive Technology functionality  
+
+### 8. IEP Progress Monitoring & Reporting
+**Code:** SPED-008  
+**File:** `08_iep_progress_monitoring_reporting.md`  
+**Purpose:** Track and report IEP goal progress  
+**Key Features:** Goal progress tracking, quarterly progress reports, parent communication, data collection tools, visual progress charts, benchmark assessments
+
+### 9. Therapy Session Management
+**Code:** SPED-009  
+**File:** `09_therapy_session_management.md`  
+**Purpose:** Manage speech, occupational, and behavioral therapy sessions  
+**Key Features:** Therapy scheduling, session notes, therapist assignments, therapy goals tracking, parent feedback, insurance billing
+
+### 10. Special Education Compliance
+**Code:** SPED-010  
+**File:** `10_special_education_compliance.md`  
+**Purpose:** Ensure compliance with special education regulations  
+**Key Features:** Legal compliance tracking, documentation requirements, annual review reminders, audit preparation, parent rights notifications  
 
 ## Integration Points
 
