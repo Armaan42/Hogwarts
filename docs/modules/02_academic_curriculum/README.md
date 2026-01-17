@@ -1049,7 +1049,7 @@ This module is the **"academic foundation"** - defining what students learn, how
 
 ## Submodule Breakdown
 
-This module is divided into **7 submodules**, each handling a specific aspect of academic curriculum management:
+This module is divided into **11 submodules**, each handling a specific aspect of academic curriculum management:
 
 ### 1. Curriculum Design & Standards
 **Code:** CURR-001  
@@ -1086,15 +1086,39 @@ This module is divided into **7 submodules**, each handling a specific aspect of
 **File:** `07_curriculum_revision_updates.md`  
 **Purpose:** Curriculum Revision & Updates functionality  
 
+### 8. Assessment Blueprint & Exam Patterns
+**Code:** CURR-008  
+**File:** `08_assessment_blueprint_exam_patterns.md`  
+**Purpose:** Define assessment structures, exam patterns, and marking schemes aligned with curriculum  
+**Key Features:** Theory/practical marks distribution, question paper structure (MCQ, short answer, long answer), chapter-wise marks allocation, difficulty level distribution (easy/medium/hard), internal assessment patterns, practical exam requirements, grading scales and rubrics
+
+### 9. Stream & Subject Combinations
+**Code:** CURR-009  
+**File:** `09_stream_subject_combinations.md`  
+**Purpose:** Manage stream selection (Science/Commerce/Arts) and subject groupings  
+**Key Features:** Stream definitions (PCM, PCB, Commerce, Humanities), subject combination rules, elective groupings, stream eligibility criteria, subject prerequisites, incompatible subject pairs, minimum/maximum subject selection limits
+
+### 10. Curriculum Pacing & Calendar
+**Code:** CURR-010  
+**File:** `10_curriculum_pacing_calendar.md`  
+**Purpose:** Plan and track curriculum delivery timeline throughout the academic year  
+**Key Features:** Chapter-wise pacing guide, monthly curriculum milestones, syllabus completion tracking, revision periods allocation, assessment windows, buffer time for slow learners, curriculum completion reports
+
+### 11. Practical & Lab Requirements
+**Code:** CURR-011  
+**File:** `11_practical_lab_requirements.md`  
+**Purpose:** Define laboratory experiments, practical work, and hands-on learning requirements  
+**Key Features:** Mandatory experiments list (Physics, Chemistry, Biology), lab equipment requirements, practical skills assessment, lab safety protocols, viva questions bank, practical record book requirements, field trip/project requirements  
+
 ## Integration Points
 
 Academic Curriculum connects to multiple modules across the Hogwarts ERP system.
 
 ## Development Priority
 
-**Phase 1 (Critical):** Submodules 1-3  
-**Phase 2 (High):** Submodules 4-5  
-**Phase 3 (Medium):** Remaining submodules  
+**Phase 1 (Critical):** Submodules 1-3, 8, 10  
+**Phase 2 (High):** Submodules 4-5, 9, 11  
+**Phase 3 (Medium):** Submodules 6-7  
 
 ---
 
