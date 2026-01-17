@@ -1392,7 +1392,7 @@ This module is the **"academic evaluation engine"** - exam results drive promoti
 
 ## Submodule Breakdown
 
-This module is divided into **8 submodules**, each handling a specific aspect of assessment & exams management:
+This module is divided into **12 submodules**, each handling a specific aspect of assessment & exams management:
 
 ### 1. Exam Schedule & Planning
 **Code:** EXAM-001  
@@ -1434,15 +1434,39 @@ This module is divided into **8 submodules**, each handling a specific aspect of
 **File:** `08_revaluation_retotaling.md`  
 **Purpose:** Revaluation & Retotaling functionality  
 
+### 9. Admit Card Management
+**Code:** EXAM-009  
+**File:** `09_admit_card_management.md`  
+**Purpose:** Generate, distribute, and manage exam admit cards  
+**Key Features:** Admit card generation, fee clearance verification, attendance eligibility check, photo and signature upload, barcode/QR code integration, digital admit card distribution, admit card blocking/unblocking, reprint requests
+
+### 10. Invigilation & Exam Conduct
+**Code:** EXAM-010  
+**File:** `10_invigilation_exam_conduct.md`  
+**Purpose:** Manage exam hall allocation, invigilation duties, and exam day operations  
+**Key Features:** Exam hall allocation, seating arrangement generation, invigilation duty assignment, exam day attendance, unfair means detection, emergency protocols, exam material distribution, answer sheet collection
+
+### 11. Internal Assessment & CCE
+**Code:** EXAM-011  
+**File:** `11_internal_assessment_cce.md`  
+**Purpose:** Continuous and Comprehensive Evaluation (CCE) and internal assessments  
+**Key Features:** Formative assessment tracking, summative assessment, project work evaluation, practical marks entry, class participation scoring, homework assessment, skill-based evaluation, CCE grade calculation
+
+### 12. Online Examination System
+**Code:** EXAM-012  
+**File:** `12_online_examination_system.md`  
+**Purpose:** Conduct secure online exams with proctoring and auto-grading  
+**Key Features:** Online exam creation, question bank management, randomized question papers, auto-grading (MCQ, fill-in-the-blank), time-bound exams, browser lockdown, AI proctoring, plagiarism detection, instant result generation  
+
 ## Integration Points
 
 Assessment & Exams connects to multiple modules across the Hogwarts ERP system.
 
 ## Development Priority
 
-**Phase 1 (Critical):** Submodules 1-3  
-**Phase 2 (High):** Submodules 4-5  
-**Phase 3 (Medium):** Remaining submodules  
+**Phase 1 (Critical):** Submodules 1, 4-6, 9  
+**Phase 2 (High):** Submodules 2-3, 7, 10-11  
+**Phase 3 (Medium):** Submodules 8, 12  
 
 ---
 
