@@ -1,79 +1,90 @@
-# ACTIVITY PERIOD SCHEDULING
+# ACTIVITY PERIOD SCHEDULING - COMPLETE DOCUMENTATION
 
 **Module:** Timetable & Scheduling  
 **Submodule Code:** TIME-ACTIVITY-006  
-**Category:** Operations  
-**Priority:** Medium (P2)
+**Category:** Co-curricular Management  
+**Priority:** High (P1)  
+**Owner:** Activities Coordinator
 
-## Overview
+---
 
-Schedules co-curricular activities, sports periods, club meetings, and special events within the regular timetable.
+## 📋 OVERVIEW
 
-## Purpose
+Manages scheduling of co-curricular activities, club periods, sports activities, cultural programs, and special events within the regular timetable framework.
 
-Allocate time for non-academic activities, manage activity rotation, and ensure balanced participation.
+### Purpose
 
-## Key Features
+Schedule activity periods for clubs and societies, allocate resources for activities, manage student participation, coordinate with regular academic schedule, and ensure balanced activity distribution.
 
-### 6.1 Activity Types
+---
 
-**Co-curricular Activities:**
-```
-Sports:
-- Cricket, Football, Basketball
-- Athletics, Swimming
-- Indoor games (Chess, Table Tennis)
+## 🎯 KEY FEATURES
 
-Arts & Culture:
-- Music (Vocal, Instrumental)
-- Dance (Classical, Western)
-- Drama, Debate
-- Fine Arts, Craft
+### 1. Club Period Allocation
 
-Clubs:
-- Science Club
-- Coding Club
-- Environment Club
-- Literary Club
-```
+**Activity Schedule:**
+```yaml
+Activity Periods: Friday P7-P8 (1:45-3:15 PM)
 
-### 6.2 Activity Schedule
+Clubs Available:
+  - Robotics Club (Computer Lab, 30 students)
+  - Drama Club (Auditorium, 40 students)
+  - Music Club (Music Room, 25 students)
+  - Art Club (Art Studio, 20 students)
+  - Science Club (Lab, 25 students)
+  - Debate Club (Conference Room, 30 students)
+  - Sports Club (Ground, 50 students)
 
-**Weekly Activity Periods:**
-```
-Grade 6 - Activity Schedule
+Student Selection:
+  - Each student chooses 1 club
+  - Allocation based on preference and capacity
+  - Quarterly rotation option
 
-Monday, Period 8 (1:40-2:20 PM):
-- Sports: Cricket (Boys), Basketball (Girls)
-
-Wednesday, Period 9 (2:20-3:00 PM):
-- Clubs: Rotating schedule
-  Week 1: Science Club
-  Week 2: Coding Club
-  Week 3: Environment Club
-  Week 4: Literary Club
-
-Friday, Period 7-8 (1:00-2:20 PM):
-- Arts: Music/Dance/Drama (Student choice)
+Schedule:
+  Friday 1:45-3:15 PM:
+    - All clubs run simultaneously
+    - Students attend their assigned club
+    - Faculty supervisors assigned
 ```
 
-## Data Fields
+### 2. Event Scheduling
 
-```
-activity_schedule_id (PK)
-activity_type (SPORTS/ARTS/CLUBS)
-activity_name
-grade
-day_of_week
-period_number
-instructor_id (FK)
-venue
-max_participants
-enrolled_students
-rotation_schedule (JSON)
+**Special Events:**
+```yaml
+Annual Day Preparation:
+  Duration: 2 weeks before event
+  Schedule Changes:
+    - P7-P8 daily: Rehearsals
+    - Saturday: Full day practice
+  
+  Resource Allocation:
+    - Auditorium: Drama rehearsals
+    - Music Room: Music practice
+    - Dance Studio: Dance practice
 ```
 
 ---
 
-**Status:** Fully Documented  
-**Last Updated:** January 15, 2026
+## 📊 DATABASE SCHEMA
+
+```sql
+CREATE TABLE activity_schedule (
+  activity_id INT PRIMARY KEY AUTO_INCREMENT,
+  activity_name VARCHAR(200) NOT NULL,
+  activity_type ENUM('CLUB', 'SPORTS', 'CULTURAL', 'SPECIAL_EVENT') NOT NULL,
+  day_of_week VARCHAR(10),
+  period_number INT,
+  room_id INT,
+  supervisor_id INT,
+  max_capacity INT,
+  enrolled_students INT DEFAULT 0,
+  status ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
+  FOREIGN KEY (supervisor_id) REFERENCES teachers(teacher_id)
+);
+```
+
+---
+
+**Status:** Production-Ready Documentation  
+**Last Updated:** January 18, 2026  
+**Version:** 1.0
