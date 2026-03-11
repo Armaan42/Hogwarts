@@ -92,5 +92,77 @@ has_quiz (boolean)
 
 ---
 
-**Status:** Fully Documented  
-**Last Updated:** January 15, 2026
+
+## EXTENDED DATABASE SCHEMA
+
+### 3. Video Analytics (`lms_video_analytics`)
+
+```sql
+CREATE TABLE lms_video_analytics (
+    analytics_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    video_id BIGINT NOT NULL,
+    student_id INT NOT NULL,
+    
+    total_watch_time_seconds INT,
+    completion_percentage DECIMAL(5,2),
+    
+    replay_segments JSON, -- [{"start":120,"end":180,"replays":3}] (student rewatched 2:00-3:00 three times)
+    playback_speed DECIMAL(3,1) DEFAULT 1.0,
+    
+    last_watched_position INT, -- Resume from here
+    watched_at DATETIME,
+    device_type ENUM('DESKTOP', 'TABLET', 'MOBILE'),
+    
+    FOREIGN KEY (video_id) REFERENCES lms_videos(video_id),
+    FOREIGN KEY (student_id) REFERENCES students(student_id)
+);
+```
+
+---
+
+## EDGE CASES
+
+### Edge Case 1: Video Plays But Audio Fails
+*   **Scenario:** A student reports "I can see the teacher but there's no sound" for a recorded lecture.
+*   **Resolution:** The system stores videos with separate audio and video tracks. If the primary audio codec fails on certain browsers, the player offers a fallback: "Having audio issues? Click here for audio-only version." The system also provides a downloadable transcript (auto-generated via speech-to-text).
+
+### Edge Case 2: Student Plays Video at 4x Speed to Game Completion
+*   **Scenario:** Student plays a 20-minute video at 4x speed (5 min real time) just to mark it as "Completed" without actually learning.
+*   **Resolution:** The system logs `playback_speed`. If average speed > 2x for more than 50% of the video, the completion is flagged as "Speed-Watched." Teacher can configure `video_speed_completion_cap` (default: 2x) -- playback above this speed does not count toward completion percentage.
+
+### Edge Case 3: Copyright Content in Uploaded Videos
+*   **Scenario:** A teacher uploads a YouTube documentary clip as "their lecture" -- potentially violating copyright.
+*   **Resolution:** The system provides a "Content Declaration" checkbox during upload: "I confirm this content is original or I have the rights to distribute it." Additionally, the admin can enable an optional third-party copyright scan (integration with content identification APIs).
+
+---
+
+## REAL-WORLD SCENARIOS
+
+### Scenario A: Flipped Classroom Model
+*   Teacher records a 15-minute "Introduction to Quadratic Equations" video with embedded quizzes at 5:00, 10:00, and 14:00 marks.
+*   Students watch at home. The quiz responses tell the teacher which concepts students understood and where they struggled.
+*   Classroom time is then spent on problem-solving (the "hard" part), not on explanation.
+
+### Scenario B: Teacher-to-Teacher Knowledge Sharing
+*   The best English teacher records a masterclass on "Teaching Shakespeare to Grade 9."
+*   This recording is shared internally with all English teachers across branches as a professional development resource.
+
+---
+
+## CONFIGURATION PARAMETERS
+
+| Parameter | Default | Description |
+|---|---|---|
+| `video_max_upload_size_mb` | 500 | Maximum file size for video uploads |
+| `video_supported_formats` | `['MP4','WEBM','MOV']` | Accepted video file types |
+| `video_auto_transcode` | `true` | Auto-convert to adaptive streaming (HLS)? |
+| `video_speed_completion_cap` | 2.0 | Max playback speed that counts toward completion |
+| `video_auto_caption` | `true` | Auto-generate subtitles via speech-to-text? |
+| `video_retention_months` | 24 | Months before old videos are archived |
+| `video_download_allowed` | `false` | Can students download videos for offline viewing? |
+
+---
+
+**Status:** Production-Ready Documentation  
+**Version:** 3.0  
+**Last Updated:** March 2026

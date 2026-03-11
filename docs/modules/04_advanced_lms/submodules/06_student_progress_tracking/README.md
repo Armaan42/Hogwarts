@@ -116,5 +116,44 @@ last_updated
 
 ---
 
-**Status:** Fully Documented  
-**Last Updated:** January 15, 2026
+
+## EDGE CASES
+
+### Edge Case 1: Transfer Student with No Historical Data
+*   **Scenario:** A student joins mid-year from another school. The LMS has zero activity history for them.
+*   **Resolution:** The system initializes the student's profile with baseline data from their Transfer Certificate (previous grade, marks). The progress dashboard shows "Data available from [Join Date] onwards." Year-over-year comparisons are suppressed until a full year of data is accumulated.
+
+### Edge Case 2: Teacher Deletes Course Content After Student Completed It
+*   **Scenario:** Teacher removes an outdated module. The student's progress was 100% but now the denominator changes.
+*   **Resolution:** Completed milestones are preserved as "Archived Completions." The system shows: "Completed: 5/5 modules (1 archived)." The overall completion percentage is recalculated based on current active modules only, but a footnote acknowledges the archived work.
+
+### Edge Case 3: Parent Compares Siblings' Progress
+*   **Scenario:** A parent has 2 children. They see one child's progress at 85% and the other at 40% in the same subject. They escalate to the Principal.
+*   **Resolution:** The system provides context alongside raw numbers. The 40% student may be in a section with a harder teacher or different course pace. The progress report includes "Section Average: 42%" which contextualizes the individual score.
+
+---
+
+## REAL-WORLD SCENARIOS
+
+### Scenario A: Teacher Identifies At-Risk Students Early
+*   3 weeks into the term, the progress tracking dashboard shows 5 students with < 15% engagement (no video views, no quiz attempts, no assignment submissions).
+*   Teacher schedules individual check-ins. Discovers: 2 had family issues, 1 had tech problems (no internet at home), 2 were disengaged. Tailored interventions are applied.
+
+---
+
+## CONFIGURATION PARAMETERS
+
+| Parameter | Default | Description |
+|---|---|---|
+| `progress_engagement_low_threshold_pct` | 20% | Below this = "At Risk" alert |
+| `progress_streak_reset_after_days` | 3 | Days of inactivity before streak resets |
+| `progress_parent_view_enabled` | `true` | Can parents see child's progress dashboard? |
+| `progress_comparison_mode` | `SELF_ONLY` | Options: `SELF_ONLY`, `SECTION_AVERAGE`, `GRADE_AVERAGE` |
+| `progress_auto_certificate_on_completion` | `true` | Auto-issue certificate when course is 100% complete? |
+| `progress_milestone_notifications` | `true` | Send notifications at 25%, 50%, 75%, 100% milestones? |
+
+---
+
+**Status:** Production-Ready Documentation  
+**Version:** 3.0  
+**Last Updated:** March 2026

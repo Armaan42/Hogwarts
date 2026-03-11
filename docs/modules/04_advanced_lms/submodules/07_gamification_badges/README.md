@@ -97,5 +97,75 @@ last_activity_date
 
 ---
 
-**Status:** Fully Documented  
-**Last Updated:** January 15, 2026
+
+## EXTENDED DATABASE SCHEMA
+
+### 3. Leaderboard Snapshots (`lms_leaderboard`)
+
+```sql
+CREATE TABLE lms_leaderboard (
+    snapshot_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    leaderboard_type ENUM('CLASS', 'GRADE', 'SCHOOL'),
+    scope_id INT, -- Class ID, Grade ID, or NULL for school-wide
+    
+    period ENUM('WEEKLY', 'MONTHLY', 'TERM', 'ANNUAL'),
+    period_start DATE,
+    period_end DATE,
+    
+    rankings JSON, -- [{"student_id":101,"xp":450,"rank":1}, {"student_id":102,"xp":430,"rank":2}]
+    
+    generated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+---
+
+## EDGE CASES
+
+### Edge Case 1: Gaming the XP System
+*   **Scenario:** A student discovers that posting 100 low-effort forum replies earns more XP than solving 10 challenging problems.
+*   **Resolution:** The system implements "Diminishing Returns." The first 5 forum posts per day earn full XP (10 each). Posts 6-10 earn 50% XP. Posts 11+ earn 0 XP. This prevents spam-grinding while encouraging genuine participation.
+
+### Edge Case 2: Student Demoralized by Low Rank
+*   **Scenario:** A struggling student is consistently ranked last on the leaderboard, causing discouragement.
+*   **Resolution:** Configurable display options:
+    *   `TOP_N_ONLY`: Only show Top 10; other students see their own rank privately.
+    *   `PERSONAL_GROWTH`: Show "Your XP increased by 120 this week (15% improvement)" instead of comparative rank.
+    *   `OPT_OUT`: Students can choose to hide from public leaderboards.
+
+### Edge Case 3: Badge Exploit via Account Sharing
+*   **Scenario:** Two students share login credentials. One completes activities on behalf of the other to earn badges.
+*   **Resolution:** The system tracks device fingerprints and IP addresses. If two accounts consistently log in from the same device within short intervals, a "Shared Account Suspicion" flag is raised for admin review.
+
+---
+
+## REAL-WORLD SCENARIOS
+
+### Scenario A: House Points Integration
+*   The school's 4 Houses (Red, Blue, Green, Yellow) compete via the LMS gamification system.
+*   Every XP earned by a student contributes to their House's total.
+*   Monthly "House Cup" updated on the school digital signboard (integrated via the Communication Module).
+
+### Scenario B: Year-End Awards from Gamification Data
+*   At the Annual Day, awards are given: "Digital Learner of the Year" (highest XP), "Badge Master" (most badges), "Quiz Champion" (highest quiz scores).
+*   Data is pulled directly from the gamification tables, replacing subjective teacher nominations with data-driven recognition.
+
+---
+
+## CONFIGURATION PARAMETERS
+
+| Parameter | Default | Description |
+|---|---|---|
+| `gamification_xp_per_assignment` | 20 | XP earned for submitting an assignment |
+| `gamification_xp_per_quiz_correct` | 5 | XP per correct quiz answer |
+| `gamification_xp_per_forum_post` | 10 | XP per forum post (subject to diminishing returns) |
+| `gamification_daily_xp_cap` | 200 | Max XP earnable per day |
+| `gamification_leaderboard_display` | `TOP_10` | Options: `ALL`, `TOP_10`, `PERSONAL_ONLY` |
+| `gamification_diminishing_returns_threshold` | 5 | Actions per type per day before XP reduction |
+| `gamification_house_integration` | `true` | Aggregate XP by school Houses? |
+
+---
+
+**Status:** Production-Ready Documentation  
+**Version:** 3.0  
+**Last Updated:** March 2026

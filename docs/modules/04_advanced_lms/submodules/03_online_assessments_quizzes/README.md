@@ -155,5 +155,46 @@ tags (JSON)
 
 ---
 
-**Status:** Fully Documented  
-**Last Updated:** January 15, 2026
+
+## EDGE CASES
+
+### Edge Case 1: Internet Drops During Timed Quiz
+*   **Scenario:** Student's internet disconnects while taking a 15-minute timed quiz. Timer continues server-side.
+*   **Resolution:** The quiz engine saves every answer selection to the server in real-time (auto-save on each question). When the student reconnects, they resume from where they left off with the remaining time. If the timer expired during disconnection, the system submits whatever was answered, and the teacher can grant a re-attempt at discretion.
+
+### Edge Case 2: Question Bank Exhaustion
+*   **Scenario:** The quiz is configured to "Randomize 10 questions from a pool of 15." But 6 questions have been flagged as erroneous by the content review team, leaving only 9 valid questions.
+*   **Resolution:** The system detects that the pool is smaller than the required count and alerts the teacher: "Only 9 valid questions available for this quiz (10 required). Please add more questions or reduce the quiz length."
+
+### Edge Case 3: Student Copies Answers from Browser Tab
+*   **Scenario:** During an unproctored quiz, a student opens Google in another tab to look up answers.
+*   **Resolution:** For high-stakes quizzes, the teacher enables "Tab Switch Detection." The system logs every tab-switch event (via Page Visibility API). If a student switches tabs more than 2 times, the quiz is auto-submitted and flagged for review.
+
+---
+
+## REAL-WORLD SCENARIOS
+
+### Scenario A: Diagnostic Pre-Test at Term Start
+*   Teacher creates a 20-question diagnostic quiz covering all topics from the previous term.
+*   Results show: 70% of students struggle with "Fractions." Teacher adjusts the remedial plan accordingly.
+*   Quiz is purely formative (no grades assigned).
+
+---
+
+## CONFIGURATION PARAMETERS
+
+| Parameter | Default | Description |
+|---|---|---|
+| `quiz_auto_save_enabled` | `true` | Save answers in real-time to prevent data loss? |
+| `quiz_tab_switch_detection` | `false` | Enable tab-switch monitoring? |
+| `quiz_tab_switch_max_allowed` | 2 | Max tab switches before auto-submit |
+| `quiz_randomize_questions` | `true` | Randomize question order per student? |
+| `quiz_randomize_options` | `true` | Randomize MCQ option order? |
+| `quiz_show_correct_answers_after` | `SUBMISSION` | When to reveal answers: `SUBMISSION`, `DEADLINE`, `NEVER` |
+| `quiz_negative_marking` | `false` | Deduct marks for wrong MCQ answers? |
+
+---
+
+**Status:** Production-Ready Documentation  
+**Version:** 3.0  
+**Last Updated:** March 2026

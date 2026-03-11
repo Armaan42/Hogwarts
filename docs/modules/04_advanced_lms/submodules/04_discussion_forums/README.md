@@ -95,5 +95,69 @@ views
 
 ---
 
-**Status:** Fully Documented  
-**Last Updated:** January 15, 2026
+
+## EXTENDED DATABASE SCHEMA
+
+### 3. Forum Moderation Queue (`lms_forum_moderation`)
+
+```sql
+CREATE TABLE lms_forum_moderation (
+    mod_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    post_id BIGINT NOT NULL,
+    
+    flag_reason ENUM('PROFANITY', 'SPAM', 'BULLYING', 'OFF_TOPIC', 'INAPPROPRIATE'),
+    flagged_by INT, -- Student or AI system
+    
+    moderator_action ENUM('PENDING', 'APPROVED', 'HIDDEN', 'DELETED'),
+    moderator_id INT,
+    moderator_notes TEXT,
+    
+    flagged_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    resolved_at DATETIME
+);
+```
+
+---
+
+## EDGE CASES
+
+### Edge Case 1: Student Posts Homework Answer in Forum
+*   **Scenario:** A student posts the complete solution to an active assignment in a discussion thread, allowing others to copy.
+*   **Resolution:** Teacher marks the post as "Spoiler/Answer Leak". The post is hidden with the message: "This reply has been hidden by the teacher as it contains assignment answers." The student receives a warning.
+
+### Edge Case 2: Excessive Thread Necromancy
+*   **Scenario:** A student replies to a thread from 6 months ago, causing it to jump to the top of active discussions.
+*   **Resolution:** Threads older than `forum_thread_lock_days` (default: 90) are auto-locked. The student sees "This thread is archived. Create a new discussion if you have a related question."
+
+### Edge Case 3: Anonymous Posting Abuse
+*   **Scenario:** If anonymous posting is enabled, students use it to make inappropriate comments.
+*   **Resolution:** While posts appear anonymous to other students, the system logs the actual author. Teachers can "Reveal Identity" on flagged anonymous posts for disciplinary purposes. This is disclosed in the forum rules.
+
+---
+
+## REAL-WORLD SCENARIOS
+
+### Scenario A: Flipped Classroom Discussion
+*   Teacher posts a 5-minute video on "Photosynthesis" and creates a discussion: "What would happen if plants could only photosynthesize at night?"
+*   Students respond with hypotheses. Teacher engages, asks follow-up questions. The discussion becomes the foundation for the next class.
+
+### Scenario B: Cross-Section Q&A During Exams
+*   Before the Mid-Term, the teacher creates a "Doubt Clearing Forum" open to all sections of Grade 10.
+*   Students post questions. Both teachers and peer tutors can answer. The thread is pinned for 2 weeks.
+
+---
+
+## CONFIGURATION PARAMETERS
+
+| Parameter | Default | Description |
+|---|---|---|
+| `forum_moderation_mode` | `POST_MODERATION` | Options: `PRE_MODERATION`, `POST_MODERATION`, `NONE` |
+| `forum_profanity_filter` | `true` | Auto-flag posts with inappropriate language? |
+| `forum_anonymous_posting` | `false` | Allow anonymous posts? |
+| `forum_thread_lock_days` | 90 | Days after which threads auto-lock |
+| `forum_max_post_length_chars` | 5000 | Maximum characters per post |
+| `forum_file_upload_enabled` | `true` | Allow image/file attachments? |
+| `forum_upvote_enabled` | `true` | Allow students to upvote helpful answers? |
+
+---
+

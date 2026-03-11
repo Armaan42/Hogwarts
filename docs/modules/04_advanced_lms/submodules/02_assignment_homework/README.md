@@ -232,5 +232,37 @@ END FUNCTION
 
 ---
 
-**Status:** Fully Documented  
-**Last Updated:** January 15, 2026
+
+## EDGE CASES
+
+### Edge Case 1: Student Submits Wrong File
+*   **Scenario:** Student accidentally uploads their Science assignment for the English class.
+*   **Resolution:** If the deadline hasn't passed, the student can "Replace Submission" (the system keeps both versions in version history but only the latest is evaluated). After the deadline, the student must request the teacher to "Reopen Submission" which the teacher can grant once.
+
+### Edge Case 2: Plagiarism Detection False Positive
+*   **Scenario:** Two students legitimately use the same textbook definition (identical text), and the plagiarism checker flags it as 40% similarity.
+*   **Resolution:** The teacher reviews the plagiarism report which highlights the matching segments. Common phrases, textbook quotes, and bibliographic references are excluded from the similarity score via a "Reference Library" that the system compares against.
+
+### Edge Case 3: Group Assignment with Unequal Contribution
+*   **Scenario:** A 4-member group submits a project. Only 2 members did the actual work.
+*   **Resolution:** The system logs contribution metrics: edits per member in collaborative documents, task completion in project boards. The teacher sees a "Contribution Dashboard" and can assign differentiated grades within the same group (e.g., 8/10 for workers, 5/10 for free-riders).
+
+---
+
+## CONFIGURATION PARAMETERS
+
+| Parameter | Default | Description |
+|---|---|---|
+| `assignment_late_penalty_per_day_pct` | 10% | Marks deducted per day late |
+| `assignment_late_max_days` | 3 | Max days a late submission is accepted |
+| `assignment_plagiarism_check` | `true` | Auto-run plagiarism detection? |
+| `assignment_plagiarism_threshold_pct` | 30% | Above this % similarity triggers a flag |
+| `assignment_resubmission_allowed` | `true` | Can students replace their submission? |
+| `assignment_peer_review_enabled` | `false` | Enable peer review for assignments? |
+| `assignment_max_file_size_mb` | 50 | Max upload size per submission |
+
+---
+
+**Status:** Production-Ready Documentation  
+**Version:** 3.0  
+**Last Updated:** March 2026

@@ -260,5 +260,37 @@ END FUNCTION
 
 ---
 
-**Status:** Fully Documented  
-**Last Updated:** January 15, 2026
+
+## EDGE CASES
+
+### Edge Case 1: Teacher Uploads Corrupt File
+*   **Scenario:** A teacher uploads a 50 MB PDF that appears valid but is actually a corrupt file. Students click "Open" and get a blank page.
+*   **Resolution:** The system validates uploaded files during processing: PDF page extraction test, video codec check, image dimension verification. Corrupt files are flagged immediately: "Upload Failed: File appears to be damaged. Please re-upload."
+
+### Edge Case 2: Content Version Conflict
+*   **Scenario:** Two co-teachers (Teacher A and Teacher B) both edit the same course module simultaneously. Teacher A's changes overwrite Teacher B's.
+*   **Resolution:** The system uses optimistic locking. When Teacher B attempts to save, they see: "This module was updated by Teacher A 3 minutes ago. Review changes and merge." A diff view shows what Teacher A changed.
+
+### Edge Case 3: Large File Upload on Slow Network
+*   **Scenario:** Teacher tries to upload a 500 MB video lecture on the school's 2 Mbps internet. Upload takes 30+ minutes and frequently fails.
+*   **Resolution:** The system supports chunked, resumable uploads. If the connection drops at 60% upload, the teacher can resume from 60% without re-uploading. A "Low Bandwidth Mode" option compresses the video server-side after a smaller initial upload.
+
+---
+
+## CONFIGURATION PARAMETERS
+
+| Parameter | Default | Description |
+|---|---|---|
+| `content_max_file_size_mb` | 500 | Max upload file size |
+| `content_supported_types` | `['PDF','DOCX','PPTX','MP4','PNG','JPG']` | Allowed file types |
+| `content_versioning_enabled` | `true` | Track version history of content changes? |
+| `content_approval_workflow` | `false` | Require HOD approval before publishing? |
+| `content_scorm_support` | `true` | Support SCORM/xAPI packages? |
+| `content_chunked_upload` | `true` | Enable resumable chunked uploads? |
+| `content_auto_organize_by_chapter` | `true` | Auto-categorize by syllabus chapter? |
+
+---
+
+**Status:** Production-Ready Documentation  
+**Version:** 3.0  
+**Last Updated:** March 2026
