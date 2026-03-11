@@ -215,6 +215,37 @@ CREATE TABLE fee_approval_requests (
 
 ---
 
+
+## EDGE CASES
+
+### Edge Case 1: Admin Accidentally Deletes Critical Data
+*   **Scenario:** A database admin runs a DELETE query during maintenance, accidentally removing 500 payment records.
+*   **Resolution:** Because the audit system uses append-only logging with cryptographic hashing, every deleted row is preserved in `fee_audit_logs` with `action = 'DELETE'` and the full `old_values` JSON. The DBA team can reconstruct the deleted records entirely from the audit logs.
+
+### Edge Case 2: Timezone Conflicts in Multi-Region Schools
+*   **Scenario:** A school group operates in IST and GST (Gulf Standard Time). A transaction timestamped at 11:30 PM IST falls on the next day in GST-based reports.
+*   **Resolution:** All audit timestamps are stored in UTC. Reports apply the user's configured timezone for display. Period locking uses the school's registered timezone, not the user's local time.
+
+### Edge Case 3: Bulk Import Bypassing Audit
+*   **Scenario:** During data migration, 5000 records are inserted via a bulk SQL script, potentially bypassing the application-level audit logging.
+*   **Resolution:** Database-level triggers on all critical tables ensure that even direct SQL inserts/updates trigger audit log entries. These trigger-level logs are marked `source = 'DB_TRIGGER'` to distinguish them from application-level logs.
+
+---
+
+## CONFIGURATION PARAMETERS
+
+| Parameter | Default | Description |
+|---|---|---|
+| `audit_log_retention_years` | 7 | How long audit logs are kept (compliance requirement) |
+| `audit_hash_algorithm` | `SHA256` | Cryptographic hash for tamper detection |
+| `audit_anomaly_receipt_cancel_limit` | 3/week | Max cancellations before flagging a cashier |
+| `audit_after_hours_alert_time` | `20:00` | Transactions after this time trigger alerts |
+| `audit_period_lock_auto` | `true` | Auto-lock periods at month-end? |
+| `audit_maker_checker_threshold` | Rs. 5,000 | Amount above which dual approval is required |
+| `audit_session_timeout_cashier` | 5 min | Cashier terminal auto-logout time |
+
+---
+
 **Status:** Production-Ready Documentation  
-**Version:** 2.0  
+**Version:** 3.0  
 **Last Updated:** March 2026

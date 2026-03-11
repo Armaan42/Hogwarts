@@ -199,6 +199,36 @@ CREATE TABLE fee_hostel_fines (
 
 ---
 
+
+## EDGE CASES
+
+### Edge Case 1: Student Switches Buildings Mid-Term
+*   **Scenario:** Hostel Wing A is flooded. 50 students are temporarily relocated to Wing B (different room type, different rate) for 2 months.
+*   **Resolution:** Admin uses "Temporary Relocation" mode. The system continues billing at the original Wing A rate (per the student's contract). The cost differential to the school is absorbed as "Emergency Expense." Students are NOT billed for the upgrade.
+
+### Edge Case 2: Day-Boarding Student Skipping Meals
+*   **Scenario:** A day-boarding student (enrolled for lunch only) consistently skips lunch on Wednesdays (early dismissal day).
+*   **Resolution:** For flat-rate mess billing, no adjustment is made. For per-day mess billing (if enabled), the hostel attendance system's swipe data auto-deducts the cost of meals not consumed.
+
+### Edge Case 3: Pocket Money Overdraft
+*   **Scenario:** The Imprest balance is Rs. 20, but the canteen POS allows a Rs. 50 purchase (possibly due to an offline POS terminal).
+*   **Resolution:** The system permits a small negative balance up to `imprest_overdraft_limit` (default Rs. 100) to avoid embarrassing the child at the counter. The deficit is auto-recovered from the next Imprest top-up.
+
+---
+
+## CONFIGURATION PARAMETERS
+
+| Parameter | Default | Description |
+|---|---|---|
+| `hostel_billing_period` | `QUARTERLY` | Options: `MONTHLY`, `QUARTERLY`, `ANNUAL` |
+| `hostel_mess_rebate_min_days` | 10 | Minimum consecutive leave days to qualify for mess rebate |
+| `hostel_mess_rebate_percentage` | 80% | What percentage of daily mess rate is refunded |
+| `hostel_imprest_low_balance_threshold` | Rs. 1,000 | Alert parent when balance drops below this |
+| `hostel_imprest_overdraft_limit` | Rs. 100 | Max negative balance allowed on Imprest |
+| `hostel_damage_auto_debit_deposit` | `false` | Auto-deduct damages from Security Deposit? |
+| `hostel_clearance_for_tc` | `true` | Block TC issuance until hostel dues are clear? |
+
+---
+
 **Status:** Production-Ready Documentation  
-**Version:** 2.0  
-**Last Updated:** March 2026
+**Version:** 3.0  

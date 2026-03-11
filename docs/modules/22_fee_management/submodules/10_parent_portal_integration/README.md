@@ -187,6 +187,102 @@ CREATE TABLE fee_portal_preferences (
 
 ---
 
+## EXTENDED DATABASE SCHEMA
+
+### 3. Auto-Pay Mandates (`fee_autopay_mandates`)
+For parents who choose automatic recurring payments.
+
+```sql
+CREATE TABLE fee_autopay_mandates (
+    mandate_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    parent_user_id INT NOT NULL,
+    
+    pg_mandate_id VARCHAR(100), -- External mandate ID from Razorpay/Stripe
+    payment_method ENUM('CARD_TOKEN', 'NACH', 'UPI_MANDATE'),
+    
+    max_amount DECIMAL(12,2), -- Upper limit per debit
+    frequency ENUM('MONTHLY', 'QUARTERLY'),
+    
+    status ENUM('ACTIVE', 'PAUSED', 'REVOKED', 'EXPIRED'),
+    valid_until DATE,
+    
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (parent_user_id) REFERENCES users(user_id)
+);
+```
+
+---
+
+## ADDITIONAL BUSINESS RULES
+
+### Rule 4: Auto-Pay Consent & Limits
+*   Parents opting for Auto-Pay (e.g., NACH e-Mandate or UPI recurring) must set a maximum debit cap.
+*   The system will NEVER debit more than the `max_amount` in a single cycle. If the invoice exceeds the mandate cap, the parent receives a notification requesting manual top-up for the difference.
+
+### Rule 5: Session Security for Financial Pages
+*   While the general portal session may last 30 days, navigating to the "Fees" tab re-prompts for OTP/password if the last authentication was > 15 minutes ago.
+*   All financial API endpoints enforce additional rate limiting (max 5 payment initiations per hour per parent) to prevent automated abuse.
+
+### Rule 6: Multi-Language Support
+*   Fee invoices and receipts displayed on the portal must support at least the school's regional language alongside English.
+*   The system stores `display_locale` in `fee_portal_preferences` and renders amounts in regional numeral systems if configured (e.g., Hindi numerals).
+
+---
+
+## EDGE CASES
+
+### Edge Case 1: Concurrent Login from Multiple Devices
+*   **Scenario:** Father is on the mobile app, Mother is on the desktop portal. Both try to pay the same Q2 invoice simultaneously.
+*   **Resolution:** The system uses optimistic locking on the `fee_invoices.payment_status` column. The first payment attempt that reaches the server locks the invoice. The second attempt receives an error: "This invoice is currently being processed. Please wait or refresh."
+
+### Edge Case 2: Parent with No Email/Phone
+*   **Scenario:** A guardian (e.g., rural grandmother) has no email address and a basic feature phone.
+*   **Resolution:** The system supports "Proxy Access" where the class teacher or school admin can generate and print physical copies of invoices and receipts on behalf of the parent. The portal marks this parent as "Offline Communication Only", and all notifications are routed to the school office for physical distribution.
+
+### Edge Case 3: Disputed Invoice Blocking Payment
+*   **Scenario:** Parent raises a legitimate dispute on 1 line item (e.g., Rs. 2000 Transport charge) but wants to pay the remaining Rs. 23,000 tuition immediately.
+*   **Resolution:** The portal allows "Pay Undisputed Items" mode. It generates a partial payment request excluding the disputed line item. The disputed Rs. 2000 remains in limbo, exempt from overdue penalties, until the admin resolves it.
+
+### Edge Case 4: Tax Certificate Across Financial Years
+*   **Scenario:** Parent pays Rs. 30,000 on March 30 (FY 2025-26) and Rs. 20,000 on April 2 (FY 2026-27) for the same Q4 invoice.
+*   **Resolution:** The Tax Certificate engine splits the reporting: FY 25-26 certificate shows Rs. 30,000. FY 26-27 certificate shows Rs. 20,000. Both certificates reference the same academic invoice but are strictly segregated by the payment realization date.
+
+---
+
+## ADDITIONAL REAL-WORLD SCENARIOS
+
+### Scenario C: The NRI Parent Timezone Problem
+*   **Context:** Parent lives in the USA (12-hour time difference). They try to pay at 2 AM IST (which is their 3 PM local time). The PG maintenance window runs 2-3 AM IST.
+*   **Resolution:**
+    *   Portal shows a banner: "Payment gateway is under scheduled maintenance (2:00 AM - 3:00 AM IST). Please try after 3:00 AM IST."
+    *   Alternatively, the parent can pay via direct NEFT to the school account. The portal displays the school's bank details with a unique "Reference Code" per student to ensure easy identification during Bank Reconciliation.
+
+### Scenario D: Portal Accessibility for Visually Impaired Parents
+*   **Context:** A parent with limited vision uses a screen reader (JAWS / NVDA).
+*   **Compliance:** All financial pages comply with WCAG 2.1 Level AA accessibility standards.
+*   **Implementation:**
+    *   All form inputs have proper `aria-labels`.
+    *   Payment amounts are spoken back by the screen reader before confirmation: "You are about to pay Rupees Twenty-Five Thousand. Press Enter to confirm."
+    *   Color-coded status badges also include text labels (e.g., "OVERDUE" next to the red badge).
+
+---
+
+## CONFIGURATION PARAMETERS
+
+| Parameter | Default | Description |
+|---|---|---|
+| `portal_session_timeout_mins` | 15 | Re-auth required for fee pages after this idle time |
+| `portal_partial_payment_enabled` | `true` | Can parents pay less than the full invoice? |
+| `portal_sibling_consolidation` | `true` | Show aggregated dues for all children? |
+| `portal_autopay_enabled` | `false` | Allow recurring payment mandate setup? |
+| `portal_dispute_window_days` | 7 | Days to raise a query on a new invoice |
+| `portal_receipt_download_format` | `PDF` | Options: `PDF`, `HTML` |
+| `portal_tax_cert_auto_generate` | `true` | Auto-generate cert on March 31? |
+| `portal_locale_support` | `['en', 'hi']` | Supported display languages |
+
+---
+
 **Status:** Production-Ready Documentation  
-**Version:** 2.0  
+**Version:** 3.0  
 **Last Updated:** March 2026

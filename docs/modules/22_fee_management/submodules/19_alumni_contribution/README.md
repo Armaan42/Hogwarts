@@ -191,6 +191,39 @@ CREATE TABLE fee_donations (
 
 ---
 
+
+## EDGE CASES
+
+### Edge Case 1: Donor Requests Anonymity After Receipt
+*   **Scenario:** A donor initially gave their name, received a tax receipt, but later requests complete anonymity from all public records and donor walls.
+*   **Resolution:** The system supports `anonymize_public = true` while keeping `tax_id_number` and receipt records intact for compliance. Public-facing reports show "Anonymous Donor" but internal audit records retain the full identity.
+
+### Edge Case 2: Pledged Amount Never Fulfilled
+*   **Scenario:** An alumnus pledged Rs. 10 Lakhs to the Library Campaign 2 years ago. Only Rs. 2 Lakhs paid. The remaining Rs. 8 Lakhs is stuck as "Pledged."
+*   **Resolution:** The system runs an automated "Pledge Aging Report" every quarter. Pledges older than 12 months with no payment activity are flagged as "Stale." The Alumni Relations Officer contacts the donor. If unresponsive after 3 attempts, the pledge status is changed to `CANCELLED`, and the campaign's `target_amount` calculation excludes it.
+
+### Edge Case 3: Foreign Donation Compliance (FCRA)
+*   **Scenario:** An NRI alumnus donates Rs. 50,000 from a US bank account.
+*   **Resolution:** Indian law (FCRA - Foreign Contribution Regulation Act) requires foreign donations to be received ONLY in a designated FCRA bank account.
+    *   The system detects `donor_country != 'IN'` and routes the PG payment link to the FCRA Merchant ID.
+    *   An additional "FCRA Compliance Report" is auto-generated quarterly, listing all foreign donations with donor passport details.
+
+---
+
+## CONFIGURATION PARAMETERS
+
+| Parameter | Default | Description |
+|---|---|---|
+| `donation_tax_section` | `80G` | Tax exemption section (India-specific) |
+| `donation_auto_receipt` | `true` | Auto-generate tax receipt on payment? |
+| `donation_min_amount` | Rs. 100 | Minimum accepted online donation |
+| `donation_pledge_stale_months` | 12 | Months of inactivity before a pledge is flagged |
+| `donation_foreign_enabled` | `true` | Accept donations from non-resident donors? |
+| `donation_fcra_account_id` | `(configured)` | Designated FCRA bank account for foreign donations |
+| `donation_donor_tier_thresholds` | `[10000, 50000, 200000]` | Amount breakpoints for Silver/Gold/Platinum tiers |
+
+---
+
 **Status:** Production-Ready Documentation  
-**Version:** 2.0  
+**Version:** 3.0  
 **Last Updated:** March 2026

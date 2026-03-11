@@ -193,6 +193,37 @@ CREATE TABLE fee_cashflow_forecasts (
 
 ---
 
+
+## EDGE CASES
+
+### Edge Case 1: Report Across Merged Academic Years
+*   **Scenario:** School changes from a Jan-Dec to an Apr-Mar academic year cycle. Reports spanning the transition year (Jan-Mar gap) show incomplete data.
+*   **Resolution:** System supports "Bridging Reports" that explicitly flag the transition quarter. Data from the old year's Q4 and the new year's Q1 are presented side-by-side with a disclaimer: "Note: This period includes data from the AY transition."
+
+### Edge Case 2: Multi-Currency Donations in Reports
+*   **Scenario:** NRI alumni donate in USD, GBP, and EUR. The CFO wants one consolidated "Donation Revenue" figure in INR.
+*   **Resolution:** The reporting engine converts all foreign currency amounts to INR using the exchange rate recorded on the date of receipt. A footnote shows the original currency amounts.
+
+### Edge Case 3: Backdated Corrections Distorting Trends
+*   **Scenario:** An accountant discovers a Rs. 5 Lakh error from 3 months ago and corrects it. The monthly trend graph now shows a spike in the current month.
+*   **Resolution:** The system distinguishes between "Transaction Date" and "Entry Date". Reports default to "Transaction Date" view, showing corrections in their original month. A toggle allows switching to "Entry Date" view for cashflow analysis.
+
+---
+
+## CONFIGURATION PARAMETERS
+
+| Parameter | Default | Description |
+|---|---|---|
+| `report_default_date_basis` | `TRANSACTION_DATE` | Options: `TRANSACTION_DATE`, `ENTRY_DATE` |
+| `report_auto_email_schedule` | `DAILY_8AM` | When to auto-send the "Morning Coffee Report" |
+| `report_dashboard_refresh_interval` | `5min` | Live dashboard polling frequency |
+| `report_aging_buckets` | `[30, 60, 90, 180]` | Days for defaulter aging analysis |
+| `report_export_formats` | `['PDF', 'XLSX', 'CSV']` | Available download formats |
+| `report_forecasting_model` | `ARIMA` | Prediction algorithm for cash flow |
+| `report_currency_display` | `INR` | Default currency for consolidated reports |
+
+---
+
 **Status:** Production-Ready Documentation  
-**Version:** 2.0  
-**Last Updated:** January 20, 2026
+**Version:** 3.0  
+**Last Updated:** March 2026

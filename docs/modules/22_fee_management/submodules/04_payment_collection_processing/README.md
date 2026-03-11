@@ -194,6 +194,95 @@ CREATE TABLE fee_receipts (
 
 ---
 
+## ADDITIONAL BUSINESS RULES
+
+### Rule 4: Advance Payment Handling
+*   If a parent pays Rs. 60,000 against a total due of Rs. 50,000, the excess Rs. 10,000 is booked into a `STUDENT_ADVANCE` wallet.
+*   This advance is automatically consumed when the next invoice (e.g., Q2) is generated.
+*   Advance Ledger is classified as "Liability" (school owes the parent), not as "Revenue".
+
+### Rule 5: Cashier Shift Reconciliation
+*   At the end of each shift, the Cashier MUST close their session.
+*   **Closing Process:** The system shows "Expected Cash = Rs. 1,50,000" (sum of all CASH receipts). The Cashier counts their physical drawer and enters "Actual Cash = Rs. 1,48,000".
+*   **Shortage (Rs. 2,000):** Logged as `CASH_SHORT`. Requires Manager sign-off. Investigated within 24 hours.
+*   **Excess (Unlikely):** Logged as `CASH_OVER`. Also investigated (possible double-count or unreturned change).
+
+### Rule 6: NEFT/RTGS Payment Detection
+*   Parents sometimes directly transfer funds to the school bank account via NEFT without notifying the school.
+*   **Auto-Detection:** During Bank Reconciliation (Submodule 06), unmatched credits in the bank statement are flagged as "Unidentified Credits".
+*   **Manual Resolution:** The accountant calls the parent, confirms identity, and creates a retroactive Receipt linked to the student's pending invoice.
+
+---
+
+## EDGE CASES
+
+### Edge Case 1: Currency Denomination Mismatch
+*   **Scenario:** Parent hands over Rs. 10,000 in old, damaged Rs. 500 notes that the bank may reject.
+*   **Resolution:** Cashier can refuse damaged notes. System provides a "Payment Declined" reason code: `DAMAGED_CURRENCY`. Receipt is NOT generated. Only valid collected cash is entered.
+
+### Edge Case 2: Post-Dated Cheque (PDC)
+*   **Scenario:** Parent provides a cheque dated 3 months in the future.
+*   **Resolution:** System accepts the cheque but marks it as `POST_DATED`. It does NOT reduce the student's outstanding balance immediately. A "Reminder to Deposit" alert fires on the cheque date.
+
+### Edge Case 3: The "Receipt Reprint" Request
+*   **Scenario:** Parent lost their physical receipt and asks for a reprint a year later.
+*   **Resolution:** System allows unlimited reprints of any historical receipt. The reprinted document is watermarked "DUPLICATE" to prevent misuse for double tax deductions.
+
+### Edge Case 4: Payment During System Downtime
+*   **Scenario:** Parent comes to pay cash at 10 AM, but the ERP server is temporarily down for maintenance.
+*   **Resolution:** Cashier issues a manual "Temporary Handwritten Acknowledgment" with a pre-printed unique serial number. Once the system is back online, the cashier enters the payment using the "Offline Entry Mode" which auto-stamps the original 10 AM timestamp (not the entry time), linking it to the physical serial number for audit.
+
+### Edge Case 5: Overpayment by Sibling Mix-Up
+*   **Scenario:** Parent has 2 children. Pays Rs. 50,000 intending it for Child A (Grade 5), but the cashier accidentally applies it to Child B (Grade 8) whose fee is only Rs. 30,000.
+*   **Resolution:** The system shows Child B as "PAID" with Rs. 20,000 excess in Advance Ledger. The Admin uses a "Transfer Advance" feature to move the Rs. 20,000 from Child B's wallet to Child A's wallet. Audit trail records the inter-student transfer with the Manager's approval.
+
+---
+
+## REAL-WORLD SCENARIOS
+
+### Scenario A: The Peak Collection Day Rush
+*   **Context:** It is the last day before the Due Date. 500 parents flood the office simultaneously.
+*   **Challenge:** Only 3 Cashier terminals available.
+*   **Resolution:**
+    1.  School deploys "Token Queue" system. Parents get token # via SMS upon arrival.
+    2.  System displays "Estimated Wait: 45 mins".
+    3.  School sends mass Push Notification: "Avoid the queue! Pay online instantly from your phone."
+    4.  Result: 400 parents switch to online payment. Only 100 wait in the physical queue.
+
+### Scenario B: The Multi-Mode Payment
+*   **Context:** Total Due = Rs. 1,00,000. Parent wants to pay Rs. 50,000 CASH and Rs. 50,000 via UPI because they don't have full cash.
+*   **Workflow:**
+    1.  Cashier starts a "Split Payment" transaction.
+    2.  Enters Mode 1: CASH = Rs. 50,000.
+    3.  Enters Mode 2: UPI = Rs. 50,000. Generates a UPI QR code on screen.
+    4.  Parent scans QR, authorizes UPI.
+    5.  System waits for UPI callback. Once both legs confirmed, generates a SINGLE consolidated receipt showing both modes.
+
+### Scenario C: End-of-Year Collection Drive
+*   **Context:** School wants to push collection efficiency from 92% to 98% before March 31.
+*   **Approach:**
+    1.  System generates a "168 Students with Outstanding Dues" report.
+    2.  Bulk SMS sent: "Clear dues by March 25 to avoid admin hold on Report Card."
+    3.  System opens a "Payment Link" valid for 7 days sent directly via SMS deep-link.
+    4.  Result: 120 parents pay within 48 hours via the one-click link.
+
+---
+
+## CONFIGURATION PARAMETERS
+
+| Parameter | Default | Description |
+|---|---|---|
+| `cash_payment_limit` | Rs. 20,000 | Max cash accepted without supervisor override |
+| `cheque_bounce_penalty` | Rs. 500 | Auto-charged penalty for returned cheques |
+| `receipt_auto_print` | `true` | Whether thermal receipt prints automatically |
+| `partial_payment_allowed` | `true` | Can parents pay less than total due? |
+| `advance_auto_adjust` | `true` | Auto-consume student advance on next invoice? |
+| `cashier_shift_close_mandatory` | `true` | Block new transactions until shift is closed |
+| `split_payment_modes_max` | 2 | Max number of payment modes in one transaction |
+| `pg_convenience_fee_bearer` | `SCHOOL` | Who pays the MDR? `SCHOOL` or `PARENT` |
+
+---
+
 **Status:** Production-Ready Documentation  
-**Version:** 2.0  
-**Last Updated:** January 20, 2026
+**Version:** 3.0  
+**Last Updated:** March 2026

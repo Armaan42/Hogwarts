@@ -187,6 +187,66 @@ CREATE TABLE fee_student_transport_history (
 
 ---
 
+## EDGE CASES
+
+### Edge Case 1: Student Uses Two Different Routes (Morning vs. Evening)
+*   **Scenario:** Student gets morning pickup from "Stop A" (Zone B) but goes to a tuition class after school, so the evening drop is at "Stop C" (Zone D - closer to tuition center).
+*   **Resolution:** System supports `DUAL_ROUTE` assignments. The billing engine calculates the higher of the two zone rates (the more expensive route determines the fee) rather than summing both.
+
+### Edge Case 2: Teacher Uses Student Bus
+*   **Scenario:** A new teacher requests to ride the school bus from the same stop as students.
+*   **Resolution:** The system creates a staff transport entry linked to `employee_id` instead of `student_id`. The billing route is:
+    *   If `staff_transport_policy = FREE`: No invoice; cost absorbed by school.
+    *   If `staff_transport_policy = SUBSIDIZED`: Invoice at 30% of student rate, routed to Payroll for salary deduction.
+
+### Edge Case 3: Special Needs Vehicle
+*   **Scenario:** A student with mobility challenges requires a wheelchair-accessible vehicle (separate from the standard bus fleet).
+*   **Resolution:** This vehicle is assigned a special `slab_id` with a potentially higher rate. The system maintains a separate `SN_TRANSPORT` fee head to track these costs. Insurance and accessibility equipment costs are allocated to this head.
+
+### Edge Case 4: Route Cancelled Due to Low Enrollment
+*   **Scenario:** Only 3 students sign up for Route 15. The school decides to cancel the route as it's not cost-effective.
+*   **Resolution:**
+    1.  Admin marks Route 15 as `SUSPENDED`.
+    2.  System notifies 3 parents: "Route 15 has been cancelled. Please arrange alternative transport."
+    3.  If parents had pre-paid annual transport fee, the system calculates pro-rata refund for remaining months and issues Credit Notes.
+    4.  Students are unlinked from the route. Their transport status reverts to `SELF_TRANSPORT`.
+
+---
+
+## ADDITIONAL REAL-WORLD SCENARIOS
+
+### Scenario C: Fuel Surcharge During Oil Price Spike
+*   **Context:** Crude oil prices jump 40% mid-year, drastically increasing the school fleet's operating cost.
+*   **Workflow:**
+    1.  Trust Board approves a temporary "Fuel Surcharge" of Rs. 300/month for Q3 and Q4.
+    2.  Admin creates a new ad-hoc fee head: "Transport Fuel Surcharge (Temporary)".
+    3.  System generates supplementary invoices for all 800 transport-using students.
+    4.  The surcharge is tracked separately in the P&L so it can be discontinued when prices normalize.
+
+### Scenario D: GPS-Based Auto-Attendance Impact on Billing
+*   **Context:** The school integrates GPS tracking on buses. The system knows exactly which students boarded on which days.
+*   **Future Feature:**
+    1.  At month-end, system calculates: "Student X used the bus only 12 out of 22 school days."
+    2.  For schools with `per_day_billing_mode = true`, the invoice is generated for 12 days only: `12 * (Monthly Rate / 22) = Pro-Rata`.
+    3.  Most schools use monthly flat rates, but this per-day model is available for premium "Pay As You Ride" plans.
+
+---
+
+## CONFIGURATION PARAMETERS
+
+| Parameter | Default | Description |
+|---|---|---|
+| `transport_billing_period` | `QUARTERLY` | Options: `MONTHLY`, `QUARTERLY`, `ANNUAL` |
+| `transport_excluded_months` | `[5, 6]` | Months where no transport fee is charged (vacation) |
+| `transport_minimum_commitment_months` | 3 | Minimum billing even if student cancels early |
+| `transport_one_way_percentage` | 60% | Fraction of full rate for pickup-only or drop-only |
+| `transport_sibling_discount_pct` | 50% | Discount for 2nd+ sibling on transport |
+| `transport_per_day_billing` | `false` | Enable GPS-based per-day billing? |
+| `transport_vendor_revenue_share_pct` | 80% | Percentage of collected fees paid out to 3rd party vendor |
+| `transport_defaulter_block_days` | 15 | Days overdue before boarding pass is disabled |
+
+---
+
 **Status:** Production-Ready Documentation  
-**Version:** 2.0  
+**Version:** 3.0  
 **Last Updated:** March 2026

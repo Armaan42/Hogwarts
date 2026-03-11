@@ -191,6 +191,115 @@ CREATE TABLE fee_sponsors (
 
 ---
 
+## EXTENDED DATABASE SCHEMA
+
+### 4. Scholarship Application Pipeline (`fee_scholarship_applications`)
+Tracking parent-initiated applications for need-based aid.
+
+```sql
+CREATE TABLE fee_scholarship_applications (
+    app_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    student_id INT NOT NULL,
+    academic_year_id INT,
+    
+    scholarship_type ENUM('MERIT', 'NEED_BASED', 'SPORTS_QUOTA', 'EWS', 'MINORITY'),
+    
+    parent_annual_income DECIMAL(15,2),
+    income_proof_url VARCHAR(255),
+    merit_proof_url VARCHAR(255), -- Grade sheet or certificate
+    
+    requested_waiver_pct DECIMAL(5,2),
+    
+    status ENUM('SUBMITTED', 'UNDER_REVIEW', 'APPROVED', 'REJECTED', 'WAITLISTED'),
+    reviewer_id INT,
+    reviewer_remarks TEXT,
+    
+    submitted_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    reviewed_at DATETIME,
+    
+    FOREIGN KEY (student_id) REFERENCES students(student_id)
+);
+```
+
+---
+
+## ADDITIONAL BUSINESS RULES
+
+### Rule 4: Budget Ceiling Enforcement
+*   Each concession rule has a `budget_limit`. When `consumed_amount >= budget_limit`, the system stops auto-applying the discount.
+*   Example: "Sibling Discount Budget: Rs. 20 Lakhs/year". Once 200 siblings have consumed the budget, the 201st sibling's application is auto-waitlisted and flagged for Trust Board approval.
+
+### Rule 5: Retrospective Scholarship Grant
+*   If a scholarship is approved in October but the Q1/Q2 fees were already paid at full rate, the system automatically calculates the retrospective benefit and issues Credit Notes for the overpaid quarters.
+*   These credits appear as "Advance" in the student's ledger and auto-adjust against Q3/Q4 invoices.
+
+### Rule 6: Anti-Stacking (Ceiling Cap)
+*   Even when multiple concessions are permitted to stack (e.g., Sibling + EWS), the cumulative discount MUST NOT exceed a configurable ceiling (e.g., 90%).
+*   This ensures the school always recovers at least 10% of the fee to cover administrative costs.
+
+---
+
+## EDGE CASES
+
+### Edge Case 1: Scholarship Holder Drops Below GPA
+*   **Scenario:** Student was granted a 50% merit scholarship with the condition "Maintain GPA >= 8.0". At the end of Term 1, the GPA drops to 7.2.
+*   **Resolution:** System flags the student in a "Scholarship Warning" list. The Principal can choose:
+    *   **Probation:** Give 1 more term to recover. Scholarship continues provisionally.
+    *   **Revoke:** Effective Term 2, the student's invoice is regenerated at full rate. A supplementary bill for the difference is issued.
+
+### Edge Case 2: Sponsor Defaults on Payment
+*   **Scenario:** "TechCorp" sponsoring 50 students fails to pay the consolidated invoice of Rs. 25 Lakhs.
+*   **Resolution:** The system cannot mark the 50 students as defaulters (they didn't cause the problem). Instead:
+    1.  The "Sponsor Receivable" ledger shows the outstanding.
+    2.  Admin can choose to "Absorb" (school bears the cost temporarily) or "Reassign" (move students to a different funding source or revert to parent-pay).
+
+### Edge Case 3: Divorced Parents & Scholarship Eligibility
+*   **Scenario:** Mother's income is low (qualifies for EWS). Father's income is high (disqualifies). Which income to consider?
+*   **Resolution:** School policy configures `income_consideration_rule`:
+    *   `PRIMARY_GUARDIAN`: Only the custodial parent's income is used.
+    *   `BOTH_PARENTS`: Combined household income is used.
+    *   The application form requires income documents from the configured party.
+
+### Edge Case 4: Mid-Year Student Transfer with Active Scholarship
+*   **Scenario:** A student with an active Merit Scholarship transfers to another branch of the same school group.
+*   **Resolution:** The scholarship `grant_id` is transferable within the same Trust. The system deactivates it at the source campus and creates a new grant at the destination campus, carrying forward the same conditions and expiry date.
+
+---
+
+## ADDITIONAL REAL-WORLD SCENARIOS
+
+### Scenario C: RTE (Right to Education) Quota Compliance
+*   **Context:** Indian law mandates 25% seats for economically weaker section students at zero fee.
+*   **Workflow:**
+    1.  During admissions, 25% of seats are tagged `RTE_QUOTA`.
+    2.  These students are auto-assigned a 100% fee waiver across all heads.
+    3.  The school claims reimbursement from the State Government.
+    4.  System generates a "Government Reimbursement Claim Report" listing all RTE students, their fee amounts, and school bank details.
+    5.  When the government disburses (often with 6+ months delay), the system reconciles the claim against the bank credit.
+
+### Scenario D: Alumni-Funded Named Scholarship
+*   **Context:** An alumnus donates Rs. 5 Lakhs/year to fund a "Dr. Sharma Memorial Scholarship" for the top Science student.
+*   **Workflow:**
+    1.  Donation received (tracked in Submodule 19).
+    2.  Admin creates a rule: "Dr. Sharma Scholarship" -> 100% Tuition Waiver -> Max 1 recipient, -> Funded by Donor ID #45.
+    3.  At year-end, the best Science student is selected by the Principal.
+    4.  System assigns the grant, links it to the donor, and sends the donor an "Impact Report": "Your scholarship funded Student X who scored 98% in Physics."
+
+---
+
+## CONFIGURATION PARAMETERS
+
+| Parameter | Default | Description |
+|---|---|---|
+| `max_concurrent_concessions` | 2 | Max number of discounts that can stack |
+| `max_cumulative_discount_pct` | 90% | Ceiling cap on total discount |
+| `scholarship_renewal_check_month` | October | When the system runs GPA-based renewal checks |
+| `rte_waiver_claim_template` | `FORM_12C` | Government form template for reimbursement |
+| `sponsor_default_grace_days` | 60 | Days before a sponsor invoice is flagged overdue |
+| `scholarship_budget_alert_pct` | 80% | Alert when budget consumption crosses this threshold |
+
+---
+
 **Status:** Production-Ready Documentation  
-**Version:** 2.0  
-**Last Updated:** January 20, 2026
+**Version:** 3.0  
+**Last Updated:** March 2026

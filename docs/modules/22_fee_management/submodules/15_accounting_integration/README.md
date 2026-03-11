@@ -206,6 +206,36 @@ CREATE TABLE fee_acc_voucher_lines (
 
 ---
 
+
+## EDGE CASES
+
+### Edge Case 1: Voucher Date vs. Posting Date Mismatch
+*   **Scenario:** A cash receipt collected on Saturday is entered into the system on Monday. The voucher date is Saturday but Tally's audit period expects Monday.
+*   **Resolution:** System supports dual date fields: `transaction_date` (when the money was collected) and `posting_date` (when it was entered). The Tally export uses `posting_date`, while internal ERP reports use `transaction_date` for accuracy.
+
+### Edge Case 2: Chart of Accounts Restructuring
+*   **Scenario:** The CA decides to restructure the Chart of Accounts mid-year (e.g., merge "Primary Tuition" and "Secondary Tuition" into "Tuition Income").
+*   **Resolution:** The ledger mapping table is updated to point both old ERP fee heads to the new single ledger. A "Mapping Migration" tool re-tags all historical vouchers for the current FY to the new ledger name, ensuring the Trial Balance reflects the new structure.
+
+### Edge Case 3: Multi-Branch Consolidated Accounting
+*   **Scenario:** A Trust runs 5 schools. Each has its own fee engine. The CA wants a single consolidated Trial Balance.
+*   **Resolution:** Each branch exports vouchers to a central Tally server using `branch_code` prefixes on ledger names (e.g., `NORTH-Tuition`, `SOUTH-Tuition`). Tally's Group Company feature consolidates them. The ERP's export engine auto-prefixes based on the school's configured `branch_code`.
+
+---
+
+## CONFIGURATION PARAMETERS
+
+| Parameter | Default | Description |
+|---|---|---|
+| `acc_export_format` | `TALLY_XML` | Options: `TALLY_XML`, `ZOHO_API`, `SAP_RFC`, `CSV` |
+| `acc_export_frequency` | `DAILY` | Options: `REAL_TIME`, `DAILY`, `WEEKLY` |
+| `acc_debtor_granularity` | `CONSOLIDATED` | Options: `STUDENT_WISE`, `CLASS_WISE`, `CONSOLIDATED` |
+| `acc_auto_voucher_generation` | `true` | Auto-create vouchers on every payment? |
+| `acc_unbalanced_voucher_action` | `BLOCK` | Options: `BLOCK`, `WARN_AND_LOG` |
+| `acc_branch_code` | `MAIN` | Prefix for multi-branch accounting |
+
+---
+
 **Status:** Production-Ready Documentation  
-**Version:** 2.0  
+**Version:** 3.0  
 **Last Updated:** March 2026

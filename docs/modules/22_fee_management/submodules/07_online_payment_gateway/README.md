@@ -204,6 +204,37 @@ CREATE TABLE fee_pg_settlements (
 
 ---
 
+
+## EDGE CASES
+
+### Edge Case 1: Double Payment (Idempotency Failure)
+*   **Scenario:** Parent clicks "Pay" twice rapidly. Two payment requests hit the PG. Both succeed. Student ledger shows double credit.
+*   **Resolution:** The system generates a unique `idempotency_key` per invoice per session. If the PG returns two success webhooks for the same key, the second payment is auto-flagged for reversal. The system creates an immediate refund request via PG API.
+
+### Edge Case 2: International Card with Currency Conversion
+*   **Scenario:** NRI parent pays with a USD credit card. The PG converts USD to INR at a dynamic forex rate.
+*   **Resolution:** The ERP always records the INR amount received (as reported by the PG webhook). Any forex discrepancy is borne by the parent. The receipt shows the INR amount only. The PG dashboard can be referenced for the exact USD amount charged.
+
+### Edge Case 3: PG Webhook Failure (Server Downtime)
+*   **Scenario:** The school's ERP server is down when Razorpay sends the success webhook.
+*   **Resolution:** Razorpay retries webhooks with exponential backoff (5 min, 30 min, 2 hours, 24 hours). The system also runs a "PG Status Poller" cron job every 15 minutes that queries `GET /v1/orders?status=paid&unsettled=true` to catch any missed callbacks.
+
+---
+
+## CONFIGURATION PARAMETERS
+
+| Parameter | Default | Description |
+|---|---|---|
+| `pg_provider` | `RAZORPAY` | Options: `RAZORPAY`, `STRIPE`, `BILLDESK`, `PAYU` |
+| `pg_test_mode` | `false` | Use sandbox/test keys? |
+| `pg_webhook_secret` | `(encrypted)` | Signature verification key |
+| `pg_auto_refund_on_duplicate` | `true` | Auto-initiate refund for duplicate payments? |
+| `pg_settlement_account_id` | `acc_xxxx` | Bank account for PG settlements |
+| `pg_surcharge_model` | `ABSORPTION` | Options: `ABSORPTION` (school pays), `SURCHARGE` (parent pays) |
+| `pg_retry_poll_interval_mins` | 15 | Cron interval for missed webhook recovery |
+
+---
+
 **Status:** Production-Ready Documentation  
-**Version:** 2.0  
-**Last Updated:** January 20, 2026
+**Version:** 3.0  
+**Last Updated:** March 2026

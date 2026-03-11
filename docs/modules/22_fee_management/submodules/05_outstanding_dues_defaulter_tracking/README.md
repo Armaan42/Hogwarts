@@ -206,5 +206,47 @@ CREATE TABLE fee_service_blocks (
 ---
 
 **Status:** Production-Ready Documentation  
-**Version:** 2.0  
-**Last Updated:** January 20, 2026
+
+## EDGE CASES
+
+### Edge Case 1: Student with Partial Scholarship Defaulting
+*   **Scenario:** Student has a 50% scholarship and is supposed to pay the remaining 50%. The parent defaults on the 50%.
+*   **Resolution:** The system correctly identifies the defaulter as owing only the net amount (not the gross). The dunning message reads "Outstanding Rs. 15,000" (not Rs. 30,000). The scholarship is not revoked due to the default; it's the parent's financial obligation that is overdue, not the student's academic entitlement.
+
+### Edge Case 2: Deceased Parent / Guardian
+*   **Scenario:** The primary fee-paying parent passes away. The student's account shows large outstanding dues.
+*   **Resolution:** The system supports a compassionate "Hold" status. The Admin marks the account as `COMPASSIONATE_HOLD` which:
+    1.  Freezes all automated dunning SMS/Emails.
+    2.  Suspends late fee accrual.
+    3.  Flags the case for the Trust Board's "Financial Aid Committee" to decide on a waiver or alternative arrangement.
+
+### Edge Case 3: Sibling Cross-Blocking
+*   **Scenario:** Parent has 2 children. Child A's fee is fully paid. Child B's fee is overdue. Should Child A's report card also be blocked?
+*   **Resolution:** Configurable policy (`sibling_cross_block = true/false`).
+    *   If `true`: Both children's non-essential services are blocked until ALL sibling dues are cleared.
+    *   If `false`: Only the specific child with dues is affected.
+
+### Edge Case 4: Legal Notice Scenarios
+*   **Scenario:** Parent owes Rs. 2 Lakhs for over 6 months. All reminders exhausted.
+*   **Resolution:** System generates a "Final Legal Notice Draft" (pre-approved template by school's lawyer) with all financial details auto-populated. The notice is sent via Registered Post (tracked). The `student_dues` record is flagged as `LEGAL_ESCALATION`. A separate `legal_cases` table tracks the outcome.
+
+---
+
+## CONFIGURATION PARAMETERS
+
+| Parameter | Default | Description |
+|---|---|---|
+| `defaulter_grace_period_days` | 15 | Days after due date before marking as defaulter |
+| `late_fee_type` | `FLAT` | Options: `FLAT`, `PERCENTAGE`, `COMPOUND` |
+| `late_fee_amount` | Rs. 50/day | Daily late fee (if type is FLAT) |
+| `late_fee_max_cap` | Rs. 5,000 | Maximum late fee per invoice |
+| `dunning_reminder_schedule` | `[7, 15, 30]` | Days after due date to send reminders |
+| `service_block_threshold_days` | 30 | Days overdue before blocking report card/TC |
+| `sibling_cross_block` | `false` | Block one sibling for another's dues? |
+| `legal_escalation_threshold` | Rs. 50,000 | Minimum outstanding for legal notice generation |
+
+---
+
+**Status:** Production-Ready Documentation  
+**Version:** 3.0  
+**Last Updated:** March 2026

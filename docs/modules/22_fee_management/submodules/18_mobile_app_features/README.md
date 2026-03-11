@@ -181,6 +181,66 @@ CREATE TABLE fee_push_queue (
 
 ---
 
+## EDGE CASES
+
+### Edge Case 1: App Installed on Child's Phone
+*   **Scenario:** Instead of the parent's phone, the school app is installed on the student's tablet (e.g., a boarding school student).
+*   **Resolution:** The system supports `DEVICE_ROLE` classification. When a device is registered to a student user (not a parent user), financial alerts are suppressed. Only a parent-linked device receives payment-related push notifications. The student device only receives academic alerts.
+
+### Edge Case 2: Dual SIM / Phone Number Change
+*   **Scenario:** Parent changes their phone number. The old FCM token becomes invalid, causing push notification failures.
+*   **Resolution:** The mobile app re-registers the FCM token on every launch. Additionally, the backend runs a nightly job that sends a "silent ping" to all tokens. Tokens that return `InvalidRegistration` or `NotRegistered` errors are automatically pruned from `fee_mobile_devices`.
+
+### Edge Case 3: Low Storage on Parent's Phone
+*   **Scenario:** The parent's phone has < 50 MB storage. The offline receipt vault cannot cache new PDFs.
+*   **Resolution:** The app detects low storage and switches to "Online-Only" mode. Receipts are not cached locally. A warning banner appears: "Limited storage. Receipts will require internet to view." The app prioritizes caching only the most recent receipt.
+
+### Edge Case 4: App Crash During Payment
+*   **Scenario:** The app crashes (or the phone reboots) after the parent has been redirected to the UPI app but before the callback is received.
+*   **Resolution:** On next app launch, the Startup Integrity Check runs:
+    1.  Reads `pending_order_id` from encrypted local storage.
+    2.  Calls `GET /api/v1/orders/{id}/status` to the backend.
+    3.  If `status = SUCCESS`: Shows the receipt retroactively.
+    4.  If `status = PENDING`: Shows "A payment may be in progress. Please wait 5 minutes." with a manual "Check Status" button.
+    5.  If `status = FAILED`: Shows "Your previous payment attempt failed. No amount was deducted."
+
+---
+
+## ADDITIONAL REAL-WORLD SCENARIOS
+
+### Scenario C: WhatsApp Business Integration
+*   **Context:** Many Indian parents are more comfortable with WhatsApp than dedicated apps.
+*   **Implementation:**
+    1.  School sets up a WhatsApp Business API account.
+    2.  Fee reminders are sent as WhatsApp template messages: "Dear Parent, your child Aarav's Q3 fee of Rs. 15,000 is due on Oct 10. Click here to pay: [Payment Link]."
+    3.  The payment link opens a web checkout (not the app) optimized for mobile browsers.
+    4.  After payment, a receipt is sent back as a WhatsApp PDF attachment.
+    5.  This serves as a "lightweight mobile channel" for parents who refuse to install the school's app.
+
+### Scenario D: Smartwatch Quick-Glance Widget
+*   **Context:** Tech-savvy parents want to check fee status from their Apple Watch or Wear OS watch.
+*   **Implementation:**
+    *   The school app includes a Watch Complication/Tile that shows just one number: "Total Due: Rs. 0" (Green) or "Total Due: Rs. 25,000" (Red).
+    *   Tapping the complication opens a minimal watch view with "Pay via iPhone" handoff button.
+    *   No full payment flow on the watch (screen too small for PG forms).
+
+---
+
+## CONFIGURATION PARAMETERS
+
+| Parameter | Default | Description |
+|---|---|---|
+| `mobile_biometric_required` | `true` | Require Face/Touch ID for Fees tab? |
+| `mobile_session_fee_timeout_mins` | 5 | Background time before re-auth for financial pages |
+| `mobile_offline_cache_max_receipts` | 10 | Max receipts stored offline |
+| `mobile_upi_deep_link_enabled` | `true` | Allow direct app-to-app UPI handoff? |
+| `mobile_push_batch_size` | 500 | Max notifications sent per FCM batch |
+| `mobile_whatsapp_fallback` | `true` | Send WhatsApp if push fails? |
+| `mobile_min_version_required` | `2.0.0` | Force update if app version is below this |
+| `mobile_orphaned_order_timeout_mins` | 30 | Time to wait before marking orphaned order as failed |
+
+---
+
 **Status:** Production-Ready Documentation  
-**Version:** 2.0  
+**Version:** 3.0  
 **Last Updated:** March 2026

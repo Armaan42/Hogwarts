@@ -157,6 +157,148 @@ CREATE TABLE fee_adhoc_invoices (
 
 ---
 
+## EXTENDED DATABASE SCHEMA
+
+### 3. Event/Activity Fee Registrations (`fee_event_registrations`)
+Tracks consent and payment for optional events.
+
+```sql
+CREATE TABLE fee_event_registrations (
+    reg_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    student_id INT NOT NULL,
+    event_name VARCHAR(150),
+    event_date DATE,
+    
+    fee_amount DECIMAL(10,2) NOT NULL,
+    consent_given BOOLEAN DEFAULT FALSE,
+    consent_date DATETIME,
+    
+    payment_status ENUM('PENDING', 'PAID', 'REFUNDED', 'CANCELLED'),
+    linked_invoice_id BIGINT,
+    
+    organizer_department_id INT,
+    external_vendor_name VARCHAR(150), -- E.g., "Trekking Co."
+    
+    FOREIGN KEY (student_id) REFERENCES students(student_id)
+);
+```
+
+### 4. Department Charge Requisitions (`fee_dept_requisitions`)
+The formal request pipeline for non-finance departments.
+
+```sql
+CREATE TABLE fee_dept_requisitions (
+    req_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    department_id INT NOT NULL,
+    raised_by_staff_id INT NOT NULL,
+    
+    student_id INT NOT NULL,
+    charge_category VARCHAR(100), -- 'FINE', 'CONSUMABLE', 'EVENT'
+    description TEXT,
+    amount DECIMAL(10,2) NOT NULL,
+    
+    supporting_evidence_url VARCHAR(255), -- Photo of broken equipment
+    
+    approval_status ENUM('DRAFT', 'SUBMITTED', 'APPROVED', 'REJECTED'),
+    approved_by INT,
+    approved_at DATETIME,
+    rejection_reason TEXT,
+    
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    
+    FOREIGN KEY (student_id) REFERENCES students(student_id)
+);
+```
+
+---
+
+## ADDITIONAL BUSINESS RULES
+
+### Rule 4: Maximum Fine Cap
+*   No single ad-hoc fine raised by a department can exceed Rs. 5,000 without mandatory Principal approval.
+*   Cumulative fines on a single student exceeding Rs. 10,000 in a quarter trigger an automatic "Student Welfare Review" notification to the counselor.
+
+### Rule 5: Event Cancellation & Refund
+*   If the school cancels an event (e.g., rain washes out the field trip), the system must auto-refund all registered parents.
+*   Logic: Bulk update `fee_event_registrations.payment_status = 'REFUNDED'` and generate Credit Notes for all linked invoices.
+*   Refund is non-negotiable; the school cannot retain the fees for a cancelled activity.
+
+### Rule 6: Statute of Limitations on Fines
+*   A fine for a lost library book cannot be raised more than 90 days after the due date of the book return.
+*   After 90 days, the system suggests "Write Off" as the item is considered irrecoverable. This prevents stale fines appearing on student accounts during year-end settlements.
+
+### Rule 7: Parental Dispute Right
+*   Parents must be given a 7-day window to dispute any ad-hoc charge before it becomes "Final".
+*   During the 7-day window, the invoice status is `UNDER_REVIEW`. Automated overdue reminders are suppressed.
+
+---
+
+## EDGE CASES
+
+### Edge Case 1: Duplicate Fine Prevention
+*   **Scenario:** The Librarian marks "Book Lost" in the Library Module, which auto-creates a fine. The front desk admin, unaware, also manually raises a fine for the same book.
+*   **Resolution:** The system checks for existing `fee_adhoc_invoices` with the same `student_id + template_id + amount` within the last 30 days. If found, the second request is flagged as "Potential Duplicate" and requires explicit confirmation ("A similar charge of Rs. 500 was raised on Jan 15. Proceed anyway?").
+
+### Edge Case 2: Student Transferred Between Sections
+*   **Scenario:** Student moves from Section A to Section B mid-term. Section A's teacher raised a fine but the student now sits in Section B.
+*   **Resolution:** The system links the charge to the `student_id`, not the section. The fine follows the student regardless of section changes.
+
+### Edge Case 3: Zero-Amount Charges
+*   **Scenario:** School wants to track "Uniform Issued" for audit purposes without charging because uniforms are sponsored.
+*   **Resolution:** The system allows `amount = 0.00` invoices tagged with category `RECORD_ONLY`. These appear in the inventory audit trail but are excluded from the parent's financial dashboard.
+
+### Edge Case 4: Bulk Fine for Class Misbehavior
+*   **Scenario:** The Vice Principal decides to fine an entire class of 40 students Rs. 200 each for a collective discipline issue.
+*   **Resolution:** The system supports "Bulk Charge" mode. Admin selects Grade 8A, selects template "Discipline Fine", enters Rs. 200. System generates 40 individual invoices with a shared `batch_reference_id` for easy reversal if the decision is overturned.
+
+---
+
+## REAL-WORLD SCENARIOS
+
+### Scenario A: Annual Day Costume Collection
+*   **Context:** The school's Annual Day function requires each participating student to purchase a costume (Rs. 800).
+*   **Flow:**
+    1.  Cultural Dept creates Event: "Annual Day 2026 Costume" (Rs. 800).
+    2.  System sends consent forms to 200 participating students' parents.
+    3.  150 parents consent and pay within 1 week.
+    4.  30 parents consent but don't pay yet (status: APPROVED_UNPAID).
+    5.  20 parents decline (no invoice generated).
+    6.  School orders 180 costumes (150 paid + 30 committed).
+    7.  Outstanding Rs. 24,000 (30 x 800) appears in the department's pending collection report.
+
+### Scenario B: Lab Equipment Breakage
+*   **Context:** During a Chemistry practical, a student accidentally breaks a titration apparatus worth Rs. 1,200.
+*   **Workflow:**
+    1.  Lab Technician logs damage in the Inventory Module with a photo.
+    2.  Inventory Module auto-triggers a POST to Fee API: `{student_id: 3092, template: 'LAB_BREAKAGE', amount: 1200}`.
+    3.  Fee system creates an ad-hoc invoice and routes it to the Science HOD for approval.
+    4.  HOD reviews the damage photo and approves.
+    5.  Parent receives notification: "A charge of Rs. 1,200 for damaged lab equipment has been added. See details."
+    6.  Parent disputes within 7 days: "My child says the equipment was already cracked."
+    7.  HOD investigates, agrees partially, and reduces the charge to Rs. 600 via a Credit Note.
+
+### Scenario C: Uniform Store Digital Billing
+*   **Context:** Instead of the uniform vendor collecting cash directly, the school integrates the store's POS with the ERP.
+*   **Flow:**
+    1.  Parent selects 2 shirts (Rs. 400 each) and 1 pair of shoes (Rs. 1,200) at the school uniform store.
+    2.  Store clerk scans items. POS creates a misc invoice for Rs. 2,000 against the student's account.
+    3.  Parent can either pay immediately at the counter (POS card swipe) or choose "Add to My Account" where the Rs. 2,000 gets consolidated into the next quarterly fee bill.
+    4.  This eliminates cash handling at the store entirely.
+
+---
+
+## CONFIGURATION PARAMETERS
+
+| Parameter | Default | Description |
+|---|---|---|
+| `misc_auto_approval_threshold` | Rs. 1,000 | Charges below this don't need Principal sign-off |
+| `misc_dispute_window_days` | 7 | Days a parent has to challenge a charge |
+| `misc_consolidation_mode` | `QUARTERLY` | When pending misc charges merge into the main bill |
+| `misc_fine_staleness_days` | 90 | Max days after incident a fine can be raised |
+| `misc_duplicate_check_window` | 30 | Days to check for duplicate charges |
+
+---
+
 **Status:** Production-Ready Documentation  
-**Version:** 2.0  
+**Version:** 3.0  
 **Last Updated:** March 2026

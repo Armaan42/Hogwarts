@@ -214,6 +214,36 @@ CREATE TABLE fee_recon_batches (
 
 ---
 
+
+## EDGE CASES
+
+### Edge Case 1: Same Amount, Same Day, Different Students
+*   **Scenario:** Three parents each pay Rs. 25,000 via NEFT on the same day. Bank statement shows 3 identical credits with no student-identifying information in the narration.
+*   **Resolution:** The system lists all three as "Ambiguous Matches" and asks the admin to manually assign each bank entry to the correct student, cross-referencing the UTR number against parent-submitted payment proofs.
+
+### Edge Case 2: PG Settlement Delay Over Weekend
+*   **Scenario:** Parent pays online on Friday evening. PG settles to the school bank on Monday (T+2). The parent immediately complains: "I paid but receipt says provisional."
+*   **Resolution:** The system generates the receipt immediately (based on PG webhook). The bank reconciliation module marks the transaction as "Awaiting Settlement" until Monday's bank statement confirms the credit. The parent-facing UI shows "Payment Confirmed" (based on PG), while the internal accounting shows "Pending Bank Credit" until reconciled.
+
+### Edge Case 3: Bank Charges Auto-Deduction
+*   **Scenario:** The bank deducts Rs. 5,000 quarterly as "Account Maintenance Charges." This debit appears in the bank statement but has no corresponding ERP transaction.
+*   **Resolution:** The system supports a "Non-Student Transactions" category. Admin maps these debits to `Bank Charges Expense A/C`. These reconciled entries appear in the accounting voucher export but are excluded from student fee reports.
+
+---
+
+## CONFIGURATION PARAMETERS
+
+| Parameter | Default | Description |
+|---|---|---|
+| `recon_auto_match_tolerance` | Rs. 1 | Amount difference tolerated for auto-matching |
+| `recon_bank_statement_format` | `MT940` | Supported: `MT940`, `CSV`, `OFX`, `CUSTOM_EXCEL` |
+| `recon_pg_settlement_lag_days` | 2 | Expected T+N settlement days for gateway |
+| `recon_stale_cheque_days` | 90 | Days after which uncleared cheques are flagged |
+| `recon_daily_close_mandatory` | `true` | Force daily reconciliation before next day's work? |
+| `recon_auto_match_enabled` | `true` | Allow system to auto-reconcile perfect matches? |
+
+---
+
 **Status:** Production-Ready Documentation  
-**Version:** 2.0  
-**Last Updated:** January 20, 2026
+**Version:** 3.0  
+**Last Updated:** March 2026

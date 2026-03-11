@@ -174,6 +174,63 @@ CREATE TABLE fee_staging_opening_balances (
 
 ---
 
+## EDGE CASES
+
+### Edge Case 1: Duplicate Students in Legacy Data
+*   **Scenario:** The old system has "Rohit Sharma (ID: 1001)" and "Rohit Sharma (ID: 1001A)" because the student re-enrolled after withdrawing. Both have financial history.
+*   **Resolution:** The migration engine's "Deduplication Wizard" flags potential duplicates based on Name + Parent Phone matching. The admin manually confirms which record to keep as the primary and which to merge. Financial histories from both records are consolidated under one new `student_id`.
+
+### Edge Case 2: Legacy System Uses Different Financial Year
+*   **Scenario:** The old system ran on a Calendar Year (Jan-Dec) basis, but the new ERP uses the Indian Financial Year (April-March).
+*   **Resolution:** The migration engine allows setting a `legacy_fy_start_month = 1`. The Opening Balance import translates the legacy's "Dec 31 closing balance" into the new system's "Opening Balance as of Jan 1" and bridges the gap until the next April 1 when the new FY starts natively.
+
+### Edge Case 3: Partially Paid Installment Plan
+*   **Scenario:** In the old system, a student's Annual Fee of Rs. 1,00,000 was split into 4 installments. Q1 and Q2 are paid (Rs. 50,000). Q3 and Q4 are pending (Rs. 50,000).
+*   **Resolution:** The migration engine imports:
+    *   Two `PAID` historical invoices (Q1, Q2) as `READ_ONLY` records.
+    *   Two `OUTSTANDING` invoices (Q3, Q4) as **ACTIVE** records in the new system, which immediately appear on the parent portal and are subject to the new system's overdue logic.
+
+### Edge Case 4: Data Import with Foreign Characters
+*   **Scenario:** Student names in the old system contain regional language characters (e.g., Hindi, Tamil) that were stored in a non-UTF8 encoding.
+*   **Resolution:** The CSV uploader detects encoding mismatches and offers a "Character Encoding Selector" (UTF-8, UTF-16, ISO-8859-1, Windows-1252). A preview pane shows the first 10 rows in the selected encoding so the admin can visually verify that `aeS?` is actually `Hindi Name` before committing.
+
+---
+
+## ADDITIONAL REAL-WORLD SCENARIOS
+
+### Scenario C: Multi-Branch Staggered Go-Live
+*   **Context:** A school group with 5 branches is going live one branch at a time (Branch 1 in April, Branch 2 in May, etc.).
+*   **Challenge:** Branches 2-5 continue using the old system while Branch 1 is already on the new ERP.
+*   **Workflow:**
+    1.  Each branch has its own migration batch.
+    2.  The central accounting system (Tally) receives data from BOTH the old and new systems during the transition.
+    3.  The migration engine supports "Incremental Sync" for the transition period where pending payments made in the old system after the cutoff are periodically synced to the new ERP until full switchover.
+
+### Scenario D: The "Excel-Only" School
+*   **Context:** A small school (200 students) with zero existing software. All records are in Excel sheets maintained by the Principal's assistant.
+*   **Challenge:** Data is extremely unstructured. Column headers change per sheet. Some years have data, others don't.
+*   **Approach:**
+    1.  Onboarding specialist provides a "Standardized Template.xlsx" with the exact column headers and formats expected.
+    2.  School staff manually copies data from their messy sheets into the template.
+    3.  The migration engine imports from this clean template.
+    4.  For historical data that's too messy to clean, the specialist advises: "Don't import. Start fresh with Opening Balances only."
+
+---
+
+## CONFIGURATION PARAMETERS
+
+| Parameter | Default | Description |
+|---|---|---|
+| `migration_cutoff_date` | `2025-03-31` | The date separating "history" from "live" data |
+| `migration_dry_run_enabled` | `true` | Always simulate before committing? |
+| `migration_auto_map_threshold` | 85% | Fuzzy match % to auto-map student IDs between systems |
+| `migration_allow_rollback` | `true` | Can a committed batch be reversed? |
+| `migration_historical_import_mode` | `SUMMARY_LINE` | Options: `FULL_DETAIL`, `SUMMARY_LINE`, `NONE` |
+| `migration_encoding_default` | `UTF-8` | Default character encoding for CSV uploads |
+| `migration_max_validation_errors` | 50 | Max errors before batch is auto-rejected |
+
+---
+
 **Status:** Production-Ready Documentation  
-**Version:** 2.0  
+**Version:** 3.0  
 **Last Updated:** March 2026
