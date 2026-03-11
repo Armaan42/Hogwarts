@@ -52,6 +52,7 @@ Each module directory contains:
 ## Module Categories
 
 ### CATEGORY 1: ACADEMIC & LEARNING (Modules 1-7)
+
 1. **Student Management Module** - Central student repository, profiles, enrollment
 2. **Academic & Curriculum Management** - Curriculum design, subject management
 3. **Timetable & Resource Scheduling** - Automated scheduling, resource allocation
@@ -61,6 +62,7 @@ Each module directory contains:
 7. **Special Education & Learning Support** - IEP, learning disabilities support
 
 ### CATEGORY 2: STUDENT SERVICES & WELL-BEING (Modules 8-13)
+
 8. **Attendance Management Module** - Biometric tracking, leave management
 9. **Health & Wellness Module** - Medical records, infirmary, counseling
 10. **Discipline & Behavior Management** - Incident tracking, merit system
@@ -69,6 +71,7 @@ Each module directory contains:
 13. **Career Guidance & University Counseling** - College applications, career planning
 
 ### CATEGORY 3: ADMINISTRATIVE & OPERATIONS (Modules 14-21)
+
 14. **HR & Teacher Management** - Payroll, performance, recruitment
 15. **Admissions & CRM Module** - Lead management, enrollment funnel
 16. **Inventory & Asset Management** - Stock control, asset tracking
@@ -79,11 +82,13 @@ Each module directory contains:
 21. **Facilities & Infrastructure Management** - Maintenance, space utilization
 
 ### CATEGORY 4: FINANCIAL MANAGEMENT (Modules 22-24)
+
 22. **Fee Management Module** - Billing, payments, scholarships, defaulters
 23. **Accounts & Finance Module** - General ledger, budgeting, financial reporting
 24. **Donations & Fundraising** - Donor management, campaign tracking
 
 ### CATEGORY 5: INTELLIGENCE & COMPLIANCE (Modules 25-29)
+
 25. **AI & Predictive Analytics Module** - Student performance prediction, insights
 26. **Consent & Compliance Management** - GDPR, data privacy, permissions
 27. **Accreditation & Quality Assurance** - Standards compliance, audits
@@ -91,23 +96,27 @@ Each module directory contains:
 29. **Surveys & Feedback Management** - Stakeholder feedback, NPS tracking
 
 ### CATEGORY 6: COMMUNICATION & ENGAGEMENT (Modules 30-33)
+
 30. **Unified Communication Engine** - SMS, email, push notifications, WhatsApp
 31. **Parent Engagement & Volunteering** - Parent portal, volunteer coordination
 32. **Events & Activities Module** - Event management, registrations
 33. **Alumni Module** - Alumni network, mentorship, fundraising
 
 ### CATEGORY 7: CO-CURRICULAR & ENRICHMENT (Modules 34-36)
+
 34. **Sports & Athletics Management** - Team management, tournaments, fitness
 35. **Arts & Cultural Activities** - Performances, exhibitions, competitions
 36. **Clubs & Societies Management** - Club operations, membership
 
 ### CATEGORY 8: INFRASTRUCTURE & TECHNOLOGY (Modules 37-40)
+
 37. **Multi-Campus Management** - Multi-location operations, centralized control
 38. **Integration Hub** - Third-party integrations, API management
 39. **User Portals** - Web portals for all stakeholders
 40. **Mobile App** - Native mobile applications (iOS/Android)
 
 ### CATEGORY 9: ADVANCED FEATURES (Modules 41-48)
+
 41. **Reports & Dashboards** - Business intelligence, custom reports
 42. **Sustainability & Green Initiatives** - Environmental tracking, green campus
 43. **Parent Financial Planning** - Fee planning, education loans
@@ -118,6 +127,7 @@ Each module directory contains:
 48. **Canteen & Nutrition** - Menu planning, nutrition tracking
 
 ### CATEGORY 10: GOVERNANCE, SECURITY & COMPLIANCE (Modules 49-54)
+
 49. **Board & Governance Management** - Board meetings, governance compliance
 50. **Legal & Contract Management** - Contract lifecycle, legal compliance
 51. **Security & Access Control** - Role-based access, authentication
@@ -127,22 +137,148 @@ Each module directory contains:
 
 ---
 
+## User Roles & Access Hierarchy
+
+The Hogwarts ERP system supports a comprehensive role-based access control (RBAC) framework. Each role has a defined scope, permission set, and module access level.
+
+### TIER 1: SYSTEM ADMINISTRATION
+
+| #   | Role                       | Description                                                                                                                                                                          | Scope                 | Key Modules            |
+| --- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------- | ---------------------- |
+| 1   | **Super Administrator**    | Full system control. Creates campuses, manages global configurations, defines role templates, oversees data backups, and has unrestricted access to all modules across all campuses. | Global (All Campuses) | All 54 Modules         |
+| 2   | **System Administrator**   | Technical system management. Handles server configurations, API integrations, user provisioning, security policies, database maintenance, and third-party service connections.       | Global                | 37, 38, 51, 52, 53, 54 |
+| 3   | **Database Administrator** | Data integrity and performance. Manages database schemas, migration scripts, backup schedules, data archival, and disaster recovery procedures.                                      | Global                | 38, 52, 53             |
+
+### TIER 2: INSTITUTIONAL LEADERSHIP
+
+| #   | Role                                | Description                                                                                                                                                                   | Scope              | Key Modules                    |
+| --- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------ | ------------------------------ |
+| 4   | **Chairman / Trust President**      | Governing body head. Read-only access to financial summaries, audit reports, compliance status, and institutional KPIs across all campuses.                                   | Global (Read-Only) | 22, 23, 24, 27, 41, 49         |
+| 5   | **Director / CEO**                  | Strategic and operational leadership. Access to cross-campus analytics, financial dashboards, admissions funnel, HR summaries, and strategic planning modules.                | Global             | 22, 23, 25, 27, 37, 41, 46, 49 |
+| 6   | **Principal**                       | Campus-level academic and administrative head. Full authority over academics, exams, discipline, staff, and campus operations. Approves results, budgets, and policy changes. | Campus             | 1-13, 14, 22, 25, 27, 29, 41   |
+| 7   | **Vice Principal (Academics)**      | Academic operations. Manages timetable, curriculum, assessment schedules, teacher allocation, and academic quality assurance.                                                 | Campus             | 2, 3, 5, 6, 7, 45              |
+| 8   | **Vice Principal (Administration)** | Administrative operations. Manages discipline, transport, hostel, facilities, security, and non-academic staff.                                                               | Campus             | 10, 11, 12, 16, 17, 19, 20, 21 |
+
+### TIER 3: ACADEMIC STAFF
+
+| #   | Role                                 | Description                                                                                                                                                           | Scope                    | Key Modules         |
+| --- | ------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ | ------------------- |
+| 9   | **Academic Coordinator**             | Curriculum and pedagogy oversight. Manages syllabus planning, learning outcomes, content quality, and teacher training coordination.                                  | Grade-Level / Department | 2, 4, 5, 7, 45      |
+| 10  | **Head of Department (HOD)**         | Subject department head. Verifies marks entries, approves question papers, manages subject teachers, and reviews departmental performance.                            | Department               | 2, 4, 5, 14, 45     |
+| 11  | **Class Teacher / Homeroom Teacher** | Primary student contact. Marks daily attendance, enters report card remarks, communicates with parents, monitors student behavior and progress.                       | Section (e.g., 8A)       | 1, 5, 8, 10, 29, 31 |
+| 12  | **Subject Teacher**                  | Subject-specific instruction. Enters period attendance, creates assignments, uploads content to LMS, enters marks, and evaluates answer sheets.                       | Subject + Sections       | 2, 3, 4, 5, 8, 45   |
+| 13  | **Substitute / Guest Teacher**       | Temporary teaching role. Limited access to mark period attendance and access lesson plans for assigned periods only.                                                  | Specific Period/Section  | 3, 4, 8             |
+| 14  | **Lab Assistant**                    | Manages lab inventory, schedules lab slots, supports practical exams, and records lab attendance.                                                                     | Lab / Department         | 4, 5, 16, 47        |
+| 15  | **Special Educator (SENCO)**         | Manages IEPs (Individualized Education Plans), learning disability accommodations, assistive technology allocation, and progress tracking for special needs students. | Assigned Students        | 7                   |
+| 16  | **Sports Instructor / PE Teacher**   | Manages sports teams, fitness assessments, sports attendance, tournament logistics, and co-scholastic PE grading.                                                     | Campus                   | 5, 8, 34            |
+| 17  | **Arts / Music Teacher**             | Manages cultural activities, co-scholastic art/music grading, club coordination, and performance event planning.                                                      | Campus                   | 5, 35, 36           |
+| 18  | **Librarian**                        | Manages book cataloging, circulation (issuing/returning), digital library resources, overdue fines, and library attendance.                                           | Library                  | 18                  |
+
+### TIER 4: STUDENT SERVICES & SUPPORT STAFF
+
+| #   | Role                               | Description                                                                                                                                                                    | Scope          | Key Modules    |
+| --- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------- | -------------- |
+| 19  | **School Counselor**               | Student mental health and behavioral support. Conducts psychometric assessments, manages counseling sessions, handles chronic absenteeism cases, and provides career guidance. | Campus         | 7, 9, 10, 13   |
+| 20  | **Career Guidance Counselor**      | University and career advisory. Manages college application tracking, entrance exam preparation, recommendation letters, and career aptitude mapping.                          | Grades 9-12    | 13, 5 (Sub 10) |
+| 21  | **School Nurse / Medical Officer** | Student health management. Maintains medical records, manages infirmary visits, tracks immunization, issues medical certificates, and handles health emergencies.              | Campus         | 9, 20          |
+| 22  | **Hostel Warden**                  | Residential student management. Oversees room allocation, hostel attendance, mess management, late-night check-ins, and hostel discipline.                                     | Hostel Block   | 12, 8          |
+| 23  | **Transport Coordinator**          | Fleet and route management. Manages bus routes, driver assignments, vehicle maintenance, GPS tracking, and student transport allocation.                                       | Transport      | 11             |
+| 24  | **Mess / Canteen Manager**         | Food service management. Manages meal planning, nutrition tracking, canteen inventory, and diet-specific meal preparations.                                                    | Mess / Canteen | 12, 48         |
+
+### TIER 5: ADMINISTRATIVE & OFFICE STAFF
+
+| #   | Role                          | Description                                                                                                                                                                                      | Scope       | Key Modules    |
+| --- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------- | -------------- |
+| 25  | **Front Office Executive**    | First point of contact. Handles visitor management, phone enquiries, admission enquiries, certificate requests, and student dispatch/early pickup logging.                                       | Campus      | 15, 19, 28     |
+| 26  | **Admissions Officer**        | Manages the complete admissions funnel. Handles enquiry registration, application processing, entrance test scheduling, interview coordination, seat allocation, and enrollment confirmation.    | Campus      | 15             |
+| 27  | **Exam Controller**           | Examination operations head. Manages exam scheduling, hall allocation, question paper handling, answer sheet coding/decoding, marks verification, result processing, and report card generation. | Campus      | 5, 6, 47       |
+| 28  | **Accounts Officer / Bursar** | Financial management. Handles fee collection, payment processing, refund management, bank reconciliation, scholarship disbursement, and financial reporting.                                     | Campus      | 22, 23, 24     |
+| 29  | **Fee Collection Clerk**      | Counter-level fee operations. Processes cash/cheque/DD payments, issues receipts, and manages daily collection registers.                                                                        | Counter     | 22             |
+| 30  | **HR Manager**                | Human resource management. Handles staff recruitment, payroll processing, leave management, appraisals, professional development, and compliance documentation.                                  | Campus      | 14             |
+| 31  | **Procurement Officer**       | Purchasing and vendor management. Handles purchase requisitions, vendor empanelment, quotation comparison, purchase orders, and goods receipt verification.                                      | Campus      | 16, 17         |
+| 32  | **Administrative Officer**    | General administration. Oversees facilities, maintenance requests, event logistics, stationery distribution, and day-to-day campus operations.                                                   | Campus      | 19, 20, 21, 32 |
+| 33  | **Data Entry Operator**       | Data management. Handles bulk data entry for marks, attendance backfilling, student record updates, and report generation.                                                                       | As Assigned | 1, 5, 8        |
+| 34  | **IT Support Staff**          | On-ground tech support. Manages device setup, biometric enrollment, network troubleshooting, software installations, and teacher tech assistance.                                                | Campus      | 38, 40, 51     |
+
+### TIER 6: EXTERNAL STAKEHOLDERS (PORTAL ACCESS)
+
+| #   | Role                               | Description                                                                                                                                                            | Scope                    | Key Modules       |
+| --- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ | ----------------- |
+| 35  | **Parent / Guardian**              | Child's academic monitor. Views attendance, marks, report cards, fee invoices, leave applications, transport tracking, and communicates with teachers via portal/app.  | Own Child Only           | 8, 22, 31, 39, 40 |
+| 36  | **Student**                        | Self-service academic participant. Views timetable, downloads assignments, submits homework, accesses LMS content, participates in discussions, and views own results. | Own Profile Only         | 4, 5, 8, 39, 40   |
+| 37  | **Alumni**                         | Past student engagement. Access to alumni directory, mentorship programs, donation portal, event invitations, and transcript requests.                                 | Alumni Portal            | 33                |
+| 38  | **Board Member / Trustee**         | Governance oversight. Read-only access to governance dashboards, financial summaries, audit reports, compliance certifications, and meeting agendas.                   | Board Portal             | 24, 27, 41, 49    |
+| 39  | **Auditor (External)**             | Financial and operational audit. Time-limited, read-only access to financial records, compliance documents, attendance registers, and fee collection data.             | Audit Scope (Time-Bound) | 22, 23, 27        |
+| 40  | **Government Inspector (DEO/BEO)** | Regulatory inspection. Verification-only access to RTE compliance data, student enrollment statistics, teacher qualification records, and infrastructure reports.      | Inspection Scope         | 1, 8, 14, 27      |
+
+### ROLE HIERARCHY & INHERITANCE
+
+```
+Super Administrator
+  └── System Administrator
+       └── Principal
+            ├── Vice Principal (Academics)
+            │    ├── Academic Coordinator
+            │    │    ├── HOD
+            │    │    │    ├── Subject Teacher
+            │    │    │    └── Lab Assistant
+            │    │    ├── Special Educator
+            │    │    └── Librarian
+            │    └── Exam Controller
+            │         └── Data Entry Operator
+            ├── Vice Principal (Administration)
+            │    ├── Administrative Officer
+            │    │    ├── Front Office Executive
+            │    │    └── Transport Coordinator
+            │    ├── Hostel Warden
+            │    ├── School Nurse
+            │    └── HR Manager
+            ├── Accounts Officer
+            │    └── Fee Collection Clerk
+            ├── School Counselor
+            │    └── Career Guidance Counselor
+            └── Class Teacher
+                 └── Substitute Teacher
+```
+
+**Permission Inheritance:** A higher-tier role inherits all permissions of the roles below it in its branch. For example, a Principal has all permissions of Vice Principals, HODs, and Teachers. However, cross-branch inheritance does not apply (an Accounts Officer does not inherit Teacher permissions).
+
+### CUSTOM ROLE BUILDER
+
+The system supports creating custom roles by combining granular permissions:
+
+| Permission Category | Granularity Options                                 |
+| ------------------- | --------------------------------------------------- |
+| **Module Access**   | Full / Read-Only / No Access (per module)           |
+| **Data Scope**      | Global / Campus / Grade / Section / Own             |
+| **Action Level**    | Create / Read / Update / Delete / Approve / Export  |
+| **Time-Bound**      | Permanent / Date-Limited (for auditors, inspectors) |
+| **IP Restriction**  | Any / Campus Network Only / Whitelisted IPs         |
+
+---
+
 ## Navigation Guide
 
 ### For Developers
+
 Start with these foundational modules to understand the core architecture:
+
 - [Module 01: Student Management](docs/modules/01_student_management/README.md) - The heart of the ERP
 - [Module 38: Integration Hub](docs/modules/38_integration_hub/README.md) - API and integration patterns
 - [Module 51: Security & Access Control](docs/modules/51_security_access_control/README.md) - Security architecture
 
 ### For Business Analysts
+
 Understand business processes and workflows:
+
 - [Module 15: Admissions & CRM](docs/modules/15_admissions_crm/README.md) - Student acquisition funnel
 - [Module 22: Fee Management](docs/modules/22_fee_management/README.md) - Revenue operations
 - [Module 25: AI & Predictive Analytics](docs/modules/25_ai_predictive_analytics/README.md) - Intelligence layer
 
 ### For Implementation Teams
+
 Focus on deployment and configuration:
+
 - [Module 37: Multi-Campus Management](docs/modules/37_multi_campus_management/README.md) - Scaling strategies
 - [Module 53: Disaster Recovery](docs/modules/53_disaster_recovery_business_continuity/README.md) - Resilience planning
 - [Module 54: Internationalization](docs/modules/54_internationalization_localization/README.md) - Global deployment
@@ -152,6 +288,7 @@ Focus on deployment and configuration:
 All module and submodule documentation follows enterprise-grade standards:
 
 ### Module README Structure
+
 - **Module Overview** - Purpose, role, type, dependencies
 - **Outbound Connections** - Data flows to other modules
 - **Inbound Connections** - Data received from other modules
@@ -159,6 +296,7 @@ All module and submodule documentation follows enterprise-grade standards:
 - **Real-World Examples** - Practical use cases
 
 ### Submodule README Structure
+
 - **Purpose** - What problem this submodule solves
 - **Key Features** - Core capabilities
 - **Data Fields** - Complete field specifications
@@ -170,13 +308,16 @@ All module and submodule documentation follows enterprise-grade standards:
 ## Key Features
 
 ### Comprehensive Dependency Mapping
+
 Every module documents its relationships with other modules, including:
+
 - Data flows (what data is sent/received)
 - Trigger events (when integration occurs)
 - Business impact (how it affects operations)
 - Real-world examples (practical scenarios)
 
 ### Production-Ready Documentation
+
 - ✅ Complete business logic with pseudocode
 - ✅ Real-world examples and use cases
 - ✅ Data field specifications
@@ -185,6 +326,7 @@ Every module documents its relationships with other modules, including:
 - ✅ User workflows and processes
 
 ### Enterprise-Grade Coverage
+
 - 54 comprehensive modules
 - 457 detailed submodule specifications
 - Complete dependency analysis across all modules
@@ -194,6 +336,7 @@ Every module documents its relationships with other modules, including:
 ## Technology Vision
 
 **Hogwarts** is designed as a modern, cloud-native ERP with:
+
 - **AI-Powered Intelligence** - Predictive analytics, personalized learning
 - **Mobile-First Design** - Native apps for all stakeholders
 - **Real-Time Operations** - Live updates, instant notifications
@@ -204,6 +347,7 @@ Every module documents its relationships with other modules, including:
 ## Use Cases
 
 This documentation supports:
+
 - **Development Teams** - Complete technical specifications for implementation
 - **Business Analysts** - Process flows and business requirements
 - **Project Managers** - Scope definition and dependency planning
@@ -222,6 +366,7 @@ This documentation supports:
 ## Documentation Quality
 
 Every document in this repository is:
+
 - ✅ **Detailed** - Comprehensive coverage of all aspects
 - ✅ **Practical** - Real-world examples and scenarios
 - ✅ **Structured** - Consistent format across all modules
@@ -235,9 +380,6 @@ Every document in this repository is:
 **Last Updated:** January 2026  
 **Status:** Production-Ready Documentation  
 **Total Modules:** 54  
-**Total Submodules:** 457+  
+**Total Submodules:** 457+
 
 **Hogwarts** - Transforming Educational Excellence Through Technology
-
-
-
