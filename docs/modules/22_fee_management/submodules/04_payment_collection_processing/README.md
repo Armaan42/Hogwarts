@@ -1,193 +1,199 @@
 # PAYMENT COLLECTION & PROCESSING
 
 **Module:** Fee Management  
-**Submodule Code:** FEE-PAYMENT-004  
-**Category:** Financial Core  
-**Priority:** Critical (P0)
-
-## Overview
-
-Accepts and processes fee payments through multiple channels (online, cash, cheque, bank transfer), validates transactions, allocates payments to invoices, and generates receipts.
-
-## Purpose
-
-Provide flexible payment options to parents, ensure secure transaction processing, maintain accurate payment records, and automate payment allocation to outstanding invoices.
-
-## Key Features
-
-### 4.1 Payment Modes
-
-**Online Payment Gateway:**
-- Credit/Debit Card, Net Banking, UPI, Wallets
-- Gateway Fee: 1.5-2%
-- Instant Confirmation
-
-**Cash:**
-- Paid at school accounts office
-- Receipt printed immediately
-- Daily limit: ₹50,000
-
-**Cheque:**
-- Payable to school
-- Clearance time: 2-3 days
-- Post-dated cheques accepted
-
-**Bank Transfer (NEFT/RTGS):**
-- Direct to school account
-- Reconciliation required
-
-**Standing Instruction:**
-- Auto-debit monthly
-- Setup once
-
-### 4.2 Payment Processing Workflow
-
-```
-FUNCTION process_payment(payment_details):
-  // Validate payment
-  IF payment_details.amount <= 0:
-    RETURN ERROR "Invalid amount"
-  END IF
-  
-  student = GET student(payment_details.student_id)
-  IF student.status != "ACTIVE":
-    RETURN ERROR "Student not active"
-  END IF
-  
-  // Process based on mode
-  IF payment_details.mode = "ONLINE":
-    gateway_response = CALL payment_gateway_API(payment_details)
-    IF gateway_response.status = "SUCCESS":
-      transaction_id = gateway_response.transaction_id
-    ELSE:
-      RETURN ERROR "Payment failed"
-    END IF
-  ELSE IF payment_details.mode = "CASH":
-    transaction_id = GENERATE_RECEIPT_NUMBER()
-    PRINT physical_receipt()
-  ELSE IF payment_details.mode = "CHEQUE":
-    transaction_id = "CHQ/" + payment_details.cheque_number
-    payment_details.status = "PENDING_CLEARANCE"
-  END IF
-  
-  // Create payment record
-  payment = NEW Payment
-  payment.student = student
-  payment.amount = payment_details.amount
-  payment.mode = payment_details.mode
-  payment.transaction_id = transaction_id
-  payment.payment_date = TODAY
-  
-  // Allocate to invoices (oldest first)
-  outstanding_invoices = GET invoices WHERE student = student AND status = "UNPAID"
-  remaining_amount = payment_details.amount
-  
-  FOR each invoice IN outstanding_invoices:
-    IF remaining_amount >= invoice.outstanding_amount:
-      invoice.paid_amount += invoice.outstanding_amount
-      remaining_amount -= invoice.outstanding_amount
-      invoice.status = "PAID"
-    ELSE:
-      invoice.paid_amount += remaining_amount
-      invoice.outstanding_amount -= remaining_amount
-      remaining_amount = 0
-      invoice.status = "PARTIALLY_PAID"
-      BREAK
-    END IF
-  END FOR
-  
-  // Handle excess payment
-  IF remaining_amount > 0:
-    student.advance_payment = remaining_amount
-  END IF
-  
-  // Send confirmation
-  SEND SMS(student.parent_mobile, "Payment ₹{amount} received")
-  SEND EMAIL(student.parent_email, payment_receipt.pdf)
-  
-  RETURN payment
-END FUNCTION
-```
-
-### 4.3 Payment Receipt
-
-```
-═══════════════════════════════════════
-       XYZ SCHOOL FEE RECEIPT
-═══════════════════════════════════════
-Receipt No: RCT/2024/001234
-Date: July 10, 2024
-
-Student: Rohan Sharma, Grade 8B
-Admission No: 2018/08/0456
-
-───────────────────────────────────────
-Invoice: INV/2024/0001234
-Invoice Amount: ₹28,500
-Previous Dues: ₹5,000
-───────────────────────────────────────
-Amount Paid: ₹33,500
-Payment Mode: Online (UPI)
-Transaction ID: 424264859621
-───────────────────────────────────────
-Outstanding Balance: ₹0
-
-Received by: Mrs. Gupta (Accounts)
-═══════════════════════════════════════
-```
-
-### 4.4 Payment Allocation Logic
-
-**Oldest Invoice First:**
-- Outstanding: April (₹10,000), July (₹28,500)
-- Payment: ₹30,000
-- Allocation: April fully paid (₹10,000), July partially paid (₹20,000)
-
-**Advance Payment:**
-- Payment: ₹50,000, Total dues: ₹40,000
-- Excess: ₹10,000 stored as advance
-- Auto-adjusted against next invoice
-
-### 4.5 Failed Payment Handling
-
-**Online Failure:** Gateway timeout, insufficient balance
-**Cheque Bounce:** Payment status "BOUNCED", bounce charges ₹500 added
-**Refund Processing:** Duplicate payment refunded to original source (5-7 days)
-
-## Data Fields
-
-```
-payment_id (PK)
-student_id (FK)
-payment_date
-amount
-payment_mode (CASH/CHEQUE/ONLINE/NEFT/RTGS)
-transaction_id
-gateway_transaction_id
-cheque_number
-cheque_date
-bank_name
-status (SUCCESS/PENDING/FAILED/BOUNCED)
-allocated_to_invoices (JSON)
-advance_amount
-received_by
-receipt_number
-receipt_generated_date
-```
-
-## Integration Points
-
-### Connects TO:
-1. **Invoice Module** - Allocate payment to invoices
-2. **Receipt Module** - Generate payment receipt
-3. **Accounts Module** - Post to general ledger
-4. **Communication Module** - Send payment confirmation
-
-### Receives FROM:
-1. **Payment Gateway** - Online payment status
-2. **Bank** - Cheque clearance status
+**Submodule Code:** FEE-COLL-004  
+**Category:** Financial Operations  
+**Priority:** Critical (P0)  
+**Owners:** Cashier, Accounts Manager
 
 ---
 
-**Status:** Fully Documented  
-**Last Updated:** January 15, 2026
+## OVERVIEW
+
+The Payment Collection & Processing submodule handles the incoming flow of revenue. It acts as the gateway for receiving money via multiple channels (Online, Cash, Cheque, UPI) and reconciling it against pending invoices. It is designed to be rigorous, ensuring that every rupee received is accounted for, receipted, and mapped to the student's ledger instantly.
+
+### Purpose
+
+To provide a secure, error-free, and flexible mechanism for parents to pay fees while ensuring real-time ledger updates for the school. It reduces manual data entry, prevents fraud/theft, and offers convenience through digital payment options.
+
+### Scope
+
+-   **Multi-Mode Collection:** Handling Cash, Cheques, Demand Drafts (DD), NEFT/RTGS, Credit/Debit Cards, UPI, and Wallets.
+-   **Payment Gateway Integration:** Seamless connection with providers like Razorpay, Stripe, BillDesk.
+-   **Cashier Operations:** Interface for school office staff to collect physical payments.
+-   **Receipt Generation:** Instant digital and physical receipts.
+-   **Payment Allocation:** Logic to distribute a single lump-sum payment across multiple invoice heads (Tuition vs. Transport vs. Tax).
+-   **Failed Payment Handling:** Managing bounced cheques and failed online transactions.
+
+---
+
+## KEY FEATURES
+
+### 1. Online Payment Gateway (PG) Integration
+
+**Feature Description:**
+The primary mode of collection (aiming for >90% usage).
+*   **Seamless Flow:** Parent clicks "Pay Now" in portal -> Redirected to PG -> Enters Details -> Redirected back with Success/Failure.
+*   **Split Settlements:** Supports splitting funds into different bank accounts (e.g., Trust Account vs. Transport Company Account) if PG supports Nodal Accounts.
+*   **Real-Time Status:** Webhooks ensure that even if the user closes the browser, the server gets the payment confirmation.
+
+### 2. POS / Cashier Console
+
+**Feature Description:**
+For parents paying at the school counter.
+*   **Search:** Quick lookup by Student Name, ID, or Parent Phone.
+*   **Dues Display:** Shows clearly what is pending (Q1, Q2, Transport).
+*   **Mode Selection:** Cash, Cheque (Requires Cheque No, Bank Name, Date), or POS Machine (Card Swipe).
+*   **Drawer Management:** Tracks opening and closing cash balance for the cashier.
+
+### 3. Cheque & DD Lifecycle Management
+
+**Feature Description:**
+Unlike instant payments, Cheques have a lifecycle.
+1.  **Received:** Entetred into system. Status: `PENDING_CLEARANCE`. Receipt status: `PROVISIONAL`.
+2.  **Deposited:** Grouped into a "Deposit Slip" and sent to bank.
+3.  **Cleared:** Mark as `CLEARED` upon bank confirmation. Ledger updated fully.
+4.  **Bounced:** Mark as `BOUNCED`. System reverses the payment and auto-applies a "Cheque Bounce Penalty".
+
+### 4. Smart Payment Allocation
+
+**Feature Description:**
+When a parent pays ₹50,000 against a total due of ₹50,000, it's simple. But if they pay ₹25,000 (Partial) or ₹60,000 (Excess), rules apply.
+*   **FIFO:** Clear oldest invoices first.
+*   **Head Priority:** Clear Penalties -> Tuition -> Annual Charges.
+*   **Excess handling:** Store extra amount in a "Student Wallet" (Advance) for future adjustment.
+
+---
+
+## DATABASE SCHEMA
+
+### 1. Payments (`fee_payments`)
+Master record of an incoming transaction.
+
+```sql
+CREATE TABLE fee_payments (
+    payment_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    student_id INT NOT NULL,
+    
+    -- Transaction Details
+    amount_received DECIMAL(12,2) NOT NULL,
+    payment_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    payment_mode ENUM('CASH', 'CHEQUE', 'DD', 'ONLINE', 'POS', 'NEFT') NOT NULL,
+    
+    -- References
+    transaction_ref_no VARCHAR(100), -- PG Transaction ID or Cheque No
+    bank_name VARCHAR(100), -- For Cheques/NEFT
+    instrument_date DATE,   -- For Cheques
+    
+    -- Status
+    status ENUM('SUCCESS', 'PENDING', 'FAILED', 'BOUNCED', 'REFUNDED') DEFAULT 'SUCCESS',
+    
+    -- Metadata
+    collected_by INT, -- Cashier User ID (null if Online)
+    remarks TEXT,
+    
+    FOREIGN KEY (student_id) REFERENCES students(student_id)
+);
+```
+
+### 2. Payment Allocations (`fee_payment_allocations`)
+Mapping payment to invoices.
+
+```sql
+CREATE TABLE fee_payment_allocations (
+    alloc_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    payment_id BIGINT NOT NULL,
+    invoice_id BIGINT NOT NULL,
+    
+    amount_allocated DECIMAL(12,2) NOT NULL,
+    
+    FOREIGN KEY (payment_id) REFERENCES fee_payments(payment_id),
+    FOREIGN KEY (invoice_id) REFERENCES fee_invoices(invoice_id)
+);
+```
+
+### 3. Receipts (`fee_receipts`)
+The document given to the parent.
+
+```sql
+CREATE TABLE fee_receipts (
+    receipt_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    receipt_number VARCHAR(50) UNIQUE NOT NULL, -- e.g., RCPT/26/1001
+    payment_id BIGINT NOT NULL,
+    
+    generated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    pdf_path VARCHAR(255),
+    
+    is_cancelled BOOLEAN DEFAULT FALSE,
+    cancellation_reason TEXT,
+    
+    FOREIGN KEY (payment_id) REFERENCES fee_payments(payment_id)
+);
+```
+
+---
+
+## BUSINESS RULES
+
+### Rule 1: Cash Handling Limit
+*   System warns or blocks Cash Payments > ₹20,000 (or as per locak Income Tax laws).
+*   Requires Supervisor Override for high-value cash transactions to ensure Anti-Money Laundering (AML) compliance logic.
+
+### Rule 2: Cheque Bouncing
+*   If a Cheque is marked `BOUNCED`:
+    1.  The original receipt is Cancelled.
+    2.  The Invoice Balance is restored (Status -> Unpaid).
+    3.  A new Invoice is generated for "Cheque Bounce Charge" (e.g., ₹500).
+    4.  Parent is notified and blocked for future Cheque payments (must pay Cash/DD).
+
+### Rule 3: Online Convenience Fee
+*   School can configure who bears the PG Transaction Rate (MDR).
+    *   **Surcharge Model:** Parent pays (Fee + 1.5%).
+    *   **Absorption Model:** School pays (School receives Fee - 1.5%).
+    *   System records the "Gross" and "Net" appropriately.
+
+---
+
+## INTEGRATION POINTS
+
+### Outbound Relationships
+*   **To Bank Reconciliation:** Sends daily collection logs to match against bank statement.
+*   **To SMS Gateway:** "Dear Parent, Payment of Rs. X received via Y. Receipt No: Z."
+
+### Inbound Relationships
+*   **From Invoice Module:** Fetches `NetPayable` to determine how much to collect.
+*   **From Payment Gateway:** Webhooks trigger the `record_online_payment()` function.
+
+---
+
+## USER WORKFLOWS
+
+### Workflow 1: Cash Collection at Counter
+**Actor:** Cashier
+
+1.  **Parent Arrival:** Parent comes to pay ₹10,000 cash for "Rohan Grade 5".
+2.  **Lookup:** Cashier types "Rohan" in search. Selects correct student.
+3.  **View Dues:** System shows Balance ₹12,500.
+4.  **Entry:** Cashier selects "Partial Payment", enters ₹10,000.
+5.  **Mode:** Selects "CASH".
+6.  **Confirm:** System prompts "Collect ₹10,000?". Click Yes.
+7.  **Receipt:** Receipt #8099 prints on thermal printer. 
+8.  **Balance:** Updated balance ₹2,500 shown.
+
+### Workflow 2: Cheque Clearing Process
+**Actor:** Accountant
+
+1.  **Deposit:** Accountant takes 50 physical cheques to bank. 
+2.  **System Action:** Bulk selects these 50 entries and marks "Deposited". using "Create Pay-in Slip" feature.
+3.  **Clearance (3 Days Later):** Accountant downloads Bank Statement.
+4.  **Reconciliation:** 49 Cheques cleared. 1 Cheque (No. 445521) bounced "Insufficient Funds".
+5.  **Action:**
+    *   Select 49 -> Mark "CLEARED".
+    *   Select 1 -> Mark "BOUNCED".
+6.  **Outcome:** The system automates ledger updates and penalty generation for the bounce.
+
+---
+
+**Status:** Production-Ready Documentation  
+**Version:** 2.0  
+**Last Updated:** January 20, 2026
