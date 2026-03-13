@@ -184,6 +184,42 @@ END FUNCTION
  - **Result:** Optimized timetable respecting curriculum constraints
  - **Published:** July 1, 2024 to students/parents
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Curriculum finalized\nfor academic year"]
+        T2["Subject list updated"]
+        T3["Period allocation changed"]
+        T4["New elective introduced"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nTIMETABLE & SCHEDULING"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Subject List"]
+        D2["Core subjects"]
+        D3["Elective subjects"]
+        D4["Co-curricular subjects"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nTIMETABLE & SCHEDULING"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate TIMETABLE & SCHEDULING"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO ASSESSMENT & EXAMS MODULE
@@ -328,6 +364,42 @@ END FUNCTION
  - Feedback to curriculum: Add more Trigonometry practice resources
  - **Outcome:** Curriculum updated with additional Trigonometry worksheets
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Curriculum finalized"]
+        T2["Exam schedule created"]
+        T3["Question paper generation"]
+        T4["Result analysis"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nASSESSMENT & EXAMS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Learning Outcomes"]
+        D2["Subject-wise\nlearning objectives"]
+        D3["Chapter-wise outcomes"]
+        D4["Bloom's taxonomy levels"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nASSESSMENT & EXAMS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ASSESSMENT & EXAMS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO LEARNING MANAGEMENT SYSTEM (LMS)
@@ -471,6 +543,42 @@ END FUNCTION
  - Sees: 85% students completed Chapter 16 by August 15
  - Average quiz score: 7.5/10
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Curriculum finalized"]
+        T2["New chapter\nadded to curriculum"]
+        T3["Learning\nresources uploaded"]
+        T4["Chapter sequence changed"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nLEARNING MANAGEMENT\nSYSTEM (LMS)"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Course Structure"]
+        D2["Subject hierarchy"]
+        D3["Chapter sequence"]
+        D4["Topic breakdown"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nLEARNING MANAGEMENT\nSYSTEM (LMS)"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate LEARNING MANAGEMENT\nSYSTEM (LMS)"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 4. TO STUDENT MANAGEMENT MODULE
@@ -569,6 +677,42 @@ FUNCTION process_stream_selection(student, selected_stream):
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Student enrollment\n(Grade assignment)"]
+        T2["Stream selection\n(Grade 10 → 11 trans..."]
+        T3["Grade promotion (annual)"]
+        T4["Elective selection"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Grade-wise Curriculum\nRequirements"]
+        D2["Mandatory\nsubjects per grade"]
+        D3["Minimum attendance\nrequirement"]
+        D4["Pass marks criteria"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 5. TO HR & TEACHER MANAGEMENT MODULE
@@ -617,6 +761,42 @@ Curriculum defines teacher qualification requirements for each subject. Hiring d
  - Topics: New chapter content, updated assessment pattern
  - Trainer: CBSE resource person
  - **Outcome:** Teachers trained, ready for new academic year
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Curriculum updated\n(teacher training ..."]
+        T2["New subject introduced\n(new teacher h..."]
+        T3["Teacher\nhiring (qualification verific..."]
+        T4["Academic year planning\n(workload allo..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nHR & TEACHER MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Subject-wise\nTeacher Qualifications"]
+        D2["Physics: M.Sc.\nPhysics + B.Ed."]
+        D3["Chemistry: M.Sc.\nChemistry + B.Ed."]
+        D4["Math: M.Sc. Math\n/ M.A. Math + B.Ed."]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nHR & TEACHER MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate HR & TEACHER MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -673,6 +853,42 @@ Curriculum defines textbook requirements, reference materials, and digital resou
  - July: Books received, catalogued
  - August: Books issued to students
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Curriculum finalized\n(textbook list r..."]
+        T2["Academic year starts\n(procurement nee..."]
+        T3["New textbook\nedition released"]
+        T4["Student enrollment\nfinalized"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nLIBRARY MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Textbook List"]
+        D2["NCERT textbooks"]
+        D3["Private publishers"]
+        D4["Subject-wise textbooks"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nLIBRARY MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate LIBRARY MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 7. TO FEE MANAGEMENT MODULE
@@ -727,6 +943,40 @@ Curriculum determines fee components: textbook fees, lab fees, activity fees. St
  - Lab Fees: ₹1,000
  - **Total: ₹1,55,500**
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Fee structure\ncreation (annual)"]
+        T2["Stream selection\n(stream-specific fees)"]
+        T3["Elective selection\n(additional fees)"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nFEE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Textbook Costs"]
+        D2["Subject-wise\ntextbook prices"]
+        D3["Total textbook\nfee per grade"]
+        D4["Lab Fees"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFEE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FEE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 8. TO COMMUNICATION MODULE
@@ -776,6 +1026,42 @@ Curriculum updates, syllabus distribution, textbook lists must be communicated t
  - Syllabus documents uploaded
  - Textbook list with prices
  - Academic calendar published
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Academic year starts\n(syllabus distri..."]
+        T2["Curriculum updated\n(change notification)"]
+        T3["Textbook list finalized\n(procurement ..."]
+        T4["Academic\ncalendar published"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nCOMMUNICATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Syllabus PDFs"]
+        D2["Subject-wise\nsyllabus documents"]
+        D3["Chapter list,\nlearning outcomes"]
+        D4["Assessment pattern"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMMUNICATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMMUNICATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -830,6 +1116,43 @@ Curriculum updates, syllabus distribution, textbook lists must be communicated t
 
 **TRIGGER:** Board circular, syllabus update notification, assessment guideline change
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["BOARD/AFFILIATION AUTHORITY"]
+        S1["Board circular"]
+        S2["syllabus update\nnotification"]
+        S3["assessment\nguideline change"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+
+    SEND["SEND Data to\nAcademic Curriculum"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Official Syllabus"]
+        D2["Subject-wise\nsyllabus documents"]
+        D3["Chapter list,\ntopics, subtopics"]
+        D4["Learning outcomes"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAcademic Curriculum\nRecords"]
+
+    IMPACT1["CBSE Syllabus\nUpdate (2024-25)"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["March 2024"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Changes"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM TEACHER MANAGEMENT
@@ -879,6 +1202,43 @@ Curriculum updates, syllabus distribution, textbook lists must be communicated t
  - Next year: Pacing guide updated permanently
 
 **TRIGGER:** Monthly curriculum review meeting, teacher feedback form, chapter completion report
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["TEACHER MANAGEMENT"]
+        S1["Monthly curriculum\nreview meeting"]
+        S2["teacher feedback form"]
+        S3["chapter completion report"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+
+    SEND["SEND Data to\nAcademic Curriculum"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Curriculum Feedback"]
+        D2["Chapter difficulty level"]
+        D3["Time required per chapter"]
+        D4["Student comprehension\nissues"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAcademic Curriculum\nRecords"]
+
+    IMPACT1["Mid-year Curriculum\nReview (December ..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Math Teacher\n(Mr. Verma) Feedback"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["'Chapter 5 (Quadrilaterals)\ntoo diffi..."]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -930,6 +1290,43 @@ Curriculum updates, syllabus distribution, textbook lists must be communicated t
  - **Outcome:** Curriculum strengthened, learning gaps addressed
 
 **TRIGGER:** Exam results published, result analysis completed, performance review meeting
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["ASSESSMENT"]
+        S1["Exam results published"]
+        S2["result analysis completed"]
+        S3["performance\nreview meeting"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+
+    SEND["SEND Data to\nAcademic Curriculum"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Chapter-wise Performance"]
+        D2["Average marks per chapter"]
+        D3["Highest/lowest\nscoring chapters"]
+        D4["Question-wise analysis"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAcademic Curriculum\nRecords"]
+
+    IMPACT1["Post-Exam Analysis\n(Grade 9 Science, ..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Overall Performance"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Chapter-wise Analysis"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 

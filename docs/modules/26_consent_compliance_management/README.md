@@ -149,6 +149,41 @@ END FUNCTION
     - Result: BLOCKED
   - Email not sent, parent preference respected
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Data Collection:\nCheck consent before..."]
+        T2["Data Processing:\nVerify consent befor..."]
+        T3["Data Sharing: Confirm\nconsent before ..."]
+        T4["Marketing: Check\nmarketing consent"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nALL MODULES\n- CONSENT ENFORCEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Consent Status Checks"]
+        D2["Consent Requirements"]
+        D3["Compliance Flags"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nALL MODULES\n- CONSENT ENFORCEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ALL MODULES\n- CONSENT ENFORCEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO COMMUNICATION MODULE
@@ -200,6 +235,39 @@ All communications (SMS, email, WhatsApp) require consent, especially marketing 
   - Excluded: 350 parents (no consent or opted out)
   - Compliance: 100% (only consented recipients)
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Before Sending:\nCheck consent"]
+        T2["Opt-Out Request:\nUpdate consent, stop..."]
+        T3["Audit Request:\nProvide consent proof"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nCOMMUNICATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Communication Consent"]
+        D2["Opt-Out Management"]
+        D3["Consent Audit"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMMUNICATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMMUNICATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO STUDENT MANAGEMENT MODULE
@@ -239,6 +307,41 @@ Student data is highly sensitive (minors' data). Compliance module ensures prope
   - Valid consent for all processing
   - Audit trail for regulators
   - Quick response to data requests
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["New Admission: Collect\nall required c..."]
+        T2["Age Transition:\nUpdate consent requir..."]
+        T3["Data Sharing: Verify\nconsent before s..."]
+        T4["Consent Withdrawal:\nRemove data or re..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Enrollment Consents"]
+        D2["Age-Appropriate Consent"]
+        D3["Consent Verification"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 

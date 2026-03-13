@@ -152,6 +152,39 @@ END FUNCTION
   - Expand counseling hours (Priority: MEDIUM, Deadline: Apr-2026)
 - **Sent to QA Module:** For action planning and tracking
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Survey Completion:\nAnalyze results, s..."]
+        T2["Threshold Breach:\nAlert if satisfacti..."]
+        T3["Quarterly Review:\nComprehensive feedb..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nQUALITY ASSURANCE"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Survey Results"]
+        D2["Identified Issues"]
+        D3["Action Items"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nQUALITY ASSURANCE"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate QUALITY ASSURANCE"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO COMMUNICATION MODULE
@@ -188,6 +221,39 @@ Survey distribution requires communication channels. Feedback module uses Commun
   - Personalized messages
   - Mobile-friendly surveys
   - Convenient access
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Survey Launch:\nSend invitations"]
+        T2["Mid-Survey: Send\nreminders to non-res..."]
+        T3["Survey Close:\nSend thank you messages"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nCOMMUNICATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Survey Invitations"]
+        D2["Reminders"]
+        D3["Thank You Messages"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMMUNICATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMMUNICATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 

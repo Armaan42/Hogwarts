@@ -200,6 +200,42 @@ END FUNCTION
  - Gate pass record added
  - Total gate passes this year: 3
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Student requests\ngate pass"]
+        T2["Parent arrives\nto pick up student"]
+        T3["Security incident\ninvolving student"]
+        T4["Unauthorized\nexit attempt detected"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Gate Pass Records"]
+        D2["Student ID,\nname, grade, section"]
+        D3["Exit time, expected\nreturn time, actu..."]
+        D4["Reason for leaving"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO HR & STAFF MANAGEMENT MODULE
@@ -335,6 +371,42 @@ END FUNCTION
  - **HR Dashboard (End of Day):**
  - Mr. Verma: Present, On time, Overtime: 1h 10m
  - Monthly overtime: 15 hours (eligible for overtime pay)
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Staff swipes\nRFID card at gate"]
+        T2["Staff requests gate pass"]
+        T3["Visitor requests\nto meet staff"]
+        T4["Security incident\ninvolving staff"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nHR & STAFF MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Staff Entry/Exit Logs"]
+        D2["Staff ID,\nname, department"]
+        D3["Entry time"]
+        D4["Exit time"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nHR & STAFF MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate HR & STAFF MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -474,6 +546,42 @@ END FUNCTION
  - Status: Safe 
  - This month: 22/22 days on-time entry
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Student enters/exits\ncampus"]
+        T2["Parent submits\ngate pass request"]
+        T3["Security incident occurs"]
+        T4["Emergency declared"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nPARENT ENGAGEMENT PORTAL"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Entry/Exit Notifications"]
+        D2["Student entered\ncampus: 7:45 AM"]
+        D3["Student exited\ncampus: 3:30 PM"]
+        D4["Gate pass exits\nduring school hours"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nPARENT ENGAGEMENT PORTAL"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate PARENT ENGAGEMENT PORTAL"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 4. TO FACILITIES & INFRASTRUCTURE MODULE
@@ -575,6 +683,42 @@ FUNCTION schedule_security_patrol(patrol_route, time):
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["CCTV camera malfunction"]
+        T2["Access control\ndevice failure"]
+        T3["Emergency equipment\ninspection due"]
+        T4["Security patrol scheduled"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nFACILITIES & INFRASTRUCTURE"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["CCTV Maintenance"]
+        D2["Camera locations,\ninstallation dates"]
+        D3["Maintenance schedules"]
+        D4["Fault reports"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFACILITIES & INFRASTRUCTURE"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FACILITIES & INFRASTRUCTURE"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → Visitor & Campus Security)
@@ -603,6 +747,43 @@ END FUNCTION
 
 **TRIGGER:** Student enrollment, Profile updates, Status changes
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["STUDENT MANAGEMENT"]
+        S1["Student enrollment"]
+        S2["Profile updates"]
+        S3["Status changes"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+
+    SEND["SEND Data to\nVisitor\nCampus Security"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Student profiles"]
+        D2["Parent contact details"]
+        D3["Authorized pickup persons"]
+        D4["Student status"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nVisitor\nCampus Security\nRecords"]
+
+    IMPACT1["Access Control"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Student RFID cards\nlinked to profiles"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Entry/exit logged\nwith student details"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM HR MODULE
@@ -627,6 +808,43 @@ END FUNCTION
 
 **TRIGGER:** Staff onboarding, Profile updates, Status changes
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["HR"]
+        S1["Staff onboarding"]
+        S2["Profile updates"]
+        S3["Status changes"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+
+    SEND["SEND Data to\nVisitor\nCampus Security"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Staff profiles"]
+        D2["Staff contact details"]
+        D3["Staff status"]
+        D4["Reporting hierarchy"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nVisitor\nCampus Security\nRecords"]
+
+    IMPACT1["Staff Access"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Staff RFID cards\nlinked to profiles"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Entry/exit logged\nwith staff details"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM PARENT PORTAL
@@ -650,6 +868,41 @@ END FUNCTION
  - Pre-approved badge ready
 
 **TRIGGER:** Parent submits request, Parent updates contact
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["PARENT PORTAL"]
+        S1["Parent submits request"]
+        S2["Parent updates contact"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nVisitor\nCampus Security"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Gate pass requests"]
+        D2["Visitor pre-registration"]
+        D3["Updated emergency\ncontacts"]
+        D4["Parent feedback\non security"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nVisitor\nCampus Security\nRecords"]
+
+    IMPACT1["Gate Pass Requests"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["50-100 parent\nrequests/day"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Automated\napproval workflow"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -846,6 +1099,42 @@ FUNCTION trigger_emergency_alert(emergency_type, location, severity):
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Emergency declared"]
+        T2["Security incident logged"]
+        T3["Gate pass created"]
+        T4["Visitor registered"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nCOMMUNICATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Emergency Alerts"]
+        D2["Incident Notifications"]
+        D3["Gate Pass Confirmations"]
+        D4["Visitor Notifications"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMMUNICATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMMUNICATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 6. TO ANALYTICS MODULE
@@ -902,6 +1191,42 @@ Security data analyzed for threat patterns, visitor trends, incident frequency, 
   - Investigation reveals: Rohan skipping Friday tests
   - Action: Counseling, stricter gate pass approval
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Visitor registered"]
+        T2["Incident logged"]
+        T3["Gate pass created"]
+        T4["Access control event"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nANALYTICS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Visitor Analytics"]
+        D2["Incident Analytics"]
+        D3["Gate Pass Analytics"]
+        D4["Access Control Analytics"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nANALYTICS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ANALYTICS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 7. TO COMPLIANCE & AUDIT MODULE
@@ -948,6 +1273,42 @@ Security processes must comply with safety regulations, data privacy laws, emerg
   - Audit finding: 100% compliance
   - CCTV footage: 30-day retention, access logs maintained
   - Compliance: 100%
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Emergency drill conducted"]
+        T2["Incident logged"]
+        T3["Audit scheduled"]
+        T4["Timing: Real-time logging"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nCOMPLIANCE & AUDIT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Emergency\nDrill Compliance"]
+        D2["Data Privacy Compliance"]
+        D3["Incident Documentation"]
+        D4["Audit Trails"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMPLIANCE & AUDIT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMPLIANCE & AUDIT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 

@@ -133,6 +133,42 @@ END FUNCTION
  - Book value: ₹17,00,000
  - Balance sheet: Fixed Assets ₹17,00,000
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Asset purchased"]
+        T2["Monthly depreciation\ncalculation"]
+        T3["Asset disposed/sold"]
+        T4["Financial\nyear-end closing"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nACCOUNTS & FINANCE"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Asset Purchase\nTransactions"]
+        D2["Purchase date,\namount, vendor"]
+        D3["Asset category"]
+        D4["Payment terms"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nACCOUNTS & FINANCE"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ACCOUNTS & FINANCE"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO PROCUREMENT & VENDOR MANAGEMENT MODULE
@@ -225,6 +261,42 @@ END FUNCTION
  - Procurement: Expedites order, 1-day delivery
  - **Next Day:** 50 reams received, stock updated to 60 reams
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Stock level\nbelow reorder point"]
+        T2["New asset requirement"]
+        T3["Asset replacement needed"]
+        T4["Bulk procurement planning"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nPROCUREMENT\n& VENDOR MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Purchase Requisitions"]
+        D2["Item name,\nquantity required"]
+        D3["Current stock level"]
+        D4["Reorder level,\nreorder quantity"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nPROCUREMENT\n& VENDOR MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate PROCUREMENT\n& VENDOR MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO TIMETABLE & SCHEDULING MODULE
@@ -299,6 +371,40 @@ END FUNCTION
  - Chemicals stocked for week
  - Timetable approved
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Timetable created"]
+        T2["Lab period scheduled"]
+        T3["Equipment\nbooking requested"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nTIMETABLE & SCHEDULING"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Lab equipment\navailability"]
+        D2["AV equipment"]
+        D3["Sports equipment"]
+        D4["Special room resources"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nTIMETABLE & SCHEDULING"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate TIMETABLE & SCHEDULING"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 4. TO LIBRARY MANAGEMENT MODULE
@@ -354,6 +460,40 @@ FUNCTION process_book_procurement(grade, subject, quantity_needed):
  NOTIFY library_module("Sufficient stock available: {current_stock} books")
  END IF
 END FUNCTION
+```
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["New books procured"]
+        T2["Books damaged/lost"]
+        T3["Annual stock verification"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nLIBRARY MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Book inventory"]
+        D2["Book procurement requests"]
+        D3["Book condition tracking"]
+        D4["Book disposal"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nLIBRARY MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate LIBRARY MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
 ```
 
 ---
@@ -416,6 +556,42 @@ FUNCTION process_vehicle_maintenance(vehicle, maintenance_type):
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Vehicle purchased"]
+        T2["Maintenance scheduled"]
+        T3["Parts replaced"]
+        T4["Fuel refilled"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nTRANSPORT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Vehicle asset details"]
+        D2["Maintenance\nparts inventory"]
+        D3["Fuel consumption tracking"]
+        D4["Vehicle depreciation"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nTRANSPORT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate TRANSPORT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 6. TO HOSTEL & MESS MANAGEMENT MODULE
@@ -442,6 +618,42 @@ Hostel furniture, mess utensils, bedding are inventory items. Mess provisions (f
  - Inventory confirms availability, assigns assets
  - Asset register updated with room assignment
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Hostel room furnished"]
+        T2["Mess utensils damaged"]
+        T3["Provisions stock low"]
+        T4["Annual inventory audit"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nHOSTEL & MESS MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Hostel furniture"]
+        D2["Mess utensils"]
+        D3["Bedding"]
+        D4["Mess provisions"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nHOSTEL & MESS MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate HOSTEL & MESS MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 7. TO SPORTS & ATHLETICS MODULE
@@ -467,6 +679,42 @@ Sports equipment (bats, balls, nets, mats) are inventory items. Equipment alloca
  - Inventory allocates equipment to cricket team
  - Coach tracks usage, reports damages
  - Inventory replaces damaged items
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Sports season starts"]
+        T2["Equipment damaged"]
+        T3["New sport introduced"]
+        T4["Annual sports day"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSPORTS & ATHLETICS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Sports equipment\ninventory"]
+        D2["Equipment\nallocation to teams"]
+        D3["Equipment\ncondition tracking"]
+        D4["Replacement needs"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSPORTS & ATHLETICS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate SPORTS & ATHLETICS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -565,6 +813,40 @@ FUNCTION process_staff_exit_asset_return(staff):
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Staff joins\n(asset allocation)"]
+        T2["Staff exits\n(asset return)"]
+        T3["Asset replacement\nrequested"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nHR & PAYROLL"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Staff asset assignments"]
+        D2["Asset handover records"]
+        D3["Asset return during exit"]
+        D4["Asset condition at return"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nHR & PAYROLL"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate HR & PAYROLL"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → Inventory)
@@ -640,6 +922,41 @@ FUNCTION receive_goods(po_number, items_received):
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["PROCUREMENT"]
+        S1["Goods received"]
+        S2["invoice processed"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nInventory\nAsset Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Purchase orders completed"]
+        D2["Items received"]
+        D3["Vendor invoices"]
+        D4["Quality inspection\nreports"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nInventory\nAsset Management\nRecords"]
+
+    IMPACT1["Lab Equipment Received"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["PO: 40 microscopes"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Received:\n40 units (verified)"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM FACILITIES MODULE
@@ -659,6 +976,40 @@ END FUNCTION
  - Facilities completes maintenance
 
 **TRIGGER:** Maintenance scheduled, parts requested
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["FACILITIES"]
+        S1["Maintenance scheduled"]
+        S2["parts requested"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nInventory\nAsset Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Maintenance requests"]
+        D2["Parts required"]
+        D3["Consumables needed"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nInventory\nAsset Management\nRecords"]
+
+    IMPACT1["AC Maintenance"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Room 205 AC servicing"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Parts needed: Filter\n(1), Gas refill ..."]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -680,6 +1031,41 @@ END FUNCTION
  - Inventory tracks spending against budget
 
 **TRIGGER:** Budget approved, financial year-end
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["ACCOUNTS"]
+        S1["Budget approved"]
+        S2["financial year-end"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nInventory\nAsset Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Budget allocation\nper department"]
+        D2["Procurement limits"]
+        D3["Asset verification\nrequirements"]
+        D4["Audit schedules"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nInventory\nAsset Management\nRecords"]
+
+    IMPACT1["Annual Budget (2024-25)"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["IT Department: ₹10\nlakh (computers, s..."]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Science Department:\n₹5 lakh (lab equi..."]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 

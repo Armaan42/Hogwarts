@@ -148,6 +148,42 @@ END FUNCTION
  - Father pays ₹20,000 online at 3 PM
  - By 3:10 PM: Outstanding reduced to ₹45,000, admit card unblocked automatically
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Admission: First\nfee invoice generated"]
+        T2["Payment Received:\nOutstanding balance..."]
+        T3["Payment Overdue:\nDefaulter flag set, ..."]
+        T4["Grade Promotion:\nFee structure update..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Fee Structure Assignment"]
+        D2["Student ID → Individualized\nfee calcu..."]
+        D3["Grade/Class\n→ Base fee amount"]
+        D4["Category"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO PARENT ENGAGEMENT PORTAL
@@ -311,6 +347,42 @@ END FUNCTION
  - Outstanding updated to ₹0
  - Aarav's exam admit card (previously blocked) auto-unblocked
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Parent Login:\nFee dashboard displayed"]
+        T2["Payment Due Date\nApproaching: Reminde..."]
+        T3["Payment Overdue:\nAlert sent on due da..."]
+        T4["Payment Received:\nInstant confirmatio..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nPARENT ENGAGEMENT PORTAL"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Fee Dashboard"]
+        D2["Total annual\nfee breakdown"]
+        D3["Payment schedule"]
+        D4["Amount paid to date"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nPARENT ENGAGEMENT PORTAL"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate PARENT ENGAGEMENT PORTAL"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO ADMISSIONS & CRM MODULE
@@ -406,6 +478,42 @@ END FUNCTION
  - **April 2 (same day):** Student ID created, section assigned (6A), parent portal activated
  - **April 3:** Welcome email with fee schedule: Remaining ₹90,000 in 3 installments (July, Oct, Jan)
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Registration Fee\nPaid: Prospect becom..."]
+        T2["Admission Fee Paid:\nSeat confirmed, s..."]
+        T3["First Installment\nPaid: Enrollment co..."]
+        T4["Payment Deadline\nMissed: Seat release..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nADMISSIONS & CRM"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Admission Fee Structure"]
+        D2["Registration fee"]
+        D3["Admission fee"]
+        D4["Security deposit"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nADMISSIONS & CRM"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ADMISSIONS & CRM"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 4. TO TRANSPORT MANAGEMENT MODULE
@@ -500,6 +608,42 @@ END FUNCTION
  - Aarav cannot board bus on Day 61
  - Parent pays ₹9,000 (Q3 + Q4) on Day 62
  - RFID reactivated same day, can board bus from next day
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Transport Enrollment:\nTransport fee a..."]
+        T2["Transport Withdrawal:\nPro-rata refund..."]
+        T3["Payment Overdue\n60 days: Transport ac..."]
+        T4["Payment Received:\nTransport access re..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nTRANSPORT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Transport Fee Calculation"]
+        D2["Based on distance/route"]
+        D3["Route 1"]
+        D4["Route 2"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nTRANSPORT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate TRANSPORT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -621,6 +765,42 @@ END FUNCTION
  - Day 65: Father pays ₹48,600 (Q3 + Q4)
  - Mess card reactivated same day
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Boarding Enrollment:\nHostel + mess fe..."]
+        T2["Room Change: Fee\nadjusted (single ↔ s..."]
+        T3["Dietary Change:\nMess fee adjusted (ve..."]
+        T4["Payment Overdue:\nService suspension w..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nHOSTEL & MESS MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Hostel Fee"]
+        D2["Single room:\n₹1,20,000/year"]
+        D3["Shared room"]
+        D4["Shared room"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nHOSTEL & MESS MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate HOSTEL & MESS MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 6. TO LIBRARY MANAGEMENT MODULE
@@ -709,6 +889,42 @@ END FUNCTION
  - Next quarterly invoice shows: "Library Fine: ₹30"
  - Kavya pays with regular fee payment
  - Can continue borrowing books
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Book Overdue: Fine\ncalculated daily, ..."]
+        T2["Book Lost: Replacement\ncost added to ..."]
+        T3["Fine Paid: Borrowing\nprivileges restored"]
+        T4["TC Request: System\nchecks for pending..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nLIBRARY MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Library Fine Types"]
+        D2["Overdue fine:\n₹2/day per book"]
+        D3["Lost book: Replacement\ncost + ₹50 pro..."]
+        D4["Damaged book: Repair\ncost or replacem..."]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nLIBRARY MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate LIBRARY MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -807,6 +1023,42 @@ END FUNCTION
  - **January 25:** Parent pays ₹20,000
  - **January 25:** Outstanding now ₹45,000, admit card auto-unblocked
  - **February 1:** Admit card downloaded, exams in March
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Exam Registration:\nExam fee added to ..."]
+        T2["Admit Card Generation:\nFee clearance ..."]
+        T3["Outstanding > Threshold:\nAdmit card b..."]
+        T4["Payment Received:\nAdmit card unblocked"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nEXAM & ASSESSMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Exam Fee Types"]
+        D2["Internal exams:\nIncluded in tuition"]
+        D3["Board exams"]
+        D4["Competitive exams"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nEXAM & ASSESSMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate EXAM & ASSESSMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -953,6 +1205,42 @@ END FUNCTION
 
 *[Continuing with remaining connections 9-30...]*
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Scholarship Awarded:\nFee structure up..."]
+        T2["Scholarship Renewed:\nAnnual review, c..."]
+        T3["Scholarship Revoked:\nNon-compliance d..."]
+        T4["Mid-Year Award:\nPro-rata discount fro..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSCHOLARSHIP & FINANCIAL AID"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Scholarship Types"]
+        D2["Merit scholarship:\n25%, 50%, 75%, 100..."]
+        D3["Sports scholarship:\n50% tuition waiver"]
+        D4["Need-based: Variable"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSCHOLARSHIP & FINANCIAL AID"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate SCHOLARSHIP & FINANCIAL AID"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → Fee Management)
@@ -975,6 +1263,43 @@ END FUNCTION
 
 **TRIGGER:** Grade promotion, sibling admission, status change
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["STUDENT MANAGEMENT"]
+        S1["Grade promotion"]
+        S2["sibling admission"]
+        S3["status change"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+
+    SEND["SEND Data to\nFee Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Grade promotion"]
+        D2["New sibling admission"]
+        D3["Category change"]
+        D4["Status change"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nFee Management\nRecords"]
+
+    IMPACT1["Fee structure\nauto-updated"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Invoices regenerated"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Discounts applied\nautomatically"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM TRANSPORT MANAGEMENT MODULE
@@ -992,6 +1317,40 @@ END FUNCTION
 - Refunds processed
 
 **TRIGGER:** Transport enrollment change, route change
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["TRANSPORT MANAGEMENT"]
+        S1["Transport\nenrollment change"]
+        S2["route change"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nFee Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Transport enrollment"]
+        D2["Transport withdrawal"]
+        D3["Route change"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nFee Management\nRecords"]
+
+    IMPACT1["Transport fee added/removed\nfrom invoice"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Pro-rata calculations\nfor mid-year ch..."]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Refunds processed"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -1012,6 +1371,41 @@ END FUNCTION
 
 **TRIGGER:** Boarding enrollment change, room/diet change
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["HOSTEL & MESS MANAGEMENT"]
+        S1["Boarding\nenrollment change"]
+        S2["room/diet change"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nFee Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Hostel enrollment"]
+        D2["Mess enrollment"]
+        D3["Room type change"]
+        D4["Dietary preference change"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nFee Management\nRecords"]
+
+    IMPACT1["Boarding fees\nadded/adjusted"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Package discounts applied"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Pro-rata calculations"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM LIBRARY MANAGEMENT MODULE
@@ -1029,6 +1423,40 @@ END FUNCTION
 - Blocks services if unpaid
 
 **TRIGGER:** Book overdue, book lost/damaged
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["LIBRARY MANAGEMENT"]
+        S1["Book overdue"]
+        S2["book lost/damaged"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nFee Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Overdue fines"]
+        D2["Lost book charges"]
+        D3["Damaged book charges"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nFee Management\nRecords"]
+
+    IMPACT1["Fines added\nto fee account"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Appears in next invoice"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Blocks services if unpaid"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -1048,6 +1476,40 @@ END FUNCTION
 
 **TRIGGER:** Exam registration, revaluation request
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["EXAM & ASSESSMENT"]
+        S1["Exam registration"]
+        S2["revaluation request"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nFee Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Board exam registration"]
+        D2["Competitive\nexam registration"]
+        D3["Revaluation requests"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nFee Management\nRecords"]
+
+    IMPACT1["Exam fees\nadded to invoice"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Payment required\nfor admit card"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Registration confirmed\nafter payment"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM EVENTS & ACTIVITIES MODULE
@@ -1065,6 +1527,40 @@ END FUNCTION
 - Consent + payment both needed
 
 **TRIGGER:** Event registration, activity enrollment
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["EVENTS & ACTIVITIES"]
+        S1["Event registration"]
+        S2["activity enrollment"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nFee Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Field trip registration"]
+        D2["Competition registration"]
+        D3["Activity enrollment"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nFee Management\nRecords"]
+
+    IMPACT1["Event fees\nadded to invoice"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Payment required\nfor participation"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Consent +\npayment both needed"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -1084,6 +1580,40 @@ END FUNCTION
 
 **TRIGGER:** Meal plan enrollment, credit top-up request
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["CANTEEN & MEAL MANAGEMENT"]
+        S1["Meal plan enrollment"]
+        S2["credit top-up request"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nFee Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Meal plan enrollment"]
+        D2["Canteen credit requests"]
+        D3["Negative balance alerts"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nFee Management\nRecords"]
+
+    IMPACT1["Meal charges\nadded to invoice"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Canteen credit\ntopped up after payment"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Spending limits enforced"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM UNIFORM & BOOKS MODULE
@@ -1102,6 +1632,38 @@ END FUNCTION
 
 **TRIGGER:** Uniform/book purchase
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["UNIFORM & BOOKS"]
+        S1["Uniform/book purchase"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nFee Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Uniform purchase"]
+        D2["Textbook purchase"]
+        D3["Stationery purchase"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nFee Management\nRecords"]
+
+    IMPACT1["Purchase costs\nadded to invoice"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Items issued\nafter payment"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Bulk orders discounted"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM ALUMNI MODULE
@@ -1118,6 +1680,39 @@ END FUNCTION
 - Tax receipts (80G) generated
 
 **TRIGGER:** Donation received, legacy student enrolls
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["ALUMNI"]
+        S1["Donation received"]
+        S2["legacy student enrolls"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nFee Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Alumni donations"]
+        D2["Legacy student\nidentification"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nFee Management\nRecords"]
+
+    IMPACT1["Donations recorded\nand receipted"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Legacy discounts\napplied to children"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Tax receipts\n(80G) generated"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -1136,6 +1731,40 @@ END FUNCTION
 - Audit reports generated
 
 **TRIGGER:** EWS approval, scholarship disbursement
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["GOVERNMENT COMPLIANCE"]
+        S1["EWS approval"]
+        S2["scholarship disbursement"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nFee Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["EWS quota approval"]
+        D2["Government\nscholarship approval"]
+        D3["Compliance\naudit requirements"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nFee Management\nRecords"]
+
+    IMPACT1["EWS fee structure applied"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Government\nscholarship credited"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Audit reports generated"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 

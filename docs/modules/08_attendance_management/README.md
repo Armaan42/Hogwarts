@@ -145,6 +145,42 @@ END FUNCTION
  - **Cumulative (April-July):** 83/96 days = 86.46% 
  - **Year-end:** Annual attendance 84%, eligible for promotion
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Daily Attendance\nMarked: Student reco..."]
+        T2["Month End: Monthly\nattendance percent..."]
+        T3["Term End: Term attendance\npercentage ..."]
+        T4["Low Attendance Detected:\nAlert sent t..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Daily Attendance Status"]
+        D2["Present"]
+        D3["Absent"]
+        D4["Authorized Leave"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO PARENT ENGAGEMENT PORTAL
@@ -291,6 +327,42 @@ END FUNCTION
  - Authorized Leave: 3 days
  - Attendance %: 21/24 = 87.5% (AL doesn't count as absent)
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Attendance Marked:\nParent receives no..."]
+        T2["Child Absent:\nImmediate SMS alert"]
+        T3["Late Arrival: Notification\nwith arriv..."]
+        T4["Leave Request Submitted:\nConfirmation..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nPARENT ENGAGEMENT PORTAL"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Real-time\nAttendance Status"]
+        D2["Today's attendance"]
+        D3["Time of arrival"]
+        D4["Time of departure"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nPARENT ENGAGEMENT PORTAL"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate PARENT ENGAGEMENT PORTAL"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO ACADEMIC PERFORMANCE & ASSESSMENT MODULE
@@ -401,6 +473,42 @@ END FUNCTION
  - **Attendance (April-February):** 168/220 days = 76.36% 
  - **Eligible for final exams:** Yes
  - **Board exams:** Attendance 76.36% , admit card issued
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Exam Schedule Created:\nSystem checks ..."]
+        T2["Admit Card Generation:\nAttendance ver..."]
+        T3["Low Attendance Detected:\nRemedial cla..."]
+        T4["Result Analysis:\nAttendance-performan..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nACADEMIC PERFORMANCE\n& ASSESSMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Exam Eligibility"]
+        D2["Student attendance\npercentage"]
+        D3["Subject-wise attendance"]
+        D4["Attendance\nup to exam date"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nACADEMIC PERFORMANCE\n& ASSESSMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ACADEMIC PERFORMANCE\n& ASSESSMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -518,6 +626,42 @@ END FUNCTION
  - **September:** Kavya improves, 86% attendance
  - **Scholarship retained**
  - **Year-end:** Annual attendance 84%, scholarship renewed for Grade 10
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Monthly Attendance\nCalculation: Schol..."]
+        T2["Attendance < 75%:\nWarning sent to stu..."]
+        T3["Attendance < 75%\nfor 2 consecutive mo..."]
+        T4["Attendance < 70%:\nScholarship revoked..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSCHOLARSHIP & FINANCIAL AID"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Attendance Percentage"]
+        D2["Attendance Trend"]
+        D3["Authorized vs\nUnauthorized Absences"]
+        D4["Consecutive Absences"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSCHOLARSHIP & FINANCIAL AID"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate SCHOLARSHIP & FINANCIAL AID"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -648,6 +792,42 @@ END FUNCTION
  - Rohan marked "Present"
  - **Complete tracking:** Bus boarding → School arrival → Attendance marked
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Bus Boarding: RFID\nscan logs boarding..."]
+        T2["Bus Arrival at School:\nRFID scans at ..."]
+        T3["Student Absent from\nBus: Alert sent t..."]
+        T4["Mismatch Detected:\nBus attendance ≠ s..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nTRANSPORT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Bus\nBoarding/Deboarding Logs"]
+        D2["Student boarded\nbus at pickup point"]
+        D3["Student deboarded\nat school"]
+        D4["Timestamps\nfor both events"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nTRANSPORT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate TRANSPORT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 6. TO HOSTEL & MESS MANAGEMENT MODULE
@@ -774,6 +954,42 @@ END FUNCTION
  - School attendance: 95% (1 day medical leave)
  - Hostel attendance: 100% (all nights accounted for)
  - Mess attendance: 88% (occasionally eats outside)
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Night Roll Call:\nHostel attendance ma..."]
+        T2["Meal Time: Mess\nattendance logged (RF..."]
+        T3["Student Missing:\nHostel warden alerted"]
+        T4["Weekend Leave: Student\nchecks out (Fr..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nHOSTEL & MESS MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Hostel Attendance"]
+        D2["Students\npresent in hostel"]
+        D3["Weekend home leave"]
+        D4["Unauthorized\nabsence from hostel"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nHOSTEL & MESS MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate HOSTEL & MESS MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -909,6 +1125,42 @@ END FUNCTION
  - Warning letter issued
  - **Follow-up:** Counselor session to address exam anxiety
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Unauthorized Absence\nDetected: Discip..."]
+        T2["Frequent Late Arrivals:\nWarning issued"]
+        T3["Bunking Detected:\nParent called, dete..."]
+        T4["Proxy Attendance:\nSerious disciplinar..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nDISCIPLINE &\nBEHAVIOR MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Attendance Violations"]
+        D2["Unauthorized absences"]
+        D3["Frequent late arrivals"]
+        D4["Early departures\nwithout permission"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nDISCIPLINE &\nBEHAVIOR MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate DISCIPLINE &\nBEHAVIOR MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 8. TO AI & PREDICTIVE ANALYTICS MODULE
@@ -1001,6 +1253,42 @@ END FUNCTION
  - Ananya's attendance improves to 90% in May
  - Dropout risk reduced to 15%
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Weekly: ML model\nrecalculates risk sc..."]
+        T2["Attendance Drop\n>10%: Immediate alert"]
+        T3["Consecutive Absences\n>3: Intervention..."]
+        T4["Term End: Performance\nprediction updated"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nAI & PREDICTIVE ANALYTICS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Attendance\nFeatures for ML"]
+        D2["Current attendance\npercentage"]
+        D3["Attendance trend"]
+        D4["Consecutive\nabsences count"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nAI & PREDICTIVE ANALYTICS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate AI & PREDICTIVE ANALYTICS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → Attendance Management)
@@ -1024,6 +1312,43 @@ END FUNCTION
 
 **TRIGGER:** Admission, withdrawal, section change, leave approval
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["STUDENT MANAGEMENT"]
+        S1["Admission"]
+        S2["withdrawal"]
+        S3["section change"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+
+    SEND["SEND Data to\nAttendance\nManagement"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Active student list"]
+        D2["New admissions"]
+        D3["Withdrawals"]
+        D4["Section assignments"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAttendance\nManagement\nRecords"]
+
+    IMPACT1["Attendance\nrosters auto-updated"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["New students\nadded immediately"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Withdrawn\nstudents removed"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM TIMETABLE & SCHEDULING MODULE
@@ -1044,6 +1369,43 @@ END FUNCTION
 
 **TRIGGER:** Timetable change, holiday declared, event scheduled
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["TIMETABLE & SCHEDULING"]
+        S1["Timetable change"]
+        S2["holiday declared"]
+        S3["event scheduled"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+
+    SEND["SEND Data to\nAttendance\nManagement"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Daily timetable"]
+        D2["Exam schedules"]
+        D3["Holiday calendar"]
+        D4["Special events"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAttendance\nManagement\nRecords"]
+
+    IMPACT1["Period-wise attendance\naligned with t..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Correct teacher\nsees correct students"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Holidays auto-marked"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM TRANSPORT MANAGEMENT MODULE
@@ -1061,6 +1423,38 @@ END FUNCTION
 - No penalty for students
 
 **TRIGGER:** Bus delay reported
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["TRANSPORT MANAGEMENT"]
+        S1["Bus delay reported"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nAttendance\nManagement"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Bus delay notifications"]
+        D2["Students on delayed bus"]
+        D3["Delay duration and reason"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAttendance\nManagement\nRecords"]
+
+    IMPACT1["Students on delayed\nbus not marked 'L..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Reason logged:\n'Bus Route 5 delayed'"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["No penalty for students"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -1080,6 +1474,40 @@ END FUNCTION
 
 **TRIGGER:** Infirmary visit, medical leave
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["HEALTH & WELLNESS"]
+        S1["Infirmary visit"]
+        S2["medical leave"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nAttendance\nManagement"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Student sent to\ninfirmary during class"]
+        D2["Medical leave\nrecommendations"]
+        D3["Hospitalization\nnotifications"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAttendance\nManagement\nRecords"]
+
+    IMPACT1["Attendance adjusted\n(present but in i..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Medical leave\nauto-applied"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Authorized absence marked"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM DISCIPLINE MODULE
@@ -1097,6 +1525,40 @@ END FUNCTION
 - Detention attendance tracked separately
 
 **TRIGGER:** Suspension imposed, detention assigned
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["DISCIPLINE"]
+        S1["Suspension imposed"]
+        S2["detention assigned"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nAttendance\nManagement"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Suspension orders"]
+        D2["Detention schedules"]
+        D3["Disciplinary leave"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAttendance\nManagement\nRecords"]
+
+    IMPACT1["Suspended students\nmarked 'Suspended'..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Doesn't count against\nattendance perc..."]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Detention attendance\ntracked separately"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -1116,6 +1578,40 @@ END FUNCTION
 
 **TRIGGER:** Event scheduled, student registered
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["EVENTS & ACTIVITIES"]
+        S1["Event scheduled"]
+        S2["student registered"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nAttendance\nManagement"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Event participation lists"]
+        D2["Inter-school competition\nparticipants"]
+        D3["Field trip attendees"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAttendance\nManagement\nRecords"]
+
+    IMPACT1["Event participants\nmarked 'On School ..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Counts as present\nfor attendance perc..."]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Separate tracking\nfor event attendance"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM EXAM & ASSESSMENT MODULE
@@ -1134,6 +1630,40 @@ END FUNCTION
 
 **TRIGGER:** Exam scheduled, exam conducted
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["EXAM & ASSESSMENT"]
+        S1["Exam scheduled"]
+        S2["exam conducted"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nAttendance\nManagement"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Exam schedules"]
+        D2["Students appearing\nfor exams"]
+        D3["Exam hall attendance"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAttendance\nManagement\nRecords"]
+
+    IMPACT1["Exam day attendance\nmarked at exam hall"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Students not appearing\nmarked absent"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Exam attendance\nseparate from class a..."]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM PARENT PORTAL
@@ -1151,6 +1681,38 @@ END FUNCTION
 - Parents notified of approval/rejection
 
 **TRIGGER:** Leave request submitted
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["PARENT PORTAL"]
+        S1["Leave request submitted"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nAttendance\nManagement"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Leave request submissions"]
+        D2["Supporting documents"]
+        D3["Leave cancellations"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAttendance\nManagement\nRecords"]
+
+    IMPACT1["Leave requests routed\nto teachers for..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Approved leaves\npre-marked in attendance"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Parents notified\nof approval/rejection"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -1172,6 +1734,39 @@ END FUNCTION
 
 **TRIGGER:** Biometric scan
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["BIOMETRIC SYSTEMS"]
+        S1["Biometric scan"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nAttendance\nManagement"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Fingerprint scans"]
+        D2["Face recognition data"]
+        D3["RFID card swipes"]
+        D4["Timestamps"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAttendance\nManagement\nRecords"]
+
+    IMPACT1["Attendance auto-marked"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Arrival/departure\ntimes logged"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Proxy attendance\nprevented"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM SECURITY & GATE MODULE
@@ -1189,6 +1784,38 @@ END FUNCTION
 - Gate pass system integrated
 
 **TRIGGER:** Gate entry/exit
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["SECURITY & GATE"]
+        S1["Gate entry/exit"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nAttendance\nManagement"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Gate entry logs"]
+        D2["Gate exit logs"]
+        D3["Visitor logs"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAttendance\nManagement\nRecords"]
+
+    IMPACT1["Entry logs cross-verified\nwith attend..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Early departures flagged"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Gate pass\nsystem integrated"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 

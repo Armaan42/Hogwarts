@@ -216,6 +216,42 @@ END FUNCTION
   - Can switch between children without re-login
   - Separate permissions for each child's data
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["New Student Admission:\nAuto-create st..."]
+        T2["Grade Promotion:\nUpdate role permissi..."]
+        T3["Student Withdrawal:\nDeactivate studen..."]
+        T4["Password Reset Request:\nInitiate secu..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["User Account Creation"]
+        D2["Role Assignment"]
+        D3["Access Permissions"]
+        D4["Security Policies"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO HR & TEACHER MANAGEMENT MODULE
@@ -374,6 +410,42 @@ END FUNCTION
   - Can override grade entry deadlines (logged as admin override)
   - Receives daily security audit summary email
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["New Employee Joining:\nCreate account ..."]
+        T2["Promotion: Upgrade\nrole and permissions"]
+        T3["Department Transfer:\nUpdate role and ..."]
+        T4["Resignation/Termination:\nDeactivate a..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nHR & TEACHER MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Employee Account Creation"]
+        D2["Role Hierarchy"]
+        D3["Granular Permissions"]
+        D4["Access Restrictions"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nHR & TEACHER MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate HR & TEACHER MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO FEE MANAGEMENT MODULE
@@ -528,6 +600,41 @@ END FUNCTION
   - Refund processed → Parent notified via email/SMS
   - Audit log: "Refund ₹15,000 processed by gupta.meera@hogwarts.edu.in, Reason: Student transfer"
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Parent Initiates\nPayment: Authenticat..."]
+        T2["Accountant Processes\nRefund: Requires..."]
+        T3["Fee Waiver Request:\nMulti-level appro..."]
+        T4["Bulk Payment Upload:\nAdditional secur..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nFEE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Parent Payment\nPortal Access"]
+        D2["Accountant Access"]
+        D3["Security Requirements"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFEE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FEE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 4. TO LMS (LEARNING MANAGEMENT SYSTEM)
@@ -675,6 +782,41 @@ END FUNCTION
   - Submission recorded with timestamp: 2024-01-15 23:45:32
   - Teacher receives notification: "New submission from Priya"
   - Audit log: "Assignment submitted by priya.sharma@hogwarts.edu.in, Plagiarism: 12%"
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Student Accesses\nCourse: Verify enrol..."]
+        T2["Assignment Submission:\nAuthenticate +..."]
+        T3["Quiz Attempt: Verify\nidentity + preve..."]
+        T4["Content Download:\nApply watermark + l..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nLMS (LEARNING\nMANAGEMENT SYSTEM)"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Student Course Access"]
+        D2["Teacher Content\nManagement"]
+        D3["Content Protection"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nLMS (LEARNING\nMANAGEMENT SYSTEM)"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate LMS (LEARNING\nMANAGEMENT SYSTEM)"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -886,6 +1028,41 @@ END FUNCTION
   - At 11:30 AM: Exam auto-submits (90 minutes completed)
   - Audit log: "Exam completed by rohan.verma@hogwarts.edu.in, Tab switches: 1, Face detection issues: 1"
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Question Paper Upload:\nEncrypt + rest..."]
+        T2["Exam Starts: Decrypt\nquestion paper +..."]
+        T3["Student Logs into\nExam: Identity veri..."]
+        T4["Grade Entry: Authenticate\nteacher + v..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nEXAM & ASSESSMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Question Paper Security"]
+        D2["Online Exam Security"]
+        D3["Grade Protection"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nEXAM & ASSESSMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate EXAM & ASSESSMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 6. TO PARENT ENGAGEMENT MODULE
@@ -1094,6 +1271,41 @@ END FUNCTION
   - Message encrypted and sent
   - Ms. Priya receives notification
   - Audit log: "Message sent by sharma.rajesh@gmail.com to priya.sharma@hogwarts.edu.in regarding student 2024/09/0045"
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Parent Registration:\nVerify relations..."]
+        T2["Child Admission:\nAuto-link to existin..."]
+        T3["Parent Portal Login:\nAuthenticate + d..."]
+        T4["Data Access Request:\nVerify parent-ch..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nPARENT ENGAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Parent Account Linking"]
+        D2["Access Permissions"]
+        D3["Privacy Protection"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nPARENT ENGAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate PARENT ENGAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 

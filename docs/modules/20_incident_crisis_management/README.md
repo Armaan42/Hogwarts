@@ -167,6 +167,41 @@ END FUNCTION
   - **All Clear (11:15 AM):**
     - SMS: "ALL CLEAR: Fire extinguished. No injuries. Students will resume classes in other buildings. Science Block closed for inspection."
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Incident Reported:\nImmediate alert to..."]
+        T2["Emergency Declared:\nMass notification..."]
+        T3["Evacuation Ordered:\nAlert with evacua..."]
+        T4["All Clear: Notification\nthat emergenc..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nCOMMUNICATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Emergency Alerts"]
+        D2["Notification Recipients"]
+        D3["Communication Channels"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMMUNICATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMMUNICATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO HEALTH & WELLNESS MODULE
@@ -227,6 +262,40 @@ Medical emergencies require coordination between Crisis Management and Health mo
     - Diagnosis: Hairline fracture, cast applied
     - Insurance claim initiated (next day)
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Medical Incident:\nImmediate notificat..."]
+        T2["Severe Injury: Ambulance\ncalled, hosp..."]
+        T3["Hospitalization:\nParent contacted, in..."]
+        T4["Recovery: Follow-up\ncare coordinated"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nHEALTH & WELLNESS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Medical Emergency"]
+        D2["Medical Response"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nHEALTH & WELLNESS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate HEALTH & WELLNESS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO SECURITY & ACCESS CONTROL MODULE
@@ -284,6 +353,40 @@ Security incidents (intrusions, threats, violence) require immediate lockdown an
     - All clear announced (11:25 AM)
     - Lockdown lifted (11:30 AM)
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Security Threat:\nImmediate lockdown"]
+        T2["Intrusion: Security\nguards respond"]
+        T3["Violence: Police\ncalled, lockdown act..."]
+        T4["All Clear:\nLockdown lifted"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSECURITY & ACCESS CONTROL"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Security Incident"]
+        D2["Security Response"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSECURITY & ACCESS CONTROL"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate SECURITY & ACCESS CONTROL"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 4. TO STUDENT MANAGEMENT MODULE
@@ -320,6 +423,40 @@ Student Management module provides student information (contact details, medical
   - Pattern analysis (repeated incidents)
   - Counseling referrals
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Student Incident:\nRetrieve student in..."]
+        T2["Parent Notification:\nUse contact details"]
+        T3["Medical Emergency:\nAccess medical his..."]
+        T4["Incident Closure:\nUpdate student record"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Student Information"]
+        D2["Incident Records"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 5. TO HR & TEACHER MANAGEMENT MODULE
@@ -355,6 +492,38 @@ Staff incidents (injuries, threats, harassment) require HR involvement. Crisis m
   - Incidents investigated
   - Corrective actions taken
   - Prevention measures implemented
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Staff Injury:\nWorker's comp claim"]
+        T2["Staff Threat: Security\nand HR investi..."]
+        T3["Workplace Violence:\nPolice, HR, couns..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nHR & TEACHER MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Staff Incident"]
+        D2["HR Actions"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nHR & TEACHER MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate HR & TEACHER MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -393,6 +562,40 @@ Facility-related emergencies (fire, gas leak, structural damage, power outage) r
   - Repairs prioritized
   - Normal operations resume
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Fire: Evacuate,\ncall fire department,..."]
+        T2["Gas Leak: Evacuate,\nshut off gas, ven..."]
+        T3["Structural Damage:\nEvacuate, engineer..."]
+        T4["Flood: Shut off\nwater, pump out, dry"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nFACILITIES & INFRASTRUCTURE"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Facility Emergency"]
+        D2["Facilities Response"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFACILITIES & INFRASTRUCTURE"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FACILITIES & INFRASTRUCTURE"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 7. TO LEGAL & CONTRACT MANAGEMENT MODULE
@@ -429,6 +632,40 @@ Serious incidents may have legal implications (lawsuits, liability, regulatory r
   - Proactive legal advice
   - Settlement negotiations
   - Litigation avoidance
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Serious Injury:\nLegal review for liab..."]
+        T2["Parent Complaint:\nLegal advice on res..."]
+        T3["Lawsuit Threat:\nLegal representation"]
+        T4["Regulatory Violation:\nCompliance repo..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nLEGAL & CONTRACT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Legal Incident"]
+        D2["Legal Advice"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nLEGAL & CONTRACT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate LEGAL & CONTRACT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 

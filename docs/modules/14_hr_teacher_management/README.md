@@ -184,6 +184,42 @@ END FUNCTION
  - **Friday:** Ms. Sharma returns, resumes normal schedule
  - **Mr. Gupta:** Receives substitute allowance (₹500/day × 3 days = ₹1,500)
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Timetable Creation:\nTeacher availabil..."]
+        T2["Teacher Hired:\nAdded to timetable pool"]
+        T3["Teacher on Leave:\nSubstitute assigned"]
+        T4["Workload Exceeded:\nAlert to principal"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nTIMETABLE & SCHEDULING"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Teacher Availability"]
+        D2["Working days and hours"]
+        D3["Leave schedule"]
+        D4["Part-time\nvs full-time status"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nTIMETABLE & SCHEDULING"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate TIMETABLE & SCHEDULING"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO PAYROLL & FINANCE MODULE
@@ -367,6 +403,42 @@ END FUNCTION
  - **March 2025 Payslip:** Regular salary + ₹50,000 bonus
  - **April 2025 onwards:** New gross ₹84,700, Net ₹74,030/month
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Month End: Salary\nprocessing for all ..."]
+        T2["Leave Taken: Salary\nadjustment calcul..."]
+        T3["Performance Appraisal:\nBonus/incremen..."]
+        T4["Joining/Exit: Pro-rata\nsalary calcula..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nPAYROLL & FINANCE"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Salary Structure"]
+        D2["Basic salary"]
+        D3["Allowances"]
+        D4["Deductions"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nPAYROLL & FINANCE"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate PAYROLL & FINANCE"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO ATTENDANCE MANAGEMENT MODULE
@@ -534,6 +606,42 @@ END FUNCTION
  - Total leave taken: 10 days (2 casual + 3 sick + 5 earned)
  - Attendance: 242/252 working days (96%)
  - Unused leave: Casual 10, Sick 9, Earned 10 (carried forward to next year)
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Daily Check-in:\nAttendance marked"]
+        T2["Leave Application:\nSubmitted for appr..."]
+        T3["Leave Approved:\nAttendance pre-marked..."]
+        T4["Absent without Leave:\nAlert to principal"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nATTENDANCE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Daily Attendance"]
+        D2["Present/Absent/Late/Half-day"]
+        D3["Check-in time"]
+        D4["Check-out time"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nATTENDANCE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ATTENDANCE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -711,6 +819,42 @@ END FUNCTION
  - **Increment:** 5%, No bonus
  - **Recommendation:** Continue mentorship program
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Results Published:\nTeacher performanc..."]
+        T2["Student Feedback:\nCollected term-wise"]
+        T3["Appraisal Time:\nPerformance data comp..."]
+        T4["Low Performance:\nSupport/training rec..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT ACADEMIC PERFORMANCE"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Student Results\nby Teacher"]
+        D2["Class average marks"]
+        D3["Pass percentage"]
+        D4["Improvement\nfrom previous term"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT ACADEMIC PERFORMANCE"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT ACADEMIC PERFORMANCE"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 5. TO PROFESSIONAL DEVELOPMENT & TRAINING MODULE
@@ -855,6 +999,42 @@ END FUNCTION
  - **December:** Mid-term results improve to 70%
  - **March:** Final results 72% (matches school average)
  - **Outcome:** Training successful, Ms. Kapoor on track
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["New Teacher Joins:\nInduction training..."]
+        T2["Performance Gap:\nTraining recommended"]
+        T3["New Technology:\nTraining organized"]
+        T4["Certification Needed:\nExternal progra..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nPROFESSIONAL\nDEVELOPMENT & TRAINING"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Training Needs"]
+        D2["Subject expertise gaps"]
+        D3["Pedagogy improvements"]
+        D4["Technology skills"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nPROFESSIONAL\nDEVELOPMENT & TRAINING"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate PROFESSIONAL\nDEVELOPMENT & TRAINING"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -1001,6 +1181,42 @@ END FUNCTION
  - **December:** Aarav's grade improves to 80%
  - **Mr. Sharma thanks Mr. Verma**
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Parent Login: Teacher\ncontact info di..."]
+        T2["PTM Scheduled: Appointment\nbooking opens"]
+        T3["Report Card: Teacher\ncomments included"]
+        T4["Parent Message:\nTeacher notified, res..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nPARENT ENGAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Teacher Contact Info"]
+        D2["Name and photo"]
+        D3["Subject and\nclasses taught"]
+        D4["Email and phone"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nPARENT ENGAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate PARENT ENGAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 *[Continuing with remaining 2 outbound connections...]*
@@ -1146,6 +1362,42 @@ END FUNCTION
  - Qualified teachers: 96% 
  - Training compliance: 100% 
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Teacher Hired: Verification\nprocess i..."]
+        T2["Monthly: PF/ESI\ncontributions reported"]
+        T3["Quarterly: Professional\ntax filed"]
+        T4["Annually: Form 16\ngenerated, regulato..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nCOMPLIANCE &\nSTATUTORY REPORTING"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Qualification\nVerification"]
+        D2["Educational certificates"]
+        D3["Teaching certifications"]
+        D4["Experience certificates"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMPLIANCE &\nSTATUTORY REPORTING"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMPLIANCE &\nSTATUTORY REPORTING"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 8. TO FACILITIES & INFRASTRUCTURE MODULE
@@ -1274,6 +1526,42 @@ END FUNCTION
  - **Day 2:** Collects laptop and ID from admin
  - **Day 3:** Starts teaching with all resources
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Teacher Joins: Classroom\nand resource..."]
+        T2["Facility Issue:\nMaintenance request r..."]
+        T3["Resource Needed:\nRequest submitted"]
+        T4["Teacher Exits:\nResources returned"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nFACILITIES & INFRASTRUCTURE"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Classroom Allocation"]
+        D2["Assigned classrooms\nfor each teacher"]
+        D3["Smart board and\nprojector availability"]
+        D4["Lab allocation"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFACILITIES & INFRASTRUCTURE"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FACILITIES & INFRASTRUCTURE"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → HR & Teacher Management)
@@ -1295,6 +1583,41 @@ END FUNCTION
 
 **TRIGGER:** Timetable created, changed
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["TIMETABLE"]
+        S1["Timetable created"]
+        S2["changed"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nHr Teacher\nManagement"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Class assignments"]
+        D2["Period allocations"]
+        D3["Invigilation duties"]
+        D4["Extra-curricular\nresponsibilities"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nHr Teacher\nManagement\nRecords"]
+
+    IMPACT1["Workload tracked"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Overload alerts generated"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Substitute\nneeds identified"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM STUDENT PERFORMANCE MODULE
@@ -1313,6 +1636,41 @@ END FUNCTION
 - Rewards and recognition
 
 **TRIGGER:** Results published, feedback collected
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["STUDENT PERFORMANCE"]
+        S1["Results published"]
+        S2["feedback collected"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nHr Teacher\nManagement"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Class average marks"]
+        D2["Pass percentages"]
+        D3["Student feedback ratings"]
+        D4["Parent feedback"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nHr Teacher\nManagement\nRecords"]
+
+    IMPACT1["Performance appraisals"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Training needs identified"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Rewards and recognition"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -1333,6 +1691,39 @@ END FUNCTION
 
 **TRIGGER:** Month-end payroll processing
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["PAYROLL"]
+        S1["Month-end\npayroll processing"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nHr Teacher\nManagement"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Attendance records"]
+        D2["Leave taken"]
+        D3["Overtime hours"]
+        D4["Deductions"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nHr Teacher\nManagement\nRecords"]
+
+    IMPACT1["Salary processed\naccurately"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Leave deductions applied"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Bonuses added"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM PARENT PORTAL
@@ -1351,6 +1742,40 @@ END FUNCTION
 
 **TRIGGER:** Parent sends message, books meeting
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["PARENT PORTAL"]
+        S1["Parent sends message"]
+        S2["books meeting"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nHr Teacher\nManagement"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Parent messages"]
+        D2["Meeting requests"]
+        D3["Feedback and complaints"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nHr Teacher\nManagement\nRecords"]
+
+    IMPACT1["Teachers\nrespond to parents"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Meetings scheduled"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Issues resolved"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM COMPLIANCE MODULE
@@ -1368,6 +1793,40 @@ END FUNCTION
 - Reports submitted
 
 **TRIGGER:** Regulation updated, audit scheduled
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["COMPLIANCE"]
+        S1["Regulation updated"]
+        S2["audit scheduled"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nHr Teacher\nManagement"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Qualification standards"]
+        D2["Training mandates"]
+        D3["Statutory reporting\nrequirements"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nHr Teacher\nManagement\nRecords"]
+
+    IMPACT1["Qualifications verified"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Training organized"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Reports submitted"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 

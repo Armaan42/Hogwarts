@@ -278,6 +278,42 @@ END FUNCTION
  - **Annual Conduct Grade:** C (Average of D and B)
  - **Character Development:** Successful intervention, behavior stabilized
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Incident Reported:\nBehavioral inciden..."]
+        T2["Action Taken: Disciplinary\naction rec..."]
+        T3["Points Updated:\nMerit/demerit points ..."]
+        T4["Term End: Conduct\ngrade calculated"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Incident Records"]
+        D2["Incident type"]
+        D3["Severity level"]
+        D4["Date, time, location"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO PARENT ENGAGEMENT PORTAL
@@ -485,6 +521,42 @@ END FUNCTION
  - Counseling attendance tracked
  - Improvement plan milestones updated
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Incident Logged:\nImmediate notificati..."]
+        T2["Action Taken: Parent\ninformed of disc..."]
+        T3["Points Updated:\nDashboard updated in ..."]
+        T4["Conference Scheduled:\nCalendar invite..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nPARENT ENGAGEMENT PORTAL"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Incident Notifications"]
+        D2["Real-time alerts"]
+        D3["Incident details"]
+        D4["Action taken"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nPARENT ENGAGEMENT PORTAL"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate PARENT ENGAGEMENT PORTAL"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO ATTENDANCE MODULE
@@ -594,6 +666,40 @@ END FUNCTION
  - Suspension days: 3 (shown separately)
  - Exam eligibility: Not affected
  - **RFID Card:** Deactivated March 9-11, reactivated March 12
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Suspension Imposed:\nAttendance module..."]
+        T2["Detention Assigned:\nDetention attenda..."]
+        T3["Bunking Detected:\nAttendance flags un..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nATTENDANCE"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Suspension Dates"]
+        D2["Suspension\nstart and end dates"]
+        D3["Marked as 'Disciplinary\nSuspension'"]
+        D4["Does not affect\nexam eligibility"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nATTENDANCE"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ATTENDANCE"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -706,6 +812,42 @@ END FUNCTION
  - Tutor assigned for Math
  - **Outcome:** Attendance improves to 95%, no bunking for 2 months
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Pattern Detected:\nAutomatic referral ..."]
+        T2["Serious Incident:\nManual referral by ..."]
+        T3["Parent Request:\nParent requests couns..."]
+        T4["5 bunking incidents\nin 1 month"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nCOUNSELING"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Counseling Referrals"]
+        D2["Student details"]
+        D3["Behavioral\npatterns detected"]
+        D4["Incident history"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOUNSELING"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COUNSELING"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 5. TO ACADEMIC PERFORMANCE MODULE
@@ -809,6 +951,40 @@ END FUNCTION
  - **Aarav:** Academic A, Conduct B - "Good student, minor behavioral concerns"
  - **Rohan:** Academic B, Conduct E - "Academic potential, serious conduct issues"
  - **Kavya:** Academic B+, Conduct C - "Good academics, needs behavioral improvement"
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Report Card Generation:\nConduct grade..."]
+        T2["Exam Period: Check\nfor active suspens..."]
+        T3["Cheating Detected:\nExam action triggered"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nACADEMIC PERFORMANCE"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Conduct Grade"]
+        D2["Term-wise conduct grade"]
+        D3["Conduct remarks\nfor report cards"]
+        D4["Behavioral summary"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nACADEMIC PERFORMANCE"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ACADEMIC PERFORMANCE"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -945,6 +1121,40 @@ END FUNCTION
  - **February:** Helped in hostel cleaning - Merit +10 points
  - **Overall:** Improving conduct, no major issues
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Hostel Incident:\nWarden reports viola..."]
+        T2["Curfew Violation:\nNight roll call det..."]
+        T3["Room Damage: Inspection\nfinds damage"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nHOSTEL MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Hostel Incidents"]
+        D2["Curfew violations"]
+        D3["Room damage/vandalism"]
+        D4["Noise complaints"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nHOSTEL MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate HOSTEL MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 7. TO TRANSPORT MODULE
@@ -1064,6 +1274,40 @@ END FUNCTION
  - Students apologize to driver and passengers
  - Counseling session on conflict resolution
  - Transport privileges restored March 22
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Bus\nIncident: Driver/conductor report..."]
+        T2["RFID Anomaly: Unusual\nboarding patter..."]
+        T3["Parent Complaint:\nParent reports bus ..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nTRANSPORT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Bus Incidents"]
+        D2["Fighting on bus"]
+        D3["Misbehavior\nwith driver/conductor"]
+        D4["Vandalism"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nTRANSPORT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate TRANSPORT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -1197,6 +1441,42 @@ END FUNCTION
  - **Post-Conference:** Conference notes emailed to parent
  - **Weekly:** Progress updates every Friday for 4 weeks
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Incident Logged:\nImmediate notificati..."]
+        T2["Action Taken:\nFormal notice sent"]
+        T3["Progress Milestone:\nUpdate sent"]
+        T4["Award Given:\nAnnouncement sent"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nCOMMUNICATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Incident Alerts"]
+        D2["Real-time notifications"]
+        D3["Incident details\nand severity"]
+        D4["Immediate actions taken"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMMUNICATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMMUNICATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → Discipline)
@@ -1221,6 +1501,39 @@ END FUNCTION
 
 **TRIGGER:** Attendance system detects unauthorized absence pattern
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["ATTENDANCE"]
+        S1["Attendance system\ndetects unauthorize..."]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nDiscipline Behavior"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Unauthorized absences"]
+        D2["Chronic late arrivals"]
+        D3["Early departures\nwithout permission"]
+        D4["Attendance anomalies"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nDiscipline Behavior\nRecords"]
+
+    IMPACT1["Priya: 5 unauthorized\nabsences in 1 m..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Attendance flags\nas 'Possible bunking..."]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Forwarded to\ndiscipline module"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM TEACHER MANAGEMENT MODULE
@@ -1242,6 +1555,39 @@ END FUNCTION
 - If pattern continues: Counseling referral
 
 **TRIGGER:** Teacher submits incident report via portal/app
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["TEACHER MANAGEMENT"]
+        S1["Teacher submits\nincident report via p..."]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nDiscipline Behavior"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Classroom disruptions"]
+        D2["Disrespect to teachers"]
+        D3["Cheating in\nexams/assignments"]
+        D4["Plagiarism"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nDiscipline Behavior\nRecords"]
+
+    IMPACT1["Math teacher reports:\nRohan disruptiv..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Incident logged\nwith details"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Action: Detention\n+ parent notification"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -1266,6 +1612,39 @@ END FUNCTION
 
 **TRIGGER:** Warden submits incident report
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["HOSTEL"]
+        S1["Warden submits\nincident report"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nDiscipline Behavior"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Curfew violations"]
+        D2["Room damage/vandalism"]
+        D3["Noise complaints"]
+        D4["Unauthorized guests"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nDiscipline Behavior\nRecords"]
+
+    IMPACT1["Warden reports:\nAarav broke hostel wi..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Damage cost: ₹2,000"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Action: Cost charged\n+ written warning"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM TRANSPORT MODULE
@@ -1288,6 +1667,39 @@ END FUNCTION
 
 **TRIGGER:** Driver/conductor reports via app
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["TRANSPORT"]
+        S1["Driver/conductor\nreports via app"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nDiscipline Behavior"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Fighting on bus"]
+        D2["Misbehavior\nwith driver/conductor"]
+        D3["Vandalism"]
+        D4["Unsafe behavior"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nDiscipline Behavior\nRecords"]
+
+    IMPACT1["Driver reports:\nKavya fighting on bus"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Incident logged"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Action: 3-day\ntransport suspension"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM SECURITY MODULE
@@ -1309,6 +1721,39 @@ END FUNCTION
 - Gate pass policy reinforced
 
 **TRIGGER:** Security reports violation
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["SECURITY"]
+        S1["Security\nreports violation"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nDiscipline Behavior"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Unauthorized\nexit attempts"]
+        D2["Bringing prohibited items"]
+        D3["Visitor policy violations"]
+        D4["Trespassing\nin restricted areas"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nDiscipline Behavior\nRecords"]
+
+    IMPACT1["Security: Rohan\ntrying to exit withou..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Incident logged"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Action: Detention\n+ counseling"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 

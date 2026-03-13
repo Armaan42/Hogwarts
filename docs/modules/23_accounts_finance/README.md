@@ -131,6 +131,41 @@ END FUNCTION
       Cr. GST Payable                           ₹5,400
   ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Fee Payment Received:\nCreate journal ..."]
+        T2["Fee Invoice Generated:\nCreate account..."]
+        T3["Fee Refund Processed:\nCreate reversal..."]
+        T4["Month-End: Reconcile\nfee collections ..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nFEE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Fee Revenue Recognition"]
+        D2["Accounting Entries"]
+        D3["Outstanding Dues"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFEE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FEE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO HR & PAYROLL MODULE
@@ -251,6 +286,41 @@ END FUNCTION
       Cr. PF Payable                               ₹6,00,000
   ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Salary Processing:\nMonthly salary run..."]
+        T2["Salary Payment:\nNet salary transferre..."]
+        T3["TDS Deposit: Quarterly\nTDS payment to..."]
+        T4["PF/ESI Deposit:\nMonthly statutory dep..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nHR & PAYROLL"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Salary Components"]
+        D2["Accounting Entries"]
+        D3["Statutory Compliance"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nHR & PAYROLL"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate HR & PAYROLL"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO PROCUREMENT & VENDOR MODULE
@@ -351,6 +421,39 @@ END FUNCTION
       Cr. Accounts Payable - Tech Solutions          ₹14,16,000
   ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Purchase Invoice\nReceived: Create exp..."]
+        T2["Payment Made:\nClear vendor liability"]
+        T3["Month-End: Age\nanalysis of payables"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nPROCUREMENT & VENDOR"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Purchase Invoice"]
+        D2["Accounting Entries"]
+        D3["Payment Entries"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nPROCUREMENT & VENDOR"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate PROCUREMENT & VENDOR"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 4. TO DONATIONS & FUNDRAISING MODULE
@@ -403,6 +506,39 @@ Donations are a significant revenue source for many schools. All donations must 
   Dr. Bank - Donation Account          ₹5,00,000
       Cr. Corpus Fund - Building                ₹5,00,000
   ```
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Donation Received:\nRecord revenue"]
+        T2["80G Certificate\nIssued: Link to donat..."]
+        T3["Corpus Fund Utilization:\nRequires boa..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nDONATIONS & FUNDRAISING"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Donation Receipt"]
+        D2["Accounting Entries"]
+        D3["Corpus Fund Management"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nDONATIONS & FUNDRAISING"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate DONATIONS & FUNDRAISING"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -483,6 +619,41 @@ END FUNCTION
   - 450 students @ ₹1,500/month = ₹6,75,000
   - Profit: ₹25,000/month
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Fuel Purchase:\nRecord fuel expense"]
+        T2["Maintenance Bill:\nRecord repair expense"]
+        T3["Driver Salary:\nPart of monthly payroll"]
+        T4["Transport Fee Collection:\nRecord revenue"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nTRANSPORT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Transport Expenses"]
+        D2["Transport Revenue"]
+        D3["Asset Management"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nTRANSPORT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate TRANSPORT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 6. TO FACILITIES & INFRASTRUCTURE MODULE
@@ -560,6 +731,42 @@ END FUNCTION
   - Internet: ₹15,000
   - Telephone: ₹10,000
   - Total: ₹4,00,000/month
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Utility Bill Received:\nRecord expense"]
+        T2["Maintenance Work\nCompleted: Record ex..."]
+        T3["Monthly Housekeeping:\nPart of payroll"]
+        T4["Capital Improvement:\nCapitalize asset"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nFACILITIES & INFRASTRUCTURE"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Utility Expenses"]
+        D2["Maintenance Expenses"]
+        D3["Housekeeping Expenses"]
+        D4["Security Expenses"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFACILITIES & INFRASTRUCTURE"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FACILITIES & INFRASTRUCTURE"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -646,6 +853,41 @@ END FUNCTION
   - Buses: ₹1,50,00,000 (depreciation 20% p.a. = ₹2,50,000/month)
   - **Total Monthly Depreciation:** ₹6,18,041
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Asset Purchase:\nCapitalize asset"]
+        T2["Month-End: Calculate\ndepreciation"]
+        T3["Asset Disposal:\nRemove from books"]
+        T4["Inventory Count:\nAdjust stock valuation"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nINVENTORY & ASSET MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Fixed Asset Register"]
+        D2["Inventory Valuation"]
+        D3["Depreciation"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nINVENTORY & ASSET MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate INVENTORY & ASSET MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 8. TO LIBRARY MANAGEMENT MODULE
@@ -684,6 +926,42 @@ Library operations involve book purchases (capital/expense), subscription fees, 
   - Subscriptions: ₹10,000
   - Fine Collections: ₹5,000 (revenue)
   - Librarian Salary: ₹30,000
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Book Purchase:\nRecord expense/asset"]
+        T2["Subscription Renewal:\nRecord expense"]
+        T3["Fine Collection:\nRecord revenue"]
+        T4["Lost Book Charge:\nRecord revenue"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nLIBRARY MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Book Purchases"]
+        D2["Subscription Fees"]
+        D3["Fine Collections"]
+        D4["Library Expenses"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nLIBRARY MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate LIBRARY MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -727,6 +1005,39 @@ Canteen operations involve food purchases, staff salaries, and meal sales. If ca
   - Meal Sales: ₹3,50,000
   - Profit: ₹30,000
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Food Purchase:\nRecord expense"]
+        T2["Meal Sale: Record revenue"]
+        T3["Month-End: Calculate\nprofit/loss"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nCANTEEN & NUTRITION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Canteen Expenses"]
+        D2["Canteen Revenue"]
+        D3["Inventory"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCANTEEN & NUTRITION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate CANTEEN & NUTRITION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 10. TO EVENTS & ACTIVITIES MODULE
@@ -766,6 +1077,39 @@ School events (annual day, sports day, cultural fest) involve expenses (venue, d
   - Expenses: Venue ₹1,50,000, Decorations ₹75,000, Catering ₹1,25,000, Prizes ₹50,000, Others ₹75,000 = ₹4,75,000
   - Revenue: Ticket Sales ₹2,00,000, Sponsorships ₹3,00,000 = ₹5,00,000
   - Net: ₹25,000 surplus
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Event Expense: Record\nagainst event b..."]
+        T2["Event Revenue:\nRecord income"]
+        T3["Event Completion:\nClose event budget"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nEVENTS & ACTIVITIES"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Event Expenses"]
+        D2["Event Revenue"]
+        D3["Event Budget"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nEVENTS & ACTIVITIES"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate EVENTS & ACTIVITIES"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 

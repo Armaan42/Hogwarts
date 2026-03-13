@@ -73,6 +73,40 @@ Rohan logs into student portal at 8 PM
 → Load time: 1.2 seconds
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Student/parent\nlogs into portal"]
+        T2["Profile page accessed"]
+        T3["Dashboard loaded"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Student profile"]
+        D2["Academic records"]
+        D3["Attendance percentage,\nleave requests"]
+        D4["Achievements,\ncertificates"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO FEE MANAGEMENT MODULE
@@ -117,6 +151,40 @@ FUNCTION initiate_payment_from_portal(invoice_id, parent_id):
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Parent views fee section"]
+        T2["Payment initiated"]
+        T3["Receipt downloaded"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nFEE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Pending invoices,\ndue dates"]
+        D2["Payment history, receipts"]
+        D3["Outstanding balance"]
+        D4["Payment initiation\nrequests"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFEE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FEE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → User Portals)
@@ -139,6 +207,39 @@ Portals aggregate data from all modules to provide unified view. Every module se
 - Real-time updates across all modules
 
 **TRIGGER:** Any module updates data
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["ALL MODULES"]
+        S1["Any module updates data"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nUser Portals"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Student data,\nattendance, grades"]
+        D2["Fee invoices,\npayment history"]
+        D3["Timetable, assignments,\nexam schedules"]
+        D4["Notifications,\nannouncements"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nUser Portals\nRecords"]
+
+    IMPACT1["Single dashboard\nshows all information"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["No need to check\nmultiple systems"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Real-time updates\nacross all modules"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 

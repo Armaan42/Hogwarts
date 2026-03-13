@@ -174,6 +174,42 @@ END FUNCTION
  - **Report Card Generated:** Includes all subject marks, grade, rank, teacher remarks
  - **Parent Notification:** "Ananya promoted to Grade 11 with 87% (Rank 12)"
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Result Publication:\nMarks added to st..."]
+        T2["Promotion Decision:\nStatus updated (p..."]
+        T3["Report Card Generation:\nAcademic hist..."]
+        T4["Transcript Request:\nHistorical marks ..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Exam Results"]
+        D2["Subject-wise marks"]
+        D3["Total marks\nand percentage"]
+        D4["Grade"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO PARENT ENGAGEMENT PORTAL
@@ -332,6 +368,42 @@ END FUNCTION
  - **Parent Downloads:** September 1, 4 PM
  - **Physical Copy:** Printed at home for grandparents
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Exam Schedule Published:\nParents noti..."]
+        T2["Admit Card Generated:\nDownloadable in..."]
+        T3["Results Published:\nInstant notificati..."]
+        T4["Report Card Released:\nDigital downloa..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nPARENT ENGAGEMENT PORTAL"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Exam Schedule"]
+        D2["Exam dates and timings"]
+        D3["Subjects and syllabus"]
+        D4["Exam hall and seat number"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nPARENT ENGAGEMENT PORTAL"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate PARENT ENGAGEMENT PORTAL"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO TEACHER MANAGEMENT MODULE
@@ -485,6 +557,42 @@ END FUNCTION
  - Verified by HOD on March 20
  - Results published on March 22
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Exam Scheduled:\nInvigilation duties a..."]
+        T2["Question Paper Due:\nReminder sent to ..."]
+        T3["Answer Sheets Distributed:\nEvaluation..."]
+        T4["Marks Entry Deadline:\nReminder sent"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nTEACHER MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Exam Duties"]
+        D2["Invigilation schedule"]
+        D3["Question paper\nsetting assignments"]
+        D4["Answer sheet\nevaluation assignments"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nTEACHER MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate TEACHER MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 4. TO TIMETABLE & SCHEDULING MODULE
@@ -617,6 +725,42 @@ END FUNCTION
  - Halls: 1, 2, 3, 4 (40+40+40+30 = 150 seats)
  - **Published:** February 15 (2 weeks advance notice)
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Exam Schedule Creation:\nSystem checks..."]
+        T2["Hall Allocation:\nAvailable rooms iden..."]
+        T3["Invigilation Assignment:\nTeacher avai..."]
+        T4["Exam Date Change:\nTimetable adjusted"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nTIMETABLE & SCHEDULING"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Exam Date Constraints"]
+        D2["Avoid holidays, Sundays"]
+        D3["Avoid major school events"]
+        D4["Minimum 2-day gap\nbetween exams for s..."]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nTIMETABLE & SCHEDULING"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate TIMETABLE & SCHEDULING"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 5. TO FEE MANAGEMENT MODULE
@@ -746,6 +890,42 @@ END FUNCTION
  - **February 2:** Downloaded from parent portal
  - **March:** Board exams conducted
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Exam Registration:\nExam fee added to ..."]
+        T2["Admit Card Generation:\nFee clearance ..."]
+        T3["Outstanding > Threshold:\nAdmit card b..."]
+        T4["Payment Received:\nAdmit card unblocked"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nFEE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Exam Fee Charges"]
+        D2["Board exam fee"]
+        D3["Practical exam\nfee: ₹500 - ₹2,000"]
+        D4["Revaluation fee:\n₹1,000 per subject"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFEE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FEE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 6. TO ATTENDANCE MANAGEMENT MODULE
@@ -873,6 +1053,42 @@ END FUNCTION
  - **Appeared for all exams:** Yes
  - **Results:** 88% (promoted to Grade 12)
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Admit Card Generation:\nAttendance check"]
+        T2["Exam Day: Exam\nhall attendance marked"]
+        T3["Low Attendance Detected:\nPrincipal ap..."]
+        T4["Student Absent from\nExam: Marked abse..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nATTENDANCE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Attendance Percentage"]
+        D2["Cumulative attendance\nup to exam date"]
+        D3["Subject-wise attendance"]
+        D4["Exam Eligibility"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nATTENDANCE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ATTENDANCE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 7. TO SCHOLARSHIP & FINANCIAL AID MODULE
@@ -997,6 +1213,42 @@ END FUNCTION
  - **Grade 12 Fee:** ₹1,60,000 × 75% = ₹1,20,000 (was ₹80,000 with 50%)
  - **Grade 12 Results:** 94% 
  - **Scholarship Restored:** 50% for college recommendation letter
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Results Published:\nScholarship eligib..."]
+        T2["Scholarship Award:\nPerformance criter..."]
+        T3["Scholarship Renewal:\nAnnual performan..."]
+        T4["Scholarship Revocation:\nPerformance b..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSCHOLARSHIP & FINANCIAL AID"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Exam Results"]
+        D2["Overall percentage"]
+        D3["Subject-wise marks"]
+        D4["Grade and rank"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSCHOLARSHIP & FINANCIAL AID"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate SCHOLARSHIP & FINANCIAL AID"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -1139,6 +1391,42 @@ END FUNCTION
  - Math: 72% (7% improvement, passed)
  - **AI Prediction Accuracy:** 80% actual vs 78-82% predicted 
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Results Published:\nML models updated ..."]
+        T2["Performance Drop\nDetected: Interventi..."]
+        T3["Weak Topics Identified:\nRemedial cont..."]
+        T4["Exam Prediction:\nBefore exam, AI pred..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nAI & PREDICTIVE ANALYTICS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Exam Performance Data"]
+        D2["Subject-wise marks"]
+        D3["Overall percentage trends"]
+        D4["Rank and percentile"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nAI & PREDICTIVE ANALYTICS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate AI & PREDICTIVE ANALYTICS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → Assessment & Exams)
@@ -1161,6 +1449,43 @@ END FUNCTION
 
 **TRIGGER:** Enrollment, section assignment, withdrawal
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["STUDENT MANAGEMENT"]
+        S1["Enrollment"]
+        S2["section assignment"]
+        S3["withdrawal"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+
+    SEND["SEND Data to\nAssessment Exams"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Active student list"]
+        D2["Grade and section"]
+        D3["Subject enrollment"]
+        D4["Special needs"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAssessment Exams\nRecords"]
+
+    IMPACT1["Exam rosters\nauto-generated"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Seating allocated\nby section"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["IEP students get\nextra time/separate ..."]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM ATTENDANCE MANAGEMENT MODULE
@@ -1179,6 +1504,40 @@ END FUNCTION
 
 **TRIGGER:** Admit card generation, exam eligibility check
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["ATTENDANCE MANAGEMENT"]
+        S1["Admit card generation"]
+        S2["exam eligibility check"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nAssessment Exams"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Attendance percentage"]
+        D2["Authorized vs\nunauthorized absences"]
+        D3["Medical leave records"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAssessment Exams\nRecords"]
+
+    IMPACT1["Admit cards blocked\nif attendance < 75%"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Principal approval\nrequired for low a..."]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Medical leave considered\nfor exemptions"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM FEE MANAGEMENT MODULE
@@ -1196,6 +1555,40 @@ END FUNCTION
 - Exam fees must be paid
 
 **TRIGGER:** Admit card generation, exam registration
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["FEE MANAGEMENT"]
+        S1["Admit card generation"]
+        S2["exam registration"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nAssessment Exams"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Outstanding dues amount"]
+        D2["Payment status"]
+        D3["Fee clearance\nconfirmation"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAssessment Exams\nRecords"]
+
+    IMPACT1["Admit cards blocked\nif dues > ₹50,000"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Board exam registration\nrequires fee ..."]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Exam fees must be paid"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -1216,6 +1609,39 @@ END FUNCTION
 
 **TRIGGER:** Exam schedule creation
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["TIMETABLE"]
+        S1["Exam schedule creation"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nAssessment Exams"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Holiday calendar"]
+        D2["School events"]
+        D3["Classroom availability"]
+        D4["Teacher availability"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAssessment Exams\nRecords"]
+
+    IMPACT1["Exams scheduled\non working days"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Halls allocated\nwithout clashes"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Teachers assigned\ninvigilation duties"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM TEACHER MANAGEMENT MODULE
@@ -1233,6 +1659,42 @@ END FUNCTION
 - Answer sheets distributed for evaluation
 
 **TRIGGER:** Exam scheduled, papers needed, evaluation required
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["TEACHER MANAGEMENT"]
+        S1["Exam scheduled"]
+        S2["papers needed"]
+        S3["evaluation required"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+
+    SEND["SEND Data to\nAssessment Exams"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Teacher availability"]
+        D2["Subject expertise"]
+        D3["Workload capacity"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAssessment Exams\nRecords"]
+
+    IMPACT1["Question papers\nassigned to subject t..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Invigilation\nduties balanced"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Answer sheets distributed\nfor evaluation"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -1253,6 +1715,41 @@ END FUNCTION
 
 **TRIGGER:** Quiz completed, assignment submitted
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["LMS (LEARNING\nMANAGEMENT SYSTEM)"]
+        S1["Quiz completed"]
+        S2["assignment submitted"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nAssessment Exams"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Quiz scores"]
+        D2["Assignment marks"]
+        D3["Internal assessment marks"]
+        D4["Continuous\nevaluation data"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAssessment Exams\nRecords"]
+
+    IMPACT1["Internal marks\nadded to final results"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["CCE (Continuous\nComprehensive Evaluat..."]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Formative + summative\nassessment comb..."]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM SPECIAL EDUCATION MODULE
@@ -1272,6 +1769,40 @@ END FUNCTION
 
 **TRIGGER:** Exam scheduled, IEP student enrolled
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["SPECIAL EDUCATION"]
+        S1["Exam scheduled"]
+        S2["IEP student enrolled"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nAssessment Exams"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["IEP student list"]
+        D2["Accommodation\nrequirements"]
+        D3["Modified assessment\ncriteria"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAssessment Exams\nRecords"]
+
+    IMPACT1["IEP students\nget 1.5x time"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Separate exam\nrooms allocated"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Oral exams\noption provided"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM PARENT PORTAL
@@ -1289,6 +1820,40 @@ END FUNCTION
 - Parent engagement measured
 
 **TRIGGER:** Revaluation requested, admit card downloaded
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["PARENT PORTAL"]
+        S1["Revaluation requested"]
+        S2["admit card downloaded"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nAssessment Exams"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Revaluation requests"]
+        D2["Admit card download logs"]
+        D3["Result viewing logs"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAssessment Exams\nRecords"]
+
+    IMPACT1["Revaluation\nrequests processed"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Admit card access tracked"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Parent engagement\nmeasured"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -1308,6 +1873,38 @@ END FUNCTION
 
 **TRIGGER:** Suspension imposed during exam period
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["DISCIPLINE"]
+        S1["Suspension imposed\nduring exam period"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nAssessment Exams"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Suspension orders"]
+        D2["Suspension duration"]
+        D3["Disciplinary status"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAssessment Exams\nRecords"]
+
+    IMPACT1["Suspended students\nmarked absent from..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Re-exam scheduled\nafter suspension ends"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Conduct remarks\nadded to report card"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM BOARD EXAM INTEGRATION (CBSE/ICSE)
@@ -1325,6 +1922,40 @@ END FUNCTION
 - Board certificates stored in document vault
 
 **TRIGGER:** Board exam schedule released, results published
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["BOARD EXAM INTEGRATION\n(CBSE/ICSE)"]
+        S1["Board exam\nschedule released"]
+        S2["results published"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nAssessment Exams"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Board exam schedule"]
+        D2["Board exam results"]
+        D3["Board certificates"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAssessment Exams\nRecords"]
+
+    IMPACT1["School exams scheduled\naround board e..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Board results integrated\ninto student..."]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Board certificates\nstored in document..."]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 

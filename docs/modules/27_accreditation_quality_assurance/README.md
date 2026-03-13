@@ -127,6 +127,39 @@ END FUNCTION
 - **Issues:** None (all metrics above thresholds)
 - **Action:** Continue monitoring, share best practices
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Continuous: Real-time\nquality monitoring"]
+        T2["Periodic: Monthly/quarterly\nquality r..."]
+        T3["Event-driven: Audit\nfindings, complai..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nALL MODULES\n- QUALITY MONITORING"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Quality Metrics\nCollection"]
+        D2["Quality Alerts"]
+        D3["Audit Findings"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nALL MODULES\n- QUALITY MONITORING"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ALL MODULES\n- QUALITY MONITORING"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO ACADEMIC MODULE
@@ -183,6 +216,39 @@ Academic quality is core to accreditation. QA module monitors academic standards
 - **Follow-up:** Monitor next term results
 - **Outcome (3 months):** Pass rate improved to 82%
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Exam Results: Analyze\npass rates, gra..."]
+        T2["Curriculum Review:\nAnnual curriculum ..."]
+        T3["Accreditation Audit:\nPre-audit qualit..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nACADEMIC"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Academic Quality Metrics"]
+        D2["Accreditation\nRequirements"]
+        D3["Quality Alerts"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nACADEMIC"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ACADEMIC"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO HR MODULE
@@ -221,6 +287,39 @@ Teacher quality is critical for accreditation. QA module monitors teacher qualif
   - Meet teacher qualification requirements
   - Pass inspection
   - Maintain affiliation
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Hiring: Verify\nqualifications"]
+        T2["Annual Review: Teacher\nperformance ev..."]
+        T3["Accreditation Audit:\nTeacher qualific..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nHR"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Teacher Quality Metrics"]
+        D2["Accreditation\nRequirements"]
+        D3["Quality Alerts"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nHR"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate HR"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 

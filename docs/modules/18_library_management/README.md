@@ -249,6 +249,42 @@ END FUNCTION
  - "Science Fiction Master" (20+ sci-fi books)
  - Certificate awarded, mentioned in report card
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Book Issued: Borrowing\nrecord added t..."]
+        T2["Book Returned: Return\nlogged, reading..."]
+        T3["Book Overdue: Fine\ncalculated daily, ..."]
+        T4["Book Lost: Replacement\ncost added to ..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Borrowing History"]
+        D2["Total books borrowed"]
+        D3["Current books issued"]
+        D4["Books returned"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO FEE MANAGEMENT MODULE
@@ -374,6 +410,42 @@ END FUNCTION
  - Outstanding: ₹0
  - Borrowing privileges restored
  - **March 26:** Ananya borrows new book 
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Book Overdue: Fine\ncalculated daily, ..."]
+        T2["Book Lost: Replacement\ncost added imm..."]
+        T3["Book Damaged: Assessment\ndone, charge..."]
+        T4["Fine Paid: Borrowing\nprivileges restored"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nFEE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Fine Types"]
+        D2["Overdue fine:\n₹2/day per book"]
+        D3["Lost book: Book\ncost + ₹50 processing..."]
+        D4["Damaged book: Repair\ncost or replacem..."]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFEE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FEE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -511,6 +583,42 @@ END FUNCTION
  - **Pays Ananya's fine:** Clicks "Pay ₹14", pays via UPI
  - **Fine cleared:** Ananya can borrow books tomorrow
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Book Issued: Parent\nnotification with..."]
+        T2["Book Due Soon: Reminder\n2 days before..."]
+        T3["Book Overdue: Alert\non due date + 1 day"]
+        T4["Fine Added: Notification\nwith amount"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nPARENT ENGAGEMENT PORTAL"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Reading Dashboard"]
+        D2["Books currently borrowed"]
+        D3["Due dates"]
+        D4["Reading history"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nPARENT ENGAGEMENT PORTAL"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate PARENT ENGAGEMENT PORTAL"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 4. TO ACADEMIC PERFORMANCE MODULE
@@ -615,6 +723,42 @@ END FUNCTION
  - **Low Readers (<10 books/year):** 150 students, Average marks: 60%
  - **Correlation:** Strong positive (r = 0.72)
  - **Action:** School launches "Read to Succeed" campaign, targets low readers
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Term\nEnd: Reading-performance analysis"]
+        T2["Exam Period: Resource\nusage tracking"]
+        T3["Low Reading Detected:\nIntervention alert"]
+        T4["Subject Struggle:\nRecommend subject-s..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nACADEMIC PERFORMANCE"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Reading-Performance\nCorrelation"]
+        D2["Books borrowed\nvs exam scores"]
+        D3["Subject-specific reading"]
+        D4["Reading level\nvs academic level"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nACADEMIC PERFORMANCE"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ACADEMIC PERFORMANCE"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -722,6 +866,42 @@ END FUNCTION
  - Borrowing rate: 30/35 = 86%
  - Can follow up with 5 students who didn't borrow
  - **Assignment Completion:** 33/35 students submitted book reports (94%)
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Teacher Recommends\nBook: Added to rec..."]
+        T2["Student Borrows\nRecommended Book: Tea..."]
+        T3["New Book Request:\nLibrarian reviews f..."]
+        T4["Reading Assignment:\nStudent borrowing..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nTEACHER MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Book Recommendations"]
+        D2["Teachers recommend\nbooks for specific..."]
+        D3["Reading lists\nfor each grade/subject"]
+        D4["Assignment-related\nbook suggestions"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nTEACHER MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate TEACHER MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -833,6 +1013,42 @@ END FUNCTION
  - **LMS Dashboard:** Shows reading progress, completion, time spent
  - **March 7:** Submits book report via LMS
  - **March 15:** E-book access auto-expires (14 days)
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["E-book Borrowed:\nAccess granted in LMS"]
+        T2["Reading Assignment\nPosted: Linked to ..."]
+        T3["Book Report Submitted:\nTracked in bot..."]
+        T4["Reading Time Logged:\nAnalytics updated"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nDIGITAL LEARNING\nMANAGEMENT SYSTEM (LMS)"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["E-book Integration"]
+        D2["E-book catalog\naccessible via LMS"]
+        D3["Digital borrowing"]
+        D4["Reading time tracking"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nDIGITAL LEARNING\nMANAGEMENT SYSTEM (LMS)"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate DIGITAL LEARNING\nMANAGEMENT SYSTEM (LMS)"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -956,6 +1172,42 @@ END FUNCTION
  - **Budget:** ₹50,000/month
  - **Approved:** All recommendations approved, books ordered
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Book Added:\nInventory updated"]
+        T2["Book Lost/Damaged:\nAsset written off"]
+        T3["High Demand Detected:\nProcurement rec..."]
+        T4["Annual Audit: Inventory\nreconciliation"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nINVENTORY & ASSET MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Book Inventory"]
+        D2["Total books in catalog"]
+        D3["Available copies\nvs issued copies"]
+        D4["Book condition"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nINVENTORY & ASSET MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate INVENTORY & ASSET MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 8. TO GAMIFICATION & STUDENT ENGAGEMENT MODULE
@@ -1073,6 +1325,42 @@ END FUNCTION
  - Rewards: Extended borrowing limit (7 books), Library Prefect badge
  - Recognition: Assembly announcement, certificate, trophy
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Reading Milestone:\nBadge awarded"]
+        T2["Challenge Completed:\nReward granted"]
+        T3["Leaderboard Update:\nWeekly refresh"]
+        T4["Monthly Winner:\nRecognition and prize"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nGAMIFICATION\n& STUDENT ENGAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Reading Challenges"]
+        D2["Monthly reading challenge"]
+        D3["Genre challenge"]
+        D4["Class reading competition"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nGAMIFICATION\n& STUDENT ENGAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate GAMIFICATION\n& STUDENT ENGAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → Library Management)
@@ -1095,6 +1383,43 @@ END FUNCTION
 
 **TRIGGER:** Admission, withdrawal, grade promotion, status change
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["STUDENT MANAGEMENT"]
+        S1["Admission"]
+        S2["withdrawal"]
+        S3["grade promotion"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+
+    SEND["SEND Data to\nLibrary Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["New admissions"]
+        D2["Withdrawals"]
+        D3["Grade promotions"]
+        D4["Status changes"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nLibrary Management\nRecords"]
+
+    IMPACT1["New students get\nlibrary orientation"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Withdrawn students\nmust return all books"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Borrowing limits\nadjusted by grade"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM FEE MANAGEMENT MODULE
@@ -1112,6 +1437,40 @@ END FUNCTION
 - Outstanding dues updated
 
 **TRIGGER:** Payment made, dues cleared
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["FEE MANAGEMENT"]
+        S1["Payment made"]
+        S2["dues cleared"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nLibrary Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Library fine payments"]
+        D2["Payment confirmations"]
+        D3["Outstanding\ndues clearance"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nLibrary Management\nRecords"]
+
+    IMPACT1["Fines marked as paid"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Borrowing\nprivileges restored"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Outstanding dues updated"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -1131,6 +1490,40 @@ END FUNCTION
 
 **TRIGGER:** Teacher recommendation, book request
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["TEACHER MANAGEMENT"]
+        S1["Teacher recommendation"]
+        S2["book request"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nLibrary Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Book recommendations\nfor curriculum"]
+        D2["New book acquisition\nrequests"]
+        D3["Reading assignment lists"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nLibrary Management\nRecords"]
+
+    IMPACT1["Recommended\nbooks highlighted"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Acquisition\nrequests processed"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Reading assignments\ntracked"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM LMS (LEARNING MANAGEMENT SYSTEM)
@@ -1149,6 +1542,40 @@ END FUNCTION
 
 **TRIGGER:** E-book request, assignment posted
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["LMS (LEARNING\nMANAGEMENT SYSTEM)"]
+        S1["E-book request"]
+        S2["assignment posted"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nLibrary Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["E-book access requests"]
+        D2["Reading assignment\npostings"]
+        D3["Digital resource usage"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nLibrary Management\nRecords"]
+
+    IMPACT1["E-books made\navailable in LMS"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Reading assignments\nlinked to catalog"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Usage analytics tracked"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM ACADEMIC CALENDAR MODULE
@@ -1166,6 +1593,40 @@ END FUNCTION
 - Book return deadlines extended
 
 **TRIGGER:** Exam scheduled, holiday declared
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["ACADEMIC CALENDAR"]
+        S1["Exam scheduled"]
+        S2["holiday declared"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nLibrary Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Exam schedules"]
+        D2["Holiday calendar"]
+        D3["School events"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nLibrary Management\nRecords"]
+
+    IMPACT1["Extended borrowing\nduring exams"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Library hours adjusted"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Book return\ndeadlines extended"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 

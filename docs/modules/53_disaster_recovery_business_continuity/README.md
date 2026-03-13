@@ -251,6 +251,41 @@ END FUNCTION
   - Manual re-entry: 30 payments re-entered from payment gateway logs
   - Post-incident: Security review, malware removal, system hardening
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Scheduled Backup:\nAutomated daily/hou..."]
+        T2["On-Demand Backup:\nBefore major system..."]
+        T3["Disaster Event:\nData corruption, hard..."]
+        T4["Recovery Request:\nRestore deleted dat..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nALL MODULES - BACKUP SERVICES"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Backup Schedule"]
+        D2["Backup Metadata"]
+        D3["Recovery Requests"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nALL MODULES - BACKUP SERVICES"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ALL MODULES - BACKUP SERVICES"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO STUDENT MANAGEMENT MODULE
@@ -291,6 +326,40 @@ Student data is the most critical asset in the ERP. Loss of student records woul
   - Data loss: 15 minutes of changes (2 new admissions, 1 address update)
   - Manual re-entry: 3 changes re-applied
   - Total recovery time: 25 minutes
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Continuous Backup:\nReal-time replicat..."]
+        T2["Hourly Snapshot:\nPoint-in-time recove..."]
+        T3["Daily Full Backup:\nComplete student d..."]
+        T4["Recovery Request:\nRestore deleted stu..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Backup Coverage"]
+        D2["Recovery Scenarios"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -334,6 +403,40 @@ Financial data requires the highest level of protection. Loss of fee payment rec
   - Result: 28 payments successful, 2 failed (parents notified to retry)
   - Total resolution time: 1 hour
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Real-Time Replication:\nEvery payment ..."]
+        T2["Hourly Backup:\nFinancial data snapshot"]
+        T3["Daily Backup: Complete\nfee database w..."]
+        T4["Monthly Archive:\nLong-term retention ..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nFEE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Backup Coverage"]
+        D2["Recovery Scenarios"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFEE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FEE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 4. TO EXAM & ASSESSMENT MODULE
@@ -375,6 +478,40 @@ Exam data (question papers, student answers, grades) is time-sensitive and criti
   - Data loss: 30 seconds of typing (minimal)
   - Exam extended: +5 minutes for all students (compensation)
   - Total downtime: 8 minutes
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Pre-Exam Backup:\nFull backup before e..."]
+        T2["During Exam: Auto-save\nstudent answer..."]
+        T3["Post-Exam Backup:\nImmediate backup af..."]
+        T4["Grade Entry: Backup\nafter each grade ..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nEXAM & ASSESSMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Backup Coverage"]
+        D2["Recovery Scenarios"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nEXAM & ASSESSMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate EXAM & ASSESSMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 

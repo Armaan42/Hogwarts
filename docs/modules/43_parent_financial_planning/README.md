@@ -524,12 +524,69 @@ EMI = ₹20,758
 **TRIGGER:** Parent requests payment plan  
 **IMPACT:** 40% parents opt for EMI (₹50K/term → ₹17K/month)
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Parent requests\npayment plan"]
+    end
+
+    T1 --> FETCH
+
+    FETCH["FETCH Data for\nFEE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Payment schedules"]
+        D2["EMI terms"]
+        D3["scholarship eligibility"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFEE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FEE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ### 2. TO ADMISSIONS
 
 **WHY:** Financial aid for new admissions, scholarship offers.  
 **DATA FLOW:** Need-based aid eligibility, merit scholarships  
 **TRIGGER:** Admission application  
 **IMPACT:** ₹1.2Cr/year in financial aid to 150 students
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Admission application"]
+    end
+
+    T1 --> FETCH
+
+    FETCH["FETCH Data for\nADMISSIONS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Need-based\naid eligibility"]
+        D2["merit scholarships"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nADMISSIONS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ADMISSIONS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -540,6 +597,31 @@ EMI = ₹20,758
 **WHY:** Fee structure, payment history for planning.  
 **DATA RECEIVED:** Total K-12 cost (₹60L), payment history  
 **IMPACT:** Parents plan 12-year education budget
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["FEE MANAGEMENT"]
+        S1["Fee Structure\nUpdated"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nParent Financial\nPlanning"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Total K-12 cost (₹60L)"]
+        D2["payment history"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nParent Financial\nPlanning\nRecords"]
+
+    IMPACT1[" Parents plan 12-year\neducation budget"]
+    UPDATE --> IMPACT1
+
+```
 
 ---
 

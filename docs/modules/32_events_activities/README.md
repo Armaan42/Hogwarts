@@ -216,6 +216,42 @@ END FUNCTION
   - "Thank you for making our Annual Function a grand success! Photos: link, Feedback: link"
   - Feedback response rate: 40% (720 responses)
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Event Created:\nSend announcement"]
+        T2["1 Week Before:\nSend reminder"]
+        T3["1 Day Before:\nSend final reminder"]
+        T4["Event Completed:\nSend thank you + fee..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nCOMMUNICATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Event Announcements"]
+        D2["Invitations"]
+        D3["Reminders"]
+        D4["Post-Event"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMMUNICATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMMUNICATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO PARENT ENGAGEMENT MODULE
@@ -239,6 +275,38 @@ Parents volunteer for events and RSVP. Events module sends volunteer opportuniti
 - **Event Created:** Post volunteer opportunities
 - **Parent Signs Up:** Register volunteer
 - **Event Day:** Track volunteer attendance, log hours
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Event Created: Post\nvolunteer opportu..."]
+        T2["Parent Signs\nUp: Register volunteer"]
+        T3["Event Day: Track\nvolunteer attendance..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nPARENT ENGAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Volunteer Opportunities"]
+        D2["RSVP Data"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nPARENT ENGAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate PARENT ENGAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -267,6 +335,41 @@ Events need venues and equipment. Events module sends venue booking and equipmen
 - **1 Week Before:** Confirm bookings, finalize setup
 - **Event Day:** Facility ready, equipment in place
 - **Post-Event:** Cleanup, equipment return
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Event Created: Book\nvenue, request eq..."]
+        T2["1 Week Before: Confirm\nbookings, fina..."]
+        T3["Event Day: Facility\nready, equipment ..."]
+        T4["Post-Event: Cleanup,\nequipment return"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nFACILITIES"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Venue Booking"]
+        D2["Equipment Requests"]
+        D3["Facility Preparation"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFACILITIES"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FACILITIES"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 

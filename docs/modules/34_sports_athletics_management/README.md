@@ -482,6 +482,41 @@ Sports participation is part of student records. Sports module sends athlete dat
   - Certificates in student portfolio
   - Awards at Annual Function
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Team Selection:\nUpdate student record..."]
+        T2["Match Played:\nLog participation"]
+        T3["Achievement Earned:\nAdd to student ac..."]
+        T4["Scholarship Awarded:\nUpdate financial..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Athlete Participation"]
+        D2["Achievements"]
+        D3["Sports Scholarships"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO HEALTH MODULE
@@ -508,6 +543,39 @@ Athletes need medical clearances and fitness tracking. Sports module sends medic
 - **Injury During Match:** Report injury, seek treatment
 - **Annual Fitness Test:** Send results to Health module
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Team Selection:\nRequest medical clear..."]
+        T2["Injury During Match:\nReport injury, s..."]
+        T3["Annual Fitness Test:\nSend results to ..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nHEALTH"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Medical Clearance\nRequests"]
+        D2["Injury Reports"]
+        D3["Fitness Test Results"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nHEALTH"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate HEALTH"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO EVENTS MODULE
@@ -529,6 +597,38 @@ Sports Day and tournaments are events. Sports module sends event details to Even
 - **Sports Day Planned:** Create event in Events module
 - **Tournament Scheduled:** Add to events calendar
 - **Match Result:** Update event with result
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Sports Day Planned:\nCreate event in E..."]
+        T2["Tournament Scheduled:\nAdd to events c..."]
+        T3["Match Result: Update\nevent with result"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nEVENTS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Sports Day"]
+        D2["Tournaments"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nEVENTS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate EVENTS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 

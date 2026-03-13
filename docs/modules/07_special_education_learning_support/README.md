@@ -263,6 +263,42 @@ END FUNCTION
  - New goal: Reading fluency 100 wpm
  - Spelling accuracy: 85%
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Student identified\nwith learning diff..."]
+        T2["IEP created or updated"]
+        T3["Accommodation requested"]
+        T4["Progress review completed"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Learning Difference\nDiagnosis"]
+        D2["Student ID, name, grade"]
+        D3["Diagnosis type"]
+        D4["Diagnosis date,\ndiagnosing professional"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO ASSESSMENT & EXAMINATION MODULE
@@ -356,6 +392,42 @@ FUNCTION apply_exam_accommodations(student, exam):
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Exam scheduled\nfor student with IEP"]
+        T2["Progress monitoring\nassessment due"]
+        T3["Board\nexam accommodation request"]
+        T4["Timing: 2 weeks\nbefore exam, Weekly f..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nASSESSMENT & EXAMINATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Exam Accommodations"]
+        D2["Student ID, exam details"]
+        D3["Accommodation type"]
+        D4["Duration"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nASSESSMENT & EXAMINATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ASSESSMENT & EXAMINATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO TIMETABLE & SCHEDULING MODULE
@@ -447,6 +519,42 @@ FUNCTION schedule_intervention_sessions(student, intervention, frequency, durati
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["IEP created with\nintervention schedule"]
+        T2["Therapy session scheduled"]
+        T3["Timetable change"]
+        T4["Timing: Weekly\ntimetable sync"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nTIMETABLE & SCHEDULING"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Resource Teacher Schedule"]
+        D2["Student ID,\nintervention type"]
+        D3["Session frequency"]
+        D4["Session duration"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nTIMETABLE & SCHEDULING"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate TIMETABLE & SCHEDULING"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → Special Education)
@@ -468,6 +576,41 @@ END FUNCTION
 
 **TRIGGER:** Student enrollment, Medical record update
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["STUDENT MANAGEMENT"]
+        S1["Student enrollment"]
+        S2["Medical record update"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nSpecial Education\nLearning"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Student demographics"]
+        D2["Medical history"]
+        D3["Previous school IEP"]
+        D4["Parent contact\ninformation"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nSpecial Education\nLearning\nRecords"]
+
+    IMPACT1["Transfer Student"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["System imports IEP,\nschedules review ..."]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Accommodations\nactivated immediately"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM HEALTH MODULE
@@ -487,6 +630,41 @@ END FUNCTION
 - IEP created based on medical + educational assessment
 
 **TRIGGER:** Medical diagnosis, Doctor's note
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["HEALTH"]
+        S1["Medical diagnosis"]
+        S2["Doctor's note"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nSpecial Education\nLearning"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Medical diagnoses"]
+        D2["Medication schedules"]
+        D3["Allergies affecting\ntherapy materials"]
+        D4["Doctor's recommendations"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nSpecial Education\nLearning\nRecords"]
+
+    IMPACT1["ADHD Diagnosis"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Health module\nnotifies Special Ed"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Psycho-educational\nassessment scheduled"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -627,6 +805,42 @@ FUNCTION send_iep_meeting_invitation(iep, meeting_date):
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["IEP meeting scheduled"]
+        T2["Goal achieved"]
+        T3["Therapy session completed"]
+        T4["Accommodation requested"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nCOMMUNICATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["IEP Updates"]
+        D2["Progress Reports"]
+        D3["Collaboration Messages"]
+        D4["Data Volume"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMMUNICATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMMUNICATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 5. TO PARENT PORTAL MODULE
@@ -677,6 +891,42 @@ Parents need 24/7 access to IEP documents, progress reports, therapy session not
     - Next IEP review: March 15, 2025
   - Downloads latest progress report
   - Views therapy session notes from last week
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["IEP updated"]
+        T2["Therapy session completed"]
+        T3["Progress report generated"]
+        T4["Document uploaded"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nPARENT PORTAL"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["IEP Documents"]
+        D2["Therapy Session Notes"]
+        D3["Accommodation Tracking"]
+        D4["Progress Dashboards"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nPARENT PORTAL"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate PARENT PORTAL"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -729,6 +979,42 @@ IEP effectiveness analyzed through data. Intervention success rates tracked. Res
   - Alert sent to counselor: "5 students need screening"
   - Assessments scheduled proactively
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["IEP goal updated"]
+        T2["Intervention\nsession logged"]
+        T3["Compliance\ndeadline approaching"]
+        T4["Timing: Real-time\nstreaming"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nANALYTICS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["IEP Effectiveness"]
+        D2["Student Outcomes"]
+        D3["Resource Utilization"]
+        D4["Compliance Metrics"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nANALYTICS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ANALYTICS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 7. TO CURRICULUM MODULE
@@ -774,6 +1060,42 @@ IEP goals aligned with curriculum standards. Modified curriculum for students wi
   - Writing samples analyzed
   - Data graphed to show progress
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["IEP created"]
+        T2["Curriculum updated"]
+        T3["Progress monitoring\nscheduled"]
+        T4["Timing: Quarterly"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nCURRICULUM"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Curriculum Alignment"]
+        D2["Progress Monitoring"]
+        D3["Differentiation Plans"]
+        D4["Data Volume"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCURRICULUM"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate CURRICULUM"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## ADDITIONAL INBOUND CONNECTIONS
@@ -802,6 +1124,38 @@ IEP goals aligned with curriculum standards. Modified curriculum for students wi
 
 **TRIGGER:** Screening completed, Assessment administered
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["ASSESSMENT"]
+        S1["Screening completed"]
+        S2["Assessment administered"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nSpecial Education\nLearning"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Screening\nassessment results"]
+        D2["Diagnostic test scores"]
+        D3["Progress monitoring data"]
+        D4["Standardized\ntest accommodations"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nSpecial Education\nLearning\nRecords"]
+
+    IMPACT1["Screening Results"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Progress Monitoring"]
+    IMPACT1 --> IMPACT2
+
+```
+
 ---
 
 ### FROM TIMETABLE MODULE
@@ -825,6 +1179,38 @@ IEP goals aligned with curriculum standards. Modified curriculum for students wi
   - Maximizes therapist efficiency
 
 **TRIGGER:** Timetable published, IEP intervention scheduled
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["TIMETABLE"]
+        S1["Timetable published"]
+        S2["IEP intervention\nscheduled"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nSpecial Education\nLearning"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Student timetables"]
+        D2["Core subject periods"]
+        D3["Available\nintervention slots"]
+        D4["Therapist availability"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nSpecial Education\nLearning\nRecords"]
+
+    IMPACT1["Conflict Avoidance"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Therapist Scheduling"]
+    IMPACT1 --> IMPACT2
+
+```
 
 ---
 
