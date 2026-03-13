@@ -515,112 +515,465 @@ EMI = ₹20,758
 
 ---
 
-## OUTBOUND CONNECTIONS (Financial Planning → Other Modules)
+## OUTBOUND CONNECTIONS (Parent Financial Planning → Other Modules)
 
-### 1. TO FEE MANAGEMENT
+### 1. TO FEE MANAGEMENT MODULE
 
-**WHY:** Payment plans, EMI options, scholarship applications.  
-**DATA FLOW:** Payment schedules, EMI terms, scholarship eligibility  
-**TRIGGER:** Parent requests payment plan  
-**IMPACT:** 40% parents opt for EMI (₹50K/term → ₹17K/month)
+**WHY This Connection Exists:** The Parent Financial Planning module must synchronize payment schedules, EMI breakdowns, and discount eligibility with the Fee Management module so that invoices reflect the chosen plan. Without this connection, parents would receive standard invoices that ignore their selected payment preferences, leading to billing disputes and reconciliation failures across ₹21.6Cr in annual fee collections.
 
-```mermaid
-flowchart TD
-    subgraph TRIGGERS["TRIGGER EVENTS"]
-        T1["Parent requests\npayment plan"]
-    end
+**DATA FLOW:**
+1. `payment_plan_id` — Unique identifier for the selected payment plan (annual/term/EMI)
+2. `emi_schedule[]` — Array of EMI due dates, amounts, and bank partner codes
+3. `discount_amount` — Early-bird or annual payment discount in ₹
+4. `discount_type` — Enum: ANNUAL_PREPAY | SIBLING | MERIT_SCHOLARSHIP | NEED_BASED
+5. `parent_id` — Parent's unique identifier for fee account linkage
+6. `student_ids[]` — List of enrolled children linked to the payment plan
+7. `effective_academic_year` — Academic year the plan applies to (e.g., 2025-26)
+8. `bank_reference_number` — HDFC/ICICI/SBI loan reference if EMI via partner bank
 
-    T1 --> FETCH
+**TRIGGER EVENT:**
+1. Parent selects or changes a payment plan via the parent portal
+2. Scholarship committee approves a fee waiver and the discount needs to reflect in invoices
+3. Sibling discount eligibility changes when a new child is enrolled or withdrawn
+4. EMI bounce detected by partner bank — plan must be recalculated and re-sent
 
-    FETCH["FETCH Data for\nFEE MANAGEMENT"]
+**IMPACT:**
+- When Mr. Rajesh Iyer (parent, ₹14L/year income) selects the annual prepayment plan for his daughter Meera in Grade 6, the Fee Management module receives the ₹22,500 discount (5% of ₹4.5L) and generates a single invoice for ₹4,27,500 due April 15, 2025 instead of three term invoices.
+- When the scholarship committee approves Priya Nair's 50% need-based waiver (family income ₹3.8L/year), the module sends `discount_amount: ₹2,25,000` and `discount_type: NEED_BASED` so that Fee Management adjusts the Grade 9 invoice from ₹5,50,000 to ₹2,75,000 for the 2025-26 session.
+- If Rohan Verma's HDFC EMI bounces in September 2025, the trigger re-sends updated `emi_schedule[]` with revised dates and a ₹500 late fee, ensuring the Fee Management ledger stays accurate.
 
-    subgraph DATA["DATA SENT"]
-        direction LR
-        D1["Payment schedules"]
-        D2["EMI terms"]
-        D3["scholarship eligibility"]
-    end
+**BUSINESS LOGIC:**
 
-    FETCH --> DATA
+```
+FUNCTION sendPaymentPlanToFeeManagement(parent_id, plan):
+    student_list = fetchEnrolledStudents(parent_id)
+    IF student_list IS EMPTY:
+        LOG_ERROR("No enrolled students for parent: " + parent_id)
+        RETURN FAILURE
 
-    DATA --> VALIDATE{"Data\nValid?"}
+    base_fee = fetchAnnualFee(student_list, plan.academic_year)
+    discount = calculateDiscount(plan.type, base_fee, student_list)
 
-    VALIDATE -- Yes --> SEND["Send to\nFEE MANAGEMENT"]
-    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+    IF discount > base_fee:
+        LOG_ERROR("Discount exceeds base fee — review scholarship rules")
+        RAISE ValidationError("DISCOUNT_EXCEEDS_FEE")
 
-    SEND --> PROCESS["Process &\nUpdate FEE MANAGEMENT"]
+    net_amount = base_fee - discount
+    schedule = generatePaymentSchedule(plan.type, net_amount, plan.start_date)
 
-    PROCESS --> NOTIFY["Notify\nStakeholders"]
+    IF plan.type == "EMI":
+        bank_ref = validateBankPartner(plan.bank_code, parent_id)
+        IF bank_ref IS NULL:
+            NOTIFY_FINANCE_TEAM("Bank partner validation failed for " + parent_id)
+            RETURN FAILURE
+        schedule.bank_reference = bank_ref
+
+    payload = buildFeeManagementPayload(parent_id, student_list, schedule, discount)
+    response = POST("/api/fee-management/payment-plans", payload)
+
+    IF response.status != 200:
+        LOG_ERROR("Fee Management sync failed: " + response.error)
+        RETRY(max_attempts=3, backoff="exponential")
+    ELSE:
+        LOG_SUCCESS("Payment plan synced for parent: " + parent_id)
+        NOTIFY_PARENT(parent_id, "Your payment plan has been updated successfully")
+    RETURN response
 ```
 
-### 2. TO ADMISSIONS
-
-**WHY:** Financial aid for new admissions, scholarship offers.  
-**DATA FLOW:** Need-based aid eligibility, merit scholarships  
-**TRIGGER:** Admission application  
-**IMPACT:** ₹1.2Cr/year in financial aid to 150 students
+**EXAMPLE:**
+Mrs. Deepa Krishnan has two children — Aarav (Grade 3, ₹3.5L/year) and Kavya (Grade 7, ₹4.5L/year) — enrolled at the Bengaluru campus. She selects the annual prepayment plan in March 2025. The module calculates: base fee ₹8,00,000, sibling discount 10% on Kavya = ₹45,000, annual prepay discount 5% on combined = ₹37,750, total discount = ₹82,750. It sends `discount_amount: 82750`, `discount_type: SIBLING + ANNUAL_PREPAY`, and a single-instalment schedule due April 10, 2025 for ₹7,17,250 to Fee Management. The Fee Management module generates consolidated invoice #INV-2025-04-DK-001 and emails it to Mrs. Krishnan.
 
 ```mermaid
 flowchart TD
     subgraph TRIGGERS["TRIGGER EVENTS"]
-        T1["Admission application"]
+        T1["Parent selects or\nchanges payment plan"]
+        T2["Scholarship committee\napproves fee waiver"]
+        T3["Sibling discount\neligibility changes"]
+        T4["EMI bounce detected\nby partner bank"]
     end
-
     T1 --> FETCH
-
-    FETCH["FETCH Data for\nADMISSIONS"]
-
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+    FETCH["FETCH Data for\nFEE MANAGEMENT"]
     subgraph DATA["DATA SENT"]
         direction LR
-        D1["Need-based\naid eligibility"]
-        D2["merit scholarships"]
+        D1["payment_plan_id"]
+        D2["emi_schedule[]"]
+        D3["discount_amount"]
+        D4["discount_type"]
+        D5["student_ids[]"]
+        D6["bank_reference_number"]
     end
-
     FETCH --> DATA
-
     DATA --> VALIDATE{"Data\nValid?"}
-
-    VALIDATE -- Yes --> SEND["Send to\nADMISSIONS"]
+    VALIDATE -- Yes --> SEND["Send to\nFEE MANAGEMENT"]
     VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
-
-    SEND --> PROCESS["Process &\nUpdate ADMISSIONS"]
-
+    SEND --> PROCESS["Process &\nUpdate FEE MANAGEMENT"]
     PROCESS --> NOTIFY["Notify\nStakeholders"]
 ```
 
 ---
 
-## INBOUND CONNECTIONS (Other Modules → Financial Planning)
+### 2. TO COMMUNICATION MODULE
 
-### FROM FEE MANAGEMENT
+**WHY This Connection Exists:** Financial planning events — overdue reminders, scholarship approvals, EMI confirmations, and fee revision notices — must reach parents through email, SMS, and push notifications. The Communication module centralises multi-channel delivery so that the Financial Planning module does not maintain its own notification infrastructure. This ensures consistent branding, delivery tracking, and DND compliance across all 1,800 families.
 
-**WHY:** Fee structure, payment history for planning.  
-**DATA RECEIVED:** Total K-12 cost (₹60L), payment history  
-**IMPACT:** Parents plan 12-year education budget
+**DATA FLOW:**
+1. `notification_type` — Enum: FEE_REMINDER | SCHOLARSHIP_APPROVED | EMI_CONFIRMATION | PAYMENT_RECEIPT | FEE_REVISION | COUNSELING_INVITE
+2. `recipient_parent_id` — Target parent's unique identifier
+3. `recipient_channels[]` — Preferred channels: EMAIL, SMS, WHATSAPP, PUSH
+4. `template_id` — Communication template code (e.g., TMPL-FIN-004)
+5. `template_variables{}` — Key-value pairs for template merge (student name, amount, date)
+6. `scheduled_send_time` — ISO timestamp for deferred delivery (e.g., reminders 7 days before due date)
+7. `priority` — HIGH (overdue), MEDIUM (upcoming), LOW (informational)
+8. `attachment_url` — Link to invoice PDF or scholarship letter
+
+**TRIGGER EVENT:**
+1. Fee payment due date is 7 days away — send reminder notification
+2. Scholarship or financial aid application is approved or rejected
+3. EMI instalment is confirmed by the partner bank
+4. Annual fee revision is published for the upcoming academic year
+5. Financial counseling session slot becomes available
+
+**IMPACT:**
+- When Aarav Mehta's Grade 10 term fee of ₹1,83,333 is due on September 1, 2025, the module sends a HIGH-priority reminder on August 25 via SMS and email to his father Mr. Suresh Mehta, reducing late payments by 35% (from 180 to 117 families per term).
+- Upon approving Meera Joshi's merit scholarship (₹1,37,500 waiver, top 8% in Grade 11 CBSE boards), the module triggers a congratulatory email with the scholarship letter PDF attached, and an SMS summary: "Congratulations! Meera has been awarded a 25% merit scholarship for 2025-26."
+- When ICICI Bank confirms Rohan Das's October EMI of ₹38,000, the module sends a payment receipt notification with transaction ID and updated balance.
+
+**BUSINESS LOGIC:**
+
+```
+FUNCTION sendFinancialNotification(event_type, parent_id, context):
+    parent = fetchParentProfile(parent_id)
+    IF parent IS NULL:
+        LOG_ERROR("Parent not found: " + parent_id)
+        RETURN FAILURE
+
+    channels = parent.preferred_channels
+    IF channels IS EMPTY:
+        channels = ["EMAIL"]  -- default fallback
+
+    template = getTemplate(event_type)
+    IF template IS NULL:
+        LOG_ERROR("No template found for event: " + event_type)
+        RETURN FAILURE
+
+    variables = buildTemplateVariables(context, parent)
+    priority = determinePriority(event_type, context.days_until_due)
+
+    IF event_type == "FEE_REMINDER" AND context.days_until_due <= 0:
+        priority = "HIGH"
+        variables.overdue_flag = TRUE
+        variables.late_fee = calculateLateFee(context.amount, context.days_overdue)
+
+    payload = {
+        recipient: parent_id,
+        channels: channels,
+        template_id: template.id,
+        variables: variables,
+        priority: priority,
+        scheduled_time: context.send_time OR NOW(),
+        attachment: context.attachment_url OR NULL
+    }
+
+    response = POST("/api/communication/send", payload)
+    IF response.status != 200:
+        LOG_ERROR("Communication dispatch failed for " + parent_id)
+        QUEUE_FOR_RETRY(payload, max_retries=3)
+    RETURN response
+```
+
+**EXAMPLE:**
+The school revises fees for 2026-27 with a 6% increase. Grade 8 fees go from ₹4,50,000 to ₹4,77,000. The Financial Planning module triggers `FEE_REVISION` notifications to all 220 Grade 7 parents (children moving to Grade 8). Mr. Anil Sharma in Pune receives an email on February 1, 2026 with subject "Fee Structure Update for 2026-27" containing a personalised breakdown: tuition ₹3,40,000 → ₹3,60,400, transport ₹70,000 → ₹74,200, activities ₹40,000 → ₹42,400. The notification includes a link to the fee calculator showing updated K-12 projections.
 
 ```mermaid
 flowchart TD
-    subgraph SOURCE["FEE MANAGEMENT"]
-        S1["Fee Structure\nUpdated"]
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Fee due date\n7 days away"]
+        T2["Scholarship application\napproved or rejected"]
+        T3["EMI instalment\nconfirmed by bank"]
+        T4["Annual fee revision\npublished"]
+        T5["Counseling slot\navailable"]
     end
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+    T5 --> FETCH
+    FETCH["FETCH Data for\nCOMMUNICATION"]
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["notification_type"]
+        D2["recipient_parent_id"]
+        D3["template_id"]
+        D4["template_variables{}"]
+        D5["scheduled_send_time"]
+        D6["priority"]
+    end
+    FETCH --> DATA
+    DATA --> VALIDATE{"Data\nValid?"}
+    VALIDATE -- Yes --> SEND["Send to\nCOMMUNICATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+    SEND --> PROCESS["Process &\nUpdate COMMUNICATION"]
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
+---
+
+### 3. TO STUDENT MANAGEMENT MODULE
+
+**WHY This Connection Exists:** Financial planning decisions directly affect student enrolment status — unpaid fees may trigger suspension warnings, scholarship awards update the student's financial profile, and sibling discount eligibility depends on real-time enrolment data. The Student Management module needs these financial flags to maintain accurate student records and enforce school policies around fee compliance.
+
+**DATA FLOW:**
+1. `student_id` — Student whose financial status is being updated
+2. `financial_status` — Enum: FEES_PAID | FEES_PARTIAL | FEES_OVERDUE | SCHOLARSHIP_ACTIVE | FEE_WAIVER
+3. `scholarship_details{}` — Type, amount, validity period, renewal criteria
+4. `payment_compliance_flag` — Boolean indicating whether the student's fees are current
+5. `sibling_discount_active` — Whether a sibling discount is applied
+6. `financial_hold` — TRUE if fees are overdue beyond grace period (30 days)
+7. `counseling_notes` — Summary of financial counseling recommendations (redacted for privacy)
+
+**TRIGGER EVENT:**
+1. Fee payment status changes (paid, partial, overdue)
+2. Scholarship is awarded, renewed, or revoked
+3. Financial hold is placed or removed based on payment compliance
+4. Sibling enrolment changes — new sibling admitted or existing sibling withdrawn
+
+**IMPACT:**
+- When Priya Reddy's Grade 11 fees (₹9,00,000) remain unpaid 30 days past the September 2025 due date, the module sends `financial_hold: TRUE` to Student Management, which flags her record and prevents exam hall ticket generation until ₹9,00,000 + ₹4,500 late fee is cleared.
+- When Aarav Gupta receives a sports scholarship (30% waiver = ₹1,35,000/year for state-level cricket), the module sends `scholarship_details: {type: SPORTS, amount: 135000, valid_until: 2026-03}` so that Student Management displays the scholarship badge on his profile and includes it in his transfer certificate if needed.
+- When Mr. Patel withdraws his younger son from Grade 2, the sibling discount on his elder daughter Ananya (Grade 7) is revoked. The module sends `sibling_discount_active: FALSE` so Student Management updates Ananya's financial profile and triggers a revised invoice.
+
+**BUSINESS LOGIC:**
+
+```
+FUNCTION syncFinancialStatusToStudentManagement(student_id, event):
+    student = fetchStudentRecord(student_id)
+    IF student IS NULL OR student.status == "WITHDRAWN":
+        LOG_WARN("Student not active: " + student_id)
+        RETURN SKIP
+
+    financial_record = getFinancialRecord(student_id, current_academic_year())
+    status = determineFinancialStatus(financial_record)
+
+    hold_flag = FALSE
+    IF status == "FEES_OVERDUE":
+        days_overdue = daysSince(financial_record.due_date)
+        IF days_overdue > 30:
+            hold_flag = TRUE
+            late_fee = ROUND(financial_record.amount_due * 0.005 * days_overdue / 30)
+            LOG_INFO("Financial hold placed on " + student_id + ", late fee: ₹" + late_fee)
+
+    scholarship = getActiveScholarship(student_id)
+    sibling_discount = checkSiblingDiscount(student.parent_id)
+
+    payload = {
+        student_id: student_id,
+        financial_status: status,
+        payment_compliance_flag: (status != "FEES_OVERDUE"),
+        financial_hold: hold_flag,
+        scholarship_details: scholarship OR NULL,
+        sibling_discount_active: sibling_discount.active,
+        updated_at: NOW()
+    }
+
+    response = PUT("/api/student-management/financial-status", payload)
+    IF response.status != 200:
+        LOG_ERROR("Student Management sync failed for " + student_id)
+        ALERT_ADMIN("Financial status sync failure — manual review needed")
+    RETURN response
+```
+
+**EXAMPLE:**
+Rohan Kapoor is in Grade 10 at the Delhi campus. His father Mr. Vikram Kapoor had been paying via HDFC EMI (₹45,833/month for ₹5.5L annual fee). In November 2025, two consecutive EMIs bounce. After the 30-day grace period, the Financial Planning module sets `financial_hold: TRUE` and sends the update to Student Management. Rohan's class teacher is notified (without financial details — only "financial hold active"), and the exam coordinator is alerted that Rohan's Grade 10 pre-board hall ticket is on hold. Mr. Kapoor receives an SMS: "Dear Mr. Kapoor, please clear outstanding dues of ₹91,666 + ₹2,292 late fee to release Rohan's exam hall ticket. Contact the finance office or call 1800-XXX-XXXX." Once Mr. Kapoor clears the dues on December 18, the hold is lifted and all systems are updated within 2 hours.
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Fee payment status\nchanges"]
+        T2["Scholarship awarded\nrenewed or revoked"]
+        T3["Financial hold placed\nor removed"]
+        T4["Sibling enrolment\nchanges"]
+    end
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["student_id"]
+        D2["financial_status"]
+        D3["scholarship_details{}"]
+        D4["payment_compliance_flag"]
+        D5["financial_hold"]
+        D6["sibling_discount_active"]
+    end
+    FETCH --> DATA
+    DATA --> VALIDATE{"Data\nValid?"}
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
+---
+
+## INBOUND CONNECTIONS (Other Modules → Parent Financial Planning)
+
+### 1. FROM FEE MANAGEMENT MODULE
+
+**WHY This Connection Exists:** The Fee Management module owns the authoritative fee structure — grade-wise tuition rates, transport charges, activity fees, and annual revision percentages. Parent Financial Planning depends on this data to produce accurate K-12 cost projections, compare payment plans, and calculate scholarship savings. Without real-time fee data, the planning module would show stale numbers, eroding parent trust.
+
+**DATA RECEIVED:**
+1. `fee_structure{}` — Grade-wise annual fee breakdown (tuition, transport, books, activities, exams)
+2. `revision_percentage` — Year-over-year fee increase rate (typically 5-8%)
+3. `payment_history[]` — Parent's past payment records (dates, amounts, modes)
+4. `outstanding_balance` — Current unpaid amount for each enrolled student
+5. `late_fee_policy` — Grace period, penalty rate, and escalation rules
+6. `discount_catalog[]` — Available discounts (early-bird, sibling, merit) with eligibility rules
+
+**TRIGGER EVENT:**
+1. Fee structure is updated for a new academic year (annual event, typically February)
+2. A parent makes a payment or payment bounces — history is refreshed
+3. Late fee policy is revised by the finance committee
+4. New discount category is introduced (e.g., COVID relief discount in 2020)
+
+**IMPACT:**
+- When the school publishes the 2026-27 fee structure in February 2026 with a 6% increase, the Financial Planning module receives updated `fee_structure{}` and recalculates all active K-12 projections. Mrs. Sunita Rao, who accessed the fee calculator in January showing ₹60L total, now sees ₹63.6L — an accurate reflection.
+- When Mr. Ajay Deshmukh pays ₹1,53,333 (Term 2 fee for his son's Grade 8) on September 5, the `payment_history[]` updates, and the planning module shows "2 of 3 terms paid, ₹1,53,333 remaining for Term 3 (due January 2026)."
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["FEE MANAGEMENT MODULE"]
+        S1["Fee structure\nupdated for new year"]
+        S2["Payment made\nor bounced"]
+        S3["Late fee policy\nrevised"]
+        S4["New discount\ncategory added"]
+    end
     S1 --> SEND
-
+    S2 --> SEND
+    S3 --> SEND
+    S4 --> SEND
     SEND["SEND Data to\nParent Financial\nPlanning"]
-
     subgraph DATA["DATA RECEIVED"]
         direction LR
-        D1["Total K-12 cost (₹60L)"]
-        D2["payment history"]
+        D1["fee_structure{}"]
+        D2["revision_percentage"]
+        D3["payment_history[]"]
+        D4["outstanding_balance"]
+        D5["discount_catalog[]"]
     end
-
     SEND --> DATA
+    DATA --> UPDATE["UPDATE Financial\nPlanning Records\n& Projections"]
+    UPDATE --> IMPACT1["Recalculate K-12\ncost projections"]
+    UPDATE --> IMPACT2["Refresh parent\npayment dashboards"]
+```
 
-    DATA --> UPDATE["UPDATE\nParent Financial\nPlanning\nRecords"]
+---
 
-    IMPACT1[" Parents plan 12-year\neducation budget"]
-    UPDATE --> IMPACT1
+### 2. FROM STUDENT MANAGEMENT MODULE
 
+**WHY This Connection Exists:** Student enrolment data — current grade, section, siblings, admission date, and withdrawal status — is essential for accurate financial planning. The planning module uses this data to determine sibling discount eligibility, project grade-wise fee trajectories, and identify families whose children are transitioning between fee tiers (e.g., Grade 5 → Grade 6 incurs a ₹1L/year increase).
+
+**DATA RECEIVED:**
+1. `student_profile{}` — Name, grade, section, admission date, status (ACTIVE/WITHDRAWN)
+2. `sibling_list[]` — Other children of the same parent currently enrolled
+3. `grade_transition` — Upcoming grade change and associated fee tier shift
+4. `parent_contact{}` — Updated parent contact details for communication
+5. `attendance_flag` — Long absence flag that may indicate potential withdrawal
+
+**TRIGGER EVENT:**
+1. New student is admitted — financial plan needs to be created
+2. Student is promoted to next grade — fee tier may change
+3. Student is withdrawn — sibling discount recalculation needed
+4. Parent contact details are updated in student records
+
+**IMPACT:**
+- When Aarav Sharma is admitted to Grade 1 in April 2025, the Student Management module sends his `student_profile{}` and `parent_contact{}`. The Financial Planning module auto-generates a 12-year projection (₹60L) and sends a welcome pack with payment plan options to Mr. Sharma's email.
+- When Kavya Nair is promoted from Grade 5 to Grade 6 (fee increase from ₹3.5L to ₹4.5L), the module receives `grade_transition: {from: 5, to: 6, fee_delta: +100000}` and updates Mrs. Nair's financial dashboard with the revised projection and suggests upgrading from term-wise to annual payment to offset the increase with a 5% discount.
+- When Rishi Patel is withdrawn from Grade 2, the `sibling_list[]` for his sister Ananya (Grade 7) is updated. The Financial Planning module recalculates: sibling discount removed, Ananya's fee increases by ₹45,000/year, and the revised plan is sent to Mr. Patel.
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["STUDENT MANAGEMENT MODULE"]
+        S1["New student\nadmitted"]
+        S2["Student promoted\nto next grade"]
+        S3["Student\nwithdrawn"]
+        S4["Parent contact\nupdated"]
+    end
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+    S4 --> SEND
+    SEND["SEND Data to\nParent Financial\nPlanning"]
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["student_profile{}"]
+        D2["sibling_list[]"]
+        D3["grade_transition"]
+        D4["parent_contact{}"]
+        D5["attendance_flag"]
+    end
+    SEND --> DATA
+    DATA --> UPDATE["UPDATE Financial\nPlanning Records"]
+    UPDATE --> IMPACT1["Generate or revise\nK-12 projection"]
+    UPDATE --> IMPACT2["Recalculate sibling\ndiscounts"]
+```
+
+---
+
+### 3. FROM SCHOLARSHIP MODULE
+
+**WHY This Connection Exists:** The Scholarship module manages the complete lifecycle of scholarship applications — submission, evaluation, approval, renewal, and revocation. When a scholarship decision is made, the Financial Planning module must update the parent's fee projection, adjust payment plans, and reflect the waiver amount in all downstream calculations. This ensures parents always see their true net cost.
+
+**DATA RECEIVED:**
+1. `scholarship_id` — Unique identifier for the awarded scholarship
+2. `scholarship_type` — Enum: MERIT | NEED_BASED | SPORTS | CULTURAL | STAFF_WARD
+3. `waiver_percentage` — Percentage of tuition fee waived (25%, 50%, 100%)
+4. `waiver_amount` — Absolute ₹ value of the annual waiver
+5. `validity_period` — Start and end academic years (e.g., 2025-26 to 2027-28)
+6. `renewal_criteria` — Conditions for renewal (e.g., maintain >90% attendance, >85% marks)
+7. `revocation_reason` — If revoked: ACADEMIC_DECLINE | ATTENDANCE_BELOW_THRESHOLD | POLICY_CHANGE
+
+**TRIGGER EVENT:**
+1. Scholarship application is approved by the committee
+2. Scholarship is renewed for the next academic year after criteria check
+3. Scholarship is revoked due to non-compliance with renewal criteria
+4. New scholarship category is created (e.g., alumni-funded scholarship)
+
+**IMPACT:**
+- When Priya Menon (Grade 9, ICSE stream, Kochi campus) is awarded a 50% merit scholarship (₹2,75,000 waiver on ₹5,50,000 annual fee), the Financial Planning module receives the approval and updates her family's K-12 projection. The remaining cost for Grades 9-12 drops from ₹29L to ₹18L, and Mrs. Menon's dashboard shows the revised net fee of ₹2,75,000/year with a note: "Merit scholarship active — maintain >90% to renew."
+- When Arjun Bhatt's sports scholarship (30% waiver, ₹1,35,000/year) is revoked in January 2026 because his attendance dropped below 75%, the module receives `revocation_reason: ATTENDANCE_BELOW_THRESHOLD` and immediately recalculates the family's plan. Mr. Bhatt receives a notification: "Arjun's sports scholarship has been revoked. Revised annual fee: ₹4,50,000. Please contact the finance office to discuss payment options."
+- When the school introduces a new alumni-funded scholarship (₹50,000/year for 10 students from economically weaker sections), the Financial Planning module receives the new category and makes it visible in the scholarship eligibility checker for all qualifying families.
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["SCHOLARSHIP MODULE"]
+        S1["Scholarship\napproved"]
+        S2["Scholarship\nrenewed"]
+        S3["Scholarship\nrevoked"]
+        S4["New scholarship\ncategory created"]
+    end
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+    S4 --> SEND
+    SEND["SEND Data to\nParent Financial\nPlanning"]
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["scholarship_id"]
+        D2["scholarship_type"]
+        D3["waiver_percentage"]
+        D4["waiver_amount"]
+        D5["validity_period"]
+        D6["renewal_criteria"]
+    end
+    SEND --> DATA
+    DATA --> UPDATE["UPDATE Financial\nPlanning Records"]
+    UPDATE --> IMPACT1["Adjust K-12 cost\nprojections"]
+    UPDATE --> IMPACT2["Revise payment\nplan & invoices"]
 ```
 
 ---
@@ -998,24 +1351,164 @@ Monthly Savings Required: ₹11,903 (72 months)
 
 ## Submodule Breakdown
 
-This module is divided into **8 submodules**, each handling a specific aspect of parent financial planning management.
+This module is divided into **7 submodules**, each handling a specific aspect of parent financial planning management.
 
-[Detailed submodules would be listed here - template created for consistency]
+---
+
+### Submodule 1: Fee Projection Calculator
+
+**Name:** Fee Projection Calculator  
+**Code:** FINPLAN-043-01 (`01_fee_projection_calculator`)  
+**Priority:** P1 (Critical)  
+**Status:** Active
+
+**Description:**  
+Provides parents with a multi-year, inflation-adjusted fee projection covering the entire K-12 journey. Parents input their child's current grade and the calculator produces a year-by-year cost estimate factoring in the school's published revision rate (5-8% annually). The tool accounts for fee tier transitions (e.g., Grade 5 → Grade 6 jump from ₹3.5L to ₹4.5L) and displays cumulative totals. Approximately 800 parents use this tool each year during the admission and re-enrolment cycles. Output includes downloadable PDF reports and shareable dashboard links.
+
+**Key Functions:**
+- Calculate total remaining K-12 cost from any starting grade
+- Apply annual inflation adjustment (configurable 5-8%)
+- Show grade-tier fee jumps with explanations
+- Generate PDF projection reports
+- Compare "with scholarship" vs "without scholarship" scenarios
+
+---
+
+### Submodule 2: Payment Plan Designer
+
+**Name:** Payment Plan Designer  
+**Code:** FINPLAN-043-02 (`02_payment_plan_designer`)  
+**Priority:** P1 (Critical)  
+**Status:** Active
+
+**Description:**  
+Enables parents to choose and customise their fee payment schedule from four options: annual prepayment (5% discount), term-wise (3 instalments), monthly EMI via partner banks (HDFC/ICICI/SBI), or post-dated cheques. The designer shows a side-by-side comparison of total cost under each plan, highlights savings, and allows parents to switch plans mid-year (subject to finance office approval). Integrated with the Fee Management module for real-time invoice generation. Used by 100% of enrolled families during the annual plan selection window in March.
+
+**Key Functions:**
+- Display side-by-side plan comparison with net cost
+- Calculate early-bird and annual prepayment discounts
+- Generate EMI schedules with bank-specific interest rates
+- Allow mid-year plan switching with prorated adjustments
+- Sync selected plan to Fee Management for invoicing
+
+---
+
+### Submodule 3: Loan EMI Integration
+
+**Name:** Loan EMI Integration  
+**Code:** FINPLAN-043-03 (`03_loan_emi_integration`)  
+**Priority:** P2 (High)  
+**Status:** Active
+
+**Description:**  
+Manages the integration with partner banks (HDFC Bank, ICICI Bank, SBI) for education loan facilitation. Handles loan eligibility checks based on parent income and CIBIL score, EMI calculation using the standard formula [P × R × (1+R)^N] / [(1+R)^N - 1], and disbursement tracking. Supports loan amounts up to ₹20L with tenures of 5-7 years. Processes approximately 50 loan applications per year, with a 98% repayment rate. Includes bounce detection and automatic plan recalculation when EMIs fail.
+
+**Key Functions:**
+- Check loan eligibility (income, CIBIL score thresholds)
+- Calculate EMI for multiple banks and tenures
+- Track loan disbursement and repayment status
+- Detect EMI bounces and trigger alerts
+- Generate loan comparison reports (SBI 9% vs HDFC 9.5% vs ICICI 10%)
+
+---
+
+### Submodule 4: Scholarship Eligibility Checker
+
+**Name:** Scholarship Eligibility Checker  
+**Code:** FINPLAN-043-04 (`04_scholarship_eligibility_checker`)  
+**Priority:** P1 (Critical)  
+**Status:** Active
+
+**Description:**  
+Evaluates each student's eligibility across all available scholarship categories — merit (top 10%, 25% waiver), need-based (income <₹5L, 50% waiver), sports (state/national level, 30% waiver), and sibling discount (10-15%). The checker runs automatically at the end of each academic year using data from the Student Management and Scholarship modules, and also supports on-demand checks via the parent portal. Produces a personalised eligibility report showing which scholarships the student qualifies for, estimated savings, and application deadlines. Serves 1,800 families annually.
+
+**Key Functions:**
+- Auto-evaluate merit eligibility using academic performance data
+- Verify income-based eligibility via uploaded documents
+- Check sports/cultural achievement records
+- Calculate combined savings when multiple scholarships apply
+- Generate personalised eligibility reports with deadlines
+
+---
+
+### Submodule 5: Tax Benefits Advisor
+
+**Name:** Tax Benefits Advisor  
+**Code:** FINPLAN-043-05 (`05_tax_benefits_advisor`)  
+**Priority:** P2 (High)  
+**Status:** Active
+
+**Description:**  
+Guides parents on tax deductions available under Indian income tax law for education expenses. Primary focus on Section 80C deductions (tuition fees up to ₹1.5L/year per child, maximum 2 children) and HRA benefits for hostel fees. The advisor calculates estimated tax savings based on the parent's tax bracket (5%, 20%, or 30%) and generates a summary showing: eligible tuition amount, deduction claimed, and net tax saved. For a parent in the 30% bracket with 2 children, this can mean ₹93,000/year in tax savings. Includes integration with fee receipts for easy ITR filing.
+
+**Key Functions:**
+- Calculate Section 80C eligible tuition fee amount
+- Estimate tax savings by tax bracket (5%, 20%, 30%)
+- Generate tax-ready fee receipts with PAN and school details
+- Advise on HRA benefits for hostel and boarding fees
+- Produce annual tax benefit summary for ITR filing
+
+---
+
+### Submodule 6: Financial Aid Management
+
+**Name:** Financial Aid Management  
+**Code:** FINPLAN-043-06 (`06_financial_aid_management`)  
+**Priority:** P2 (High)  
+**Status:** Active
+
+**Description:**  
+Handles the end-to-end workflow for financial aid applications — from submission and document verification to committee review and disbursement. Covers fee waiver programs for families with income below ₹3L/year, single-parent concessions, and hardship-based relief. The submodule manages a ₹1.2Cr annual aid budget across approximately 30 recipient students. Includes document management (income certificates from Tehsildar, bank statements, Aadhaar), interview scheduling, and committee decision tracking. Integrates with the Communication module to send approval/rejection notifications.
+
+**Key Functions:**
+- Accept and validate financial aid applications with documents
+- Schedule and track committee review meetings
+- Manage ₹1.2Cr annual aid budget allocation
+- Process fee waiver disbursements (25%, 50%, 100%)
+- Track aid recipient academic performance and retention (95% rate)
+
+---
+
+### Submodule 7: Sibling Discount Calculator
+
+**Name:** Sibling Discount Calculator  
+**Code:** FINPLAN-043-07 (`07_sibling_discount_calculator`)  
+**Priority:** P3 (Medium)  
+**Status:** Active
+
+**Description:**  
+Automatically identifies families with multiple enrolled children and calculates applicable sibling discounts: 10% on the second child's tuition and 15% on the third child's tuition. Currently serves 300 families with a total annual discount disbursement of ₹1.5Cr. The calculator monitors enrolment changes in real-time — when a new sibling is admitted, the discount is applied from the next billing cycle; when a sibling is withdrawn, the discount is revoked and the affected child's fees are recalculated. Handles edge cases such as twins (both get 10%), step-siblings (eligible if same parent account), and mid-year admissions (prorated discount).
+
+**Key Functions:**
+- Auto-detect sibling relationships from parent account data
+- Calculate tiered discounts (10% second child, 15% third child)
+- Handle edge cases: twins, step-siblings, mid-year changes
+- Prorate discounts for mid-year admissions or withdrawals
+- Sync discount changes to Fee Management for invoice adjustment
+
+---
 
 ## Integration Points
 
-PARENT FINANCIAL PLANNING connects to relevant modules across the Hogwarts ERP system.
+PARENT FINANCIAL PLANNING connects to the following modules across the Hogwarts ERP system:
+
+| Module | Direction | Data Exchanged | Frequency |
+|--------|-----------|---------------|-----------|
+| Fee Management | Outbound & Inbound | Payment plans, fee structure, invoices | Real-time |
+| Communication | Outbound | Fee reminders, scholarship notifications | Event-driven |
+| Student Management | Outbound & Inbound | Financial status, enrolment data, sibling info | Event-driven |
+| Scholarship | Inbound | Scholarship awards, renewals, revocations | Event-driven |
 
 ## Development Priority
 
-**Phase 1 (Critical):** Core submodules  
-**Phase 2 (High):** Essential features  
-**Phase 3 (Medium):** Advanced features  
+**Phase 1 (Critical):** `01_fee_projection_calculator`, `02_payment_plan_designer`, `04_scholarship_eligibility_checker`  
+**Phase 2 (High):** `03_loan_emi_integration`, `05_tax_benefits_advisor`, `06_financial_aid_management`  
+**Phase 3 (Medium):** `07_sibling_discount_calculator`
 
 ---
 
 **Status:** Production-Ready Documentation  
-**Last Updated:** January 17, 2026  
-**Version:** 1.1  
-**Compliance:** Relevant Standards
+**Last Updated:** March 13, 2026  
+**Version:** 2.0  
+**Compliance:** Financial Advisory Regulations, Data Privacy (DPDP Act 2023), Tax Compliance (Section 80C)
 
