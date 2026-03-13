@@ -75,6 +75,267 @@ flowchart TD
     PROCESS --> NOTIFY["Notify\nStakeholders"]
 ```
 
+### 2. TO STUDENT MANAGEMENT MODULE
+
+**WHY This Connection Exists:** The Reports & Dashboards module generates enrollment analytics, demographic breakdowns, and student performance summaries that feed back into the Student Management module. These insights help admissions teams identify enrollment trends, forecast class sizes, and flag at-risk students for early intervention. The Student Management module relies on these consolidated reports to update student risk profiles and trigger engagement workflows.
+
+**DATA FLOW:**
+- Student enrollment trend analysis (year-over-year growth percentages)
+- Grade-wise capacity utilization metrics
+- Student dropout risk scores (0-100 scale)
+- Demographic distribution summaries (gender, category, locality)
+- Section-wise performance rankings
+- Transfer and withdrawal trend reports
+- New admission conversion rate analytics
+- Re-enrollment prediction scores
+
+**TRIGGER EVENT:**
+- Monthly enrollment report scheduled (1st of every month at 10:00 AM)
+- Board meeting preparation initiated (quarterly)
+- Admission season analytics request (March-June annually)
+- Student risk score threshold exceeded (daily automated check)
+- Academic year-end consolidation triggered (March 31st)
+
+**IMPACT:** When Principal Dr. Meera Iyer at DPS Pune requests the quarterly enrollment report on January 1, 2026, the system aggregates data across 1,800 students. The report reveals Grade 6 enrollment dropped 12% compared to last year (from 180 to 158 students), prompting the admissions team to launch a targeted campaign in Pune's Kothrud and Baner areas. Meanwhile, 23 students flagged with dropout risk scores above 70 are referred for counselling — Rohan Mehta (Grade 9, risk score 85, attendance 68%) receives immediate intervention, preventing a potential ₹1,20,000 annual fee loss.
+
+**BUSINESS LOGIC:**
+```
+FUNCTION generate_student_management_reports():
+  enrollment_data = STUDENT_MANAGEMENT.get_enrollment_by_grade()
+  capacity_data = STUDENT_MANAGEMENT.get_section_capacity()
+  risk_scores = ANALYTICS_ENGINE.calculate_dropout_risk(
+    attendance = ATTENDANCE.get_student_attendance(),
+    grades = ASSESSMENT.get_student_grades(),
+    fees = FEE_MANAGEMENT.get_payment_status()
+  )
+
+  FOR EACH student IN risk_scores:
+    IF student.risk_score > 70:
+      STUDENT_MANAGEMENT.flag_at_risk(student.id, student.risk_score)
+      NOTIFY("counsellor", "High-risk student: " + student.name)
+    END IF
+  END FOR
+
+  utilization = CALCULATE(enrollment_data / capacity_data * 100)
+  trend = COMPARE(enrollment_data, PREVIOUS_YEAR.enrollment_data)
+
+  report = COMPILE_REPORT({
+    enrollment: enrollment_data,
+    utilization: utilization,
+    trend: trend,
+    risk_students: FILTER(risk_scores, score > 70)
+  })
+
+  SEND_TO(STUDENT_MANAGEMENT, report)
+  RETURN report
+END FUNCTION
+```
+
+**EXAMPLE:** On April 1, 2026, the Reports module generates the annual student analytics package for Delhi Public School, Bengaluru. The report shows total enrollment grew from 1,750 to 1,800 students (+2.9%). Grade 1 admissions surged by 15% (120 → 138 students) driven by the new CBSE Early Years programme, while Grade 11 Science stream saw a 5% dip. The admissions coordinator, Priya Nair, uses this data to allocate ₹2,50,000 marketing budget towards Grade 11 Science promotion in Whitefield and Electronic City areas. The report also identifies 45 students with attendance below 75% who need parent-teacher meetings scheduled through the Student Management module.
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Monthly enrollment\nreport scheduled"]
+        T2["Board meeting\nprep initiated"]
+        T3["Admission season\nanalytics request"]
+    end
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Enrollment\ntrend analysis"]
+        D2["Capacity\nutilization"]
+        D3["Dropout\nrisk scores"]
+        D4["Demographic\nsummaries"]
+        D5["Performance\nrankings"]
+    end
+    FETCH --> DATA
+    DATA --> VALIDATE{"Data\nValid?"}
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+    SEND --> PROCESS["Process &\nUpdate Student Records"]
+    PROCESS --> NOTIFY["Notify\nAdmissions & Counsellors"]
+```
+
+### 3. TO FEE MANAGEMENT MODULE
+
+**WHY This Connection Exists:** The Reports & Dashboards module produces detailed fee collection analytics, outstanding fee summaries, and revenue forecasting reports that the Fee Management module consumes to optimize collection workflows. These reports identify payment patterns, highlight chronic defaulters, and provide insights for fee structure adjustments. The Fee Management module uses these analytics to trigger automated reminders, escalate overdue accounts, and plan instalment restructuring for families facing financial hardship.
+
+**DATA FLOW:**
+- Fee collection rate by grade, section, and term (percentage and ₹ amounts)
+- Outstanding fee ageing report (30/60/90/120+ days buckets)
+- Payment method distribution analysis (UPI, NEFT, card, cash, cheque)
+- Revenue vs target variance report (monthly and quarterly)
+- Defaulter priority list ranked by outstanding amount
+- Fee waiver and scholarship impact analysis
+- Term-wise collection trend comparison (current vs previous year)
+
+**TRIGGER EVENT:**
+- Daily fee collection summary generated (6:00 PM every day)
+- Weekly defaulter report scheduled (Monday 9:00 AM)
+- Monthly revenue reconciliation triggered (last working day of month)
+- Term-end fee closure report initiated
+- Fee revision analysis requested by management
+
+**IMPACT:** On December 31, 2025, the Reports module generates the Term 2 fee collection summary for Podar International School, Mumbai. The report reveals overall collection stands at 80% (₹7.2 Cr collected of ₹9.0 Cr target). The ageing analysis shows ₹85,00,000 is overdue beyond 90 days across 120 families. The Fee Management module automatically escalates 35 accounts with outstanding above ₹50,000 — including Aarav Kapoor's family (Grade 8, ₹72,000 pending since October) who is offered a 3-instalment restructuring plan. This targeted approach recovers ₹22,00,000 in January, improving collection rate to 84%.
+
+**BUSINESS LOGIC:**
+```
+FUNCTION generate_fee_management_reports():
+  collection_data = FEE_MANAGEMENT.get_collection_by_term()
+  outstanding = FEE_MANAGEMENT.get_outstanding_fees()
+  payment_methods = FEE_MANAGEMENT.get_payment_distribution()
+
+  ageing_buckets = {
+    "0-30 days": FILTER(outstanding, days_overdue <= 30),
+    "31-60 days": FILTER(outstanding, days_overdue BETWEEN 31 AND 60),
+    "61-90 days": FILTER(outstanding, days_overdue BETWEEN 61 AND 90),
+    "90+ days": FILTER(outstanding, days_overdue > 90)
+  }
+
+  defaulter_list = SORT(outstanding, amount DESC)
+  FOR EACH defaulter IN defaulter_list:
+    IF defaulter.amount > 50000 AND defaulter.days_overdue > 60:
+      FEE_MANAGEMENT.escalate_account(defaulter.student_id)
+      NOTIFY("finance_team", "Escalated: " + defaulter.name + " ₹" + defaulter.amount)
+    END IF
+  END FOR
+
+  variance = CALCULATE(collection_data.actual - collection_data.target)
+  report = COMPILE_REPORT({
+    collection_rate: collection_data,
+    ageing: ageing_buckets,
+    defaulters: TOP(defaulter_list, 50),
+    variance: variance,
+    payment_methods: payment_methods
+  })
+
+  SEND_TO(FEE_MANAGEMENT, report)
+  RETURN report
+END FUNCTION
+```
+
+**EXAMPLE:** Ms. Kavita Deshmukh, Finance Manager at Ryan International School, Hyderabad, receives the weekly defaulter report every Monday at 9:00 AM. On January 6, 2026, the report lists 85 students with combined outstanding fees of ₹38,50,000. The top defaulter is Priya Reddy's family (Grade 10, ₹1,25,000 pending across two terms). The report's payment pattern analysis reveals that 60% of pending families prefer UPI payment — so the Fee Management module triggers personalised UPI payment links via SMS to these 51 families. Within 48 hours, 18 families clear their dues totalling ₹6,20,000. The system also flags 12 scholarship-eligible students whose families earn below ₹3,00,000 annually, forwarding their profiles for fee waiver consideration.
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Daily collection\nsummary at 6 PM"]
+        T2["Weekly defaulter\nreport Monday 9 AM"]
+        T3["Monthly revenue\nreconciliation"]
+    end
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    FETCH["FETCH Data for\nFEE MANAGEMENT"]
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Collection\nrate by grade"]
+        D2["Outstanding\nageing report"]
+        D3["Payment method\ndistribution"]
+        D4["Defaulter\npriority list"]
+        D5["Revenue vs\ntarget variance"]
+    end
+    FETCH --> DATA
+    DATA --> VALIDATE{"Data\nValid?"}
+    VALIDATE -- Yes --> SEND["Send to\nFEE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+    SEND --> PROCESS["Process &\nUpdate Fee Records"]
+    PROCESS --> NOTIFY["Notify\nFinance Team"]
+```
+
+### 4. TO HR MANAGEMENT MODULE
+
+**WHY This Connection Exists:** The Reports & Dashboards module generates staff performance analytics, payroll summaries, and workforce planning reports that flow into the HR Management module. These reports provide insights on teacher effectiveness (correlated with student outcomes), staff attendance patterns, and compensation benchmarking. HR uses these analytics for appraisal decisions, training need identification, and manpower planning for the upcoming academic year.
+
+**DATA FLOW:**
+- Teacher performance correlation report (teacher metrics vs student results)
+- Staff attendance and punctuality analytics (monthly summaries)
+- Payroll expenditure trend analysis (department-wise, designation-wise)
+- Leave utilisation patterns by department
+- Training effectiveness scores (pre/post-training student outcome changes)
+- Staff attrition risk analysis
+- Workload distribution metrics (teacher-to-student ratios)
+- Overtime and substitution frequency reports
+
+**TRIGGER EVENT:**
+- Monthly payroll summary generated (25th of every month)
+- Quarterly staff performance review initiated
+- Annual appraisal data package prepared (March)
+- Staff attrition alert triggered (when resignation rate exceeds 5%)
+- Board meeting HR analytics requested
+
+**IMPACT:** During the March 2026 annual appraisal cycle at Kendriya Vidyalaya, Lucknow, the Reports module generates comprehensive teacher performance packages for 120 staff members. The correlation analysis reveals that Aarav Mishra (Mathematics teacher, Grade 9-10) achieved a 92% student pass rate — 15% above the department average — earning him a ₹15,000 monthly increment recommendation. Conversely, the report flags the Science department's 78% average pass rate (target: 85%), triggering a ₹1,80,000 professional development budget allocation for 8 Science teachers. The attrition analysis identifies 5 teachers with high exit-risk scores, prompting HR to initiate retention conversations before the April-May resignation window.
+
+**BUSINESS LOGIC:**
+```
+FUNCTION generate_hr_management_reports():
+  staff_list = HR_MANAGEMENT.get_all_staff()
+  attendance = HR_MANAGEMENT.get_staff_attendance()
+  payroll = HR_MANAGEMENT.get_payroll_data()
+  student_results = ASSESSMENT.get_results_by_teacher()
+
+  FOR EACH teacher IN staff_list WHERE role = "TEACHER":
+    teacher.performance_score = CALCULATE_CORRELATION(
+      teacher_attendance = attendance[teacher.id],
+      student_pass_rate = student_results[teacher.id].pass_rate,
+      student_avg_score = student_results[teacher.id].avg_score
+    )
+    IF teacher.performance_score > 85:
+      HR_MANAGEMENT.recommend_increment(teacher.id, "EXCELLENT")
+    ELSE IF teacher.performance_score < 60:
+      HR_MANAGEMENT.recommend_training(teacher.id, "IMPROVEMENT_NEEDED")
+    END IF
+  END FOR
+
+  attrition_risk = ANALYTICS_ENGINE.predict_attrition(staff_list, payroll, attendance)
+  workload = CALCULATE_RATIO(staff_list.count, STUDENT_MANAGEMENT.get_total_students())
+
+  report = COMPILE_REPORT({
+    performance: staff_list,
+    attendance_summary: attendance,
+    payroll_trend: payroll,
+    attrition_risk: FILTER(attrition_risk, risk > 60),
+    workload: workload
+  })
+
+  SEND_TO(HR_MANAGEMENT, report)
+  RETURN report
+END FUNCTION
+```
+
+**EXAMPLE:** On January 25, 2026, the Reports module generates the monthly payroll analytics for St. Xavier's School, Kolkata. The report shows total salary expenditure of ₹42,00,000 for 95 staff members — a 3% increase from December due to 2 new hires in the Hindi and Physical Education departments. The department-wise breakdown reveals the Science department consumes 28% of the salary budget (₹11,76,000) while producing below-target student outcomes. HR Manager Rohan Banerjee uses this cost-performance analysis to restructure the Science department's professional development plan, allocating ₹75,000 for a CBSE-certified lab training workshop. The leave utilisation report shows 8 teachers have exhausted 80% of their annual casual leave by January, prompting HR to proactively plan substitution rosters for February-March.
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Monthly payroll\nsummary on 25th"]
+        T2["Quarterly staff\nperformance review"]
+        T3["Annual appraisal\ndata package"]
+    end
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    FETCH["FETCH Data for\nHR MANAGEMENT"]
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Teacher\nperformance scores"]
+        D2["Staff attendance\nanalytics"]
+        D3["Payroll\nexpenditure trend"]
+        D4["Attrition\nrisk analysis"]
+        D5["Workload\ndistribution"]
+    end
+    FETCH --> DATA
+    DATA --> VALIDATE{"Data\nValid?"}
+    VALIDATE -- Yes --> SEND["Send to\nHR MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+    SEND --> PROCESS["Process &\nUpdate HR Records"]
+    PROCESS --> NOTIFY["Notify\nHR Team & Principal"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → Reports)
@@ -111,6 +372,202 @@ flowchart TD
     IMPACT1[" Dashboards show\nlive data from all m..."]
     UPDATE --> IMPACT1
 
+```
+
+### FROM STUDENT MANAGEMENT MODULE
+
+**WHY:** The Student Management module is the primary data source for all enrollment, demographic, and student lifecycle reports. Every student record — from admission to graduation or transfer — flows into the Reports module to power enrollment dashboards, capacity planning reports, and student demographic analytics. Without this continuous data feed, the Reports module cannot generate accurate headcount reports, section-wise breakdowns, or year-over-year enrollment comparisons that the school management relies on for strategic decisions.
+
+**DATA RECEIVED:**
+- Student master records (ID, name, grade, section, date of birth, gender, category)
+- Admission and enrollment status updates (new admission, promoted, detained, TC issued)
+- Section allocation and transfer records
+- Parent and guardian contact details (for report distribution)
+- Student category data (General, OBC, SC, ST, EWS for government compliance reports)
+- Sibling linkage information (for consolidated family reports)
+- Previous academic history and school transfer records
+
+**TRIGGER:** New student enrolled, student promoted to next grade, student withdrawn or transferred, section reallocation completed, bulk promotion at academic year-end, student profile updated
+
+**IMPACT:** When Greenwood High School, Bengaluru completes its April 2026 bulk promotion, the Student Management module sends 1,800 updated student records to the Reports module. Within 30 minutes, the Reports module refreshes all enrollment dashboards — the Executive Dashboard now shows Grade 1 intake at 142 students (118% of 120 capacity), triggering Principal Dr. Ananya Rao to approve opening a fourth section. The demographic report reveals 23% EWS students (target: 25% per RTE Act), prompting the admissions team to reserve 8 more EWS seats for the late admission window. The system automatically generates the UDISE+ compliance report with updated headcount data required by the CBSE district office by April 30th.
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["STUDENT MANAGEMENT MODULE"]
+        S1["New student\nenrolled"]
+        S2["Student promoted\nor detained"]
+        S3["Student withdrawn\nor transferred"]
+        S4["Bulk promotion\nat year-end"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+    S4 --> SEND
+
+    SEND["SEND Data to\nReports & Dashboards"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Student\nmaster records"]
+        D2["Enrollment\nstatus updates"]
+        D3["Section\nallocations"]
+        D4["Category &\ndemographic data"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nEnrollment Reports\n& Dashboards"]
+
+    IMPACT1["Capacity planning,\nRTE compliance,\nUDISE+ reports updated"]
+    UPDATE --> IMPACT1
+```
+
+### FROM FEE MANAGEMENT MODULE
+
+**WHY:** The Fee Management module supplies all financial transaction data that powers the Reports module's revenue dashboards, fee collection reports, and financial forecasting analytics. Every fee payment, receipt, refund, discount, and waiver is transmitted in near real-time to ensure financial dashboards reflect accurate collection status. This data feed is critical for the CFO's daily cash position monitoring, monthly board reports, and annual audit documentation.
+
+**DATA RECEIVED:**
+- Fee payment transactions (student ID, amount, date, payment method, receipt number)
+- Outstanding fee records (student ID, pending amount, due date, days overdue)
+- Fee structure and revision details (grade-wise fee heads, term-wise breakdowns)
+- Discount and scholarship records (type, amount, approval status)
+- Refund transactions (reason, amount, processing status)
+- Late fee and penalty calculations
+- Payment gateway settlement reports (UPI, card, net banking reconciliation)
+
+**TRIGGER:** Fee payment received, fee receipt generated, outstanding fee crosses due date, fee structure revised for new term, bulk fee reminder sent, refund processed, late fee applied, scholarship approved
+
+**IMPACT:** On January 15, 2026, the Fee Management module at Amity International School, Noida processes 320 fee payments totalling ₹48,00,000 (a spike due to Term 2 deadline). Each transaction instantly updates the Financial Dashboard — CFO Priya Malhotra sees the daily collection gauge jump from ₹12,00,000 to ₹48,00,000, with UPI contributing 55% (₹26,40,000). The outstanding fees widget drops from ₹2,10,00,000 to ₹1,62,00,000. By end of day, the automated daily summary report emails the board that Term 2 collection has reached 82% (target: 85%), with 180 families still pending. The system highlights that ₹15,00,000 of outstanding fees are concentrated in Grade 11-12 Commerce stream, enabling targeted follow-up by the finance team.
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["FEE MANAGEMENT MODULE"]
+        S1["Fee payment\nreceived"]
+        S2["Outstanding fee\ncrosses due date"]
+        S3["Fee structure\nrevised"]
+        S4["Scholarship\napproved"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+    S4 --> SEND
+
+    SEND["SEND Data to\nReports & Dashboards"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Payment\ntransactions"]
+        D2["Outstanding\nfee records"]
+        D3["Discount &\nscholarship data"]
+        D4["Payment method\nbreakdown"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nFinancial Reports\n& Dashboards"]
+
+    IMPACT1["Revenue dashboards,\ncash flow reports,\ndefaulter lists updated"]
+    UPDATE --> IMPACT1
+```
+
+### FROM ATTENDANCE MODULE
+
+**WHY:** The Attendance module feeds daily student and staff attendance records into the Reports module, enabling real-time attendance dashboards, chronic absenteeism alerts, and regulatory compliance reports. Indian schools must maintain 75% minimum attendance for board exam eligibility (CBSE/ICSE rule), making attendance analytics mission-critical. The Reports module aggregates raw attendance data into trend analyses, class-wise comparisons, and individual student attendance reports that parents access through the portal.
+
+**DATA RECEIVED:**
+- Daily student attendance records (student ID, date, status: present/absent/late/half-day)
+- Period-wise attendance for secondary classes (subject-linked attendance)
+- Staff attendance and check-in/check-out timestamps
+- Leave application records (student and staff, approved/rejected/pending)
+- Attendance correction and override entries (with approval audit trail)
+- Biometric and RFID gate entry logs
+- Bus boarding attendance from transport module integration
+
+**TRIGGER:** Daily attendance marked (class-wise, typically by 10:00 AM), late arrival recorded, student absence exceeds 3 consecutive days, monthly attendance consolidation runs, attendance falls below 75% threshold for any student, staff attendance finalized for payroll processing
+
+**IMPACT:** At Bal Bharati Public School, New Delhi, the Attendance module sends 1,800 student attendance records daily by 10:30 AM. The Reports module immediately updates the Operations Dashboard — on January 16, 2026, overall attendance shows 95% (1,710 present, 90 absent). The chronic absenteeism report flags 28 students below 75% attendance — including Aarav Singh (Grade 10-B, 68% attendance, 14 absences in 44 working days). Since CBSE requires minimum 75% attendance for board exam eligibility, the system generates an automated alert to class teacher Mrs. Sunita Yadav and sends an SMS to Aarav's parents: "Your ward's attendance is 68%. Minimum 75% required for board exam eligibility. Please contact school immediately." The monthly attendance report sent to the district education office shows the school maintains 94.5% average attendance — well above the district average of 89%.
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["ATTENDANCE MODULE"]
+        S1["Daily attendance\nmarked by 10 AM"]
+        S2["Consecutive\nabsence detected"]
+        S3["Attendance below\n75% threshold"]
+        S4["Monthly\nconsolidation"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+    S4 --> SEND
+
+    SEND["SEND Data to\nReports & Dashboards"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Daily student\nattendance"]
+        D2["Period-wise\nattendance"]
+        D3["Staff attendance\nlogs"]
+        D4["Leave\nrecords"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAttendance Reports\n& Dashboards"]
+
+    IMPACT1["Absenteeism alerts,\nboard eligibility checks,\nparent notifications"]
+    UPDATE --> IMPACT1
+```
+
+### FROM ASSESSMENT & EXAMS MODULE
+
+**WHY:** The Assessment & Exams module provides all examination results, grade distributions, and academic performance data that the Reports module transforms into comprehensive academic analytics. Every mark entry, grade calculation, and result publication triggers data flow to the Reports module, enabling class-wise performance reports, subject analysis dashboards, and board exam readiness assessments. This connection is vital for identifying academic weak spots, recognising toppers, and generating report cards that parents and regulatory bodies expect.
+
+**DATA RECEIVED:**
+- Exam scores and marks (student ID, subject, exam type, marks obtained, maximum marks)
+- Grade calculations and GPA/CGPA computations
+- Subject-wise pass/fail status and class averages
+- Internal assessment and project scores (CCE/CBSE pattern)
+- Board exam registration data and hall ticket details
+- Comparative performance data (current vs previous term/year)
+- Question-wise analysis (difficulty level, average score per question)
+
+**TRIGGER:** Exam marks entry completed for a subject, result computation finalised for a class, report cards generated and published, board exam results declared, internal assessment scores submitted, re-evaluation results updated, term-end result consolidation completed
+
+**IMPACT:** After the Term 1 examinations at The Heritage School, Kolkata conclude in December 2025, teachers complete marks entry for 1,800 students across 8 subjects over 5 days. As each subject's marks are finalised, the Reports module updates the Academic Dashboard in real-time. By December 20, the complete Term 1 analysis reveals: overall pass rate 95.2% (1,714 of 1,800 students), average score 75.8%. The subject-wise analysis dashboard highlights Mathematics as the weakest subject — Grade 10 Math average is 67% (target: 75%), with 18 students scoring below 33%. Academic Coordinator Rohan Chatterjee drills into the question-wise analysis and discovers that 72% of students scored below 50% on the trigonometry section. He immediately schedules remedial trigonometry workshops for January, allocating 12 extra periods and ₹45,000 for supplementary study materials. The topper recognition report identifies Priya Bose (Grade 10-A, 96.5% aggregate) and 15 other students scoring above 90% for the academic excellence awards ceremony on January 26th.
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["ASSESSMENT & EXAMS MODULE"]
+        S1["Marks entry\ncompleted"]
+        S2["Results\nfinalised"]
+        S3["Report cards\npublished"]
+        S4["Board exam\nresults declared"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+    S4 --> SEND
+
+    SEND["SEND Data to\nReports & Dashboards"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Exam scores\nand marks"]
+        D2["Grade and\nGPA data"]
+        D3["Subject-wise\npass/fail"]
+        D4["Question-wise\nanalysis"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAcademic Reports\n& Dashboards"]
+
+    IMPACT1["Performance reports,\ntopper lists,\nremedial action triggers"]
+    UPDATE --> IMPACT1
 ```
 
 ---
@@ -976,30 +1433,108 @@ CREATE INDEX idx_attendance_date ON attendance(date);
 # REPORTS & DASHBOARDS MODULE - SUBMODULE OVERVIEW
 
 **Module Code:** REPORT-041  
-**Category:** Analytics  
-**Priority:** P1  
-**Owner:** Module Team
+**Category:** Analytics & Business Intelligence  
+**Priority:** P1 - Critical  
+**Owner:** Reports & Analytics Team
 
 ## Submodule Breakdown
 
-This module is divided into **10 submodules**, each handling a specific aspect of reports & dashboards management.
+This module is divided into **7 submodules**, each handling a specific aspect of reports and dashboards functionality within the Hogwarts ERP system.
 
-[Detailed submodules would be listed here - template created for consistency]
+---
+
+### Submodule 1: Standard Reports Library
+
+**Name:** Standard Reports Library  
+**Code:** 01_standard_reports_library  
+**Priority:** P1 - Critical  
+**Description:** Provides a comprehensive library of 50+ pre-built reports covering enrollment, financial, academic, attendance, staff, library, transport, and hostel domains. Each report has a fixed template with configurable parameters (date range, grade, section, campus). Reports are optimised for common use cases identified through consultation with school administrators across CBSE, ICSE, and State Board institutions. Includes automated data validation to ensure report accuracy before delivery. Supports PDF, Excel, and CSV output formats with professional branding (school logo, headers, footers). Used by Principal Dr. Meera Iyer at DPS Pune to generate the monthly enrollment report (1,800 students) in under 5 seconds.
+
+---
+
+### Submodule 2: Custom Report Builder
+
+**Name:** Custom Report Builder  
+**Code:** 02_custom_report_builder  
+**Priority:** P1 - Critical  
+**Description:** Offers a drag-and-drop interface for creating ad-hoc reports without technical knowledge. Users select data sources (Student, Fee, Academic, Attendance, HR modules), drag fields into the report canvas, apply filters, grouping, sorting, and calculated fields (sum, average, count, percentage). Custom reports can be saved for reuse, shared with other users via role-based permissions, and scheduled for automated generation. Supports cross-module data joins — for example, combining student enrollment data with fee payment status and attendance records in a single report. Finance Manager Kavita Deshmukh at Ryan International, Hyderabad uses this to build a weekly "Outstanding Fees by Parent Income Category" report that cross-references fee data with EWS/General category from student records.
+
+---
+
+### Submodule 3: Dashboard Designer
+
+**Name:** Dashboard Designer  
+**Code:** 03_dashboard_designer  
+**Priority:** P1 - Critical  
+**Description:** Powers the creation and customisation of interactive, real-time dashboards for different user roles — Executive (Principal/CEO), Financial (CFO), Academic (Coordinator), and Operations (Admin). Each dashboard displays KPI widgets (gauges, scorecards), charts (line, bar, pie, radar, heatmap), and data tables with drill-down capability. Dashboards refresh every 5 minutes using cached data from the data warehouse, with on-demand refresh available. Supports widget drag-and-drop layout customisation, colour theme selection, and responsive design for desktop and tablet screens. The Executive Dashboard at Amity International, Noida displays 5 critical KPIs: Total Students (1,800), Revenue (₹21.6 Cr), Attendance (95%), Pass Rate (97%), and Fee Collection (73%).
+
+---
+
+### Submodule 4: Scheduled Reports
+
+**Name:** Scheduled Reports  
+**Code:** 04_scheduled_reports  
+**Priority:** P2 - High  
+**Description:** Enables automated report generation and distribution on configurable schedules — daily (e.g., attendance report at 8:00 AM), weekly (e.g., fee collection summary every Monday), monthly (e.g., enrollment report on the 1st), quarterly (e.g., academic performance after each term), and annually (e.g., financial statements on April 1st). Each schedule defines the report template, parameters, output format, and distribution list (email recipients, portal upload, Google Drive folder). Includes retry logic for failed generations, notification alerts for schedule failures, and a history log of all scheduled runs with status tracking. Supports 20+ concurrent scheduled reports with staggered execution to prevent database overload during peak hours.
+
+---
+
+### Submodule 5: Export & Distribution
+
+**Name:** Export & Distribution  
+**Code:** 05_export_distribution  
+**Priority:** P2 - High  
+**Description:** Manages the export of generated reports into multiple formats (PDF with professional formatting, Excel with formulas and pivot tables, CSV for data interchange, Google Sheets for collaborative access) and their distribution through various channels (email with customisable subject and body, admin portal upload with role-based access, Google Drive with organised folder structure). Supports bulk distribution — for example, sending 1,800 individual student report cards to respective parents via email in a single batch operation. Includes export size limits (50 MB for Excel, 20 MB for PDF) to prevent performance degradation. Tracks download history and provides read receipts for emailed reports. Used during the March 2026 annual report card distribution at Kendriya Vidyalaya, Lucknow, where 1,200 parent-specific PDF report cards were generated and emailed within 45 minutes.
+
+---
+
+### Submodule 6: Mobile Dashboards
+
+**Name:** Mobile Dashboards  
+**Code:** 06_mobile_dashboards  
+**Priority:** P3 - Medium  
+**Description:** Delivers responsive, touch-optimised dashboard views for smartphones and tablets, enabling school leadership to monitor KPIs on the go. Mobile dashboards render simplified versions of desktop dashboards with swipe navigation between KPI cards, tap-to-drill-down interactions, and push notification alerts for threshold breaches (e.g., daily attendance drops below 90%, fee collection falls behind target by 10%+). Supports offline caching of the last-synced dashboard snapshot for areas with poor connectivity — essential for school administrators travelling between campuses in cities like Bengaluru, Mumbai, and Delhi. Principal Aarav Gupta at Bal Bharati, Delhi uses the mobile dashboard during his morning commute to review yesterday's attendance (95%) and fee collection (₹8,50,000) before the 9:00 AM management standup.
+
+---
+
+### Submodule 7: Natural Language Query Interface
+
+**Name:** Natural Language Query (NLQ) Interface  
+**Code:** 07_nlq_interface  
+**Priority:** P3 - Medium  
+**Description:** Provides an AI-powered conversational interface where users type questions in plain English or Hindi and receive instant report visualisations. Example queries: "Show me fee collection trend for Grade 10 this year", "Which students have attendance below 75%?", "Compare Math scores between Section A and Section B for Term 1". The NLQ engine parses the query, maps it to the appropriate data sources and fields, generates the SQL query, and renders the results as a table or chart. Supports follow-up questions with context retention (e.g., "Now filter by Section A only"). Designed for non-technical users like teachers and parents who need quick answers without navigating the report builder. Priya Nair, Admissions Coordinator at DPS Bengaluru, types "How many new admissions did we get in Grade 1 this month?" and receives an instant bar chart showing 18 new admissions — 15% above the same period last year.
+
+---
 
 ## Integration Points
 
-REPORTS & DASHBOARDS connects to relevant modules across the Hogwarts ERP system.
+REPORTS & DASHBOARDS connects to all 54 modules across the Hogwarts ERP system, serving as the central analytics and business intelligence hub. Key integration categories include:
+
+- **Academic Modules:** Student Management, Assessment & Exams, Attendance, Timetable, Homework — for enrollment, performance, and academic analytics
+- **Financial Modules:** Fee Management, Payroll, Accounting, Budgeting — for revenue, expense, and financial health reporting
+- **Operations Modules:** Transport, Hostel, Library, Inventory, Cafeteria — for operational efficiency and resource utilisation analytics
+- **HR Modules:** Staff Management, Recruitment, Training, Leave — for workforce analytics, payroll summaries, and staff performance correlation
+- **Communication Modules:** Notifications, Parent Portal, Mobile App — for report distribution and alert delivery
 
 ## Development Priority
 
-**Phase 1 (Critical):** Core submodules  
-**Phase 2 (High):** Essential features  
-**Phase 3 (Medium):** Advanced features  
+**Phase 1 (Critical — Months 1-3):**
+- 01_standard_reports_library — Core pre-built reports for immediate school operations
+- 02_custom_report_builder — Ad-hoc reporting capability for power users
+- 03_dashboard_designer — Real-time KPI dashboards for school leadership
+
+**Phase 2 (High — Months 4-6):**
+- 04_scheduled_reports — Automated report generation and delivery
+- 05_export_distribution — Multi-format export and bulk distribution
+
+**Phase 3 (Medium — Months 7-9):**
+- 06_mobile_dashboards — Mobile-responsive dashboard access
+- 07_nlq_interface — AI-powered natural language query capability
 
 ---
 
 **Status:** Production-Ready Documentation  
 **Last Updated:** January 17, 2026  
 **Version:** 1.1  
-**Compliance:** Relevant Standards
+**Compliance:** Data Privacy (IT Act 2000), CBSE/ICSE Reporting Standards, RTE Act Compliance, Audit Trail Requirements
 
