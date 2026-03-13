@@ -1,7 +1,7 @@
 # School ERP System - Complete Module Dependency Map
 
-> **Last Updated:** January 15, 2026 
-> **Total Modules:** 50 
+> **Last Updated:** March 13, 2026 
+> **Total Modules:** 54 
 > **Purpose:** This document maps all inter-module dependencies to guide development sequencing and integration planning.
 
 ---
@@ -1075,6 +1075,98 @@ This analysis categorizes dependencies into:
 
 ---
 
+### Module 51: Security & Access Control
+
+**Core Dependencies:**
+- **Module 1 (Student Management):** Student identity profiles for authentication
+- **Module 14 (HR & Payroll):** Staff identity profiles, role assignments
+
+**Strong Dependencies:**
+- **Module 38 (Integration Hub):** SSO configuration, OAuth2/SAML federation
+- **Module 39 (User Portals):** Portal access control, session management
+- **Module 40 (Mobile App):** Mobile authentication, biometric login
+
+**Weak Dependencies:**
+- **Module 19 (Visitor & Campus Security):** Visitor access passes, temporary credentials
+- **Module 30 (Communication):** Security alerts, password reset notifications
+- **Module 37 (Multi-Campus):** Cross-campus access policies
+
+**Data Provided To:**
+- **Module 46 (Analytics):** Login analytics, access pattern monitoring, threat detection
+- **Module 52 (Data Privacy):** Access audit logs, consent enforcement
+
+---
+
+### Module 52: Data Privacy & GDPR
+
+**Core Dependencies:**
+- **Module 1 (Student Management):** Student PII data inventory, consent records
+- **Module 51 (Security & Access Control):** Access control enforcement, encryption policies
+
+**Strong Dependencies:**
+- **Module 14 (HR & Payroll):** Employee data protection, payroll confidentiality
+- **Module 26 (Consent & Compliance):** Consent management workflows, regulatory tracking
+- **Module 9 (Health & Wellness):** Sensitive health data protection (HIPAA-equivalent)
+
+**Weak Dependencies:**
+- **Module 30 (Communication):** Data breach notification, privacy policy updates
+- **Module 28 (Document & Certificate):** Data retention policies, document redaction
+- **Module 38 (Integration Hub):** Third-party data sharing agreements, DPA management
+
+**Data Provided To:**
+- **Module 46 (Analytics):** Privacy compliance dashboards, data inventory reports
+- **Module 49 (Board & Governance):** GDPR/DPDPA compliance status for board reporting
+- **Module 50 (Legal & Contract):** Data Processing Agreements, breach response legal docs
+
+---
+
+### Module 53: Disaster Recovery & Business Continuity
+
+**Core Dependencies:**
+- **Module 38 (Integration Hub):** System backup orchestration, failover configuration
+- **Module 51 (Security & Access Control):** Security incident triggers, access during recovery
+
+**Strong Dependencies:**
+- **Module 23 (Accounts & Finance):** Financial data backup priority, transaction logs
+- **Module 1 (Student Management):** Student data backup priority (RPO: 0, RTO: 1 hour)
+- **Module 14 (HR & Payroll):** HR data backup, payroll continuity
+
+**Weak Dependencies:**
+- **Module 30 (Communication):** Emergency communication during outages
+- **Module 37 (Multi-Campus):** Cross-campus failover, geographic redundancy
+- **Module 21 (Facilities):** Physical infrastructure disaster response (fire, flood)
+- **Module 20 (Incident & Crisis):** Crisis management coordination during disasters
+
+**Data Provided To:**
+- **Module 46 (Analytics):** Backup health dashboards, RTO/RPO metrics
+- **Module 49 (Board & Governance):** Business continuity compliance reports
+- **Module 27 (Accreditation):** Disaster recovery audit evidence
+
+---
+
+### Module 54: Internationalization & Localization
+
+**Core Dependencies:**
+- **Module 1 (Student Management):** Student language preferences, nationality data
+- **Module 14 (HR & Payroll):** Staff language capabilities, multi-currency payroll
+
+**Strong Dependencies:**
+- **Module 30 (Communication):** Multi-language notification templates, SMS/email localization
+- **Module 39 (User Portals):** UI localization, RTL support, date/currency formatting
+- **Module 22 (Fee Management):** Multi-currency fee processing, exchange rate management
+
+**Weak Dependencies:**
+- **Module 2 (Academic Curriculum):** Multilingual curriculum content, translated syllabi
+- **Module 4 (Advanced LMS):** Content localization, multilingual assessments
+- **Module 37 (Multi-Campus):** Regional language support per campus location
+- **Module 40 (Mobile App):** Mobile UI localization, regional content delivery
+
+**Data Provided To:**
+- **Module 46 (Analytics):** Language usage analytics, localization coverage reports
+- **Module 38 (Integration Hub):** Locale configuration for all integrated systems
+
+---
+
 ## Bidirectional Dependencies
 
 Some modules have strong bidirectional relationships:
@@ -1093,6 +1185,12 @@ Some modules have strong bidirectional relationships:
 
 5. **Module 30 (Communication) ↔ All Modules**
  - All modules trigger communications; communication module needs data from all modules
+
+6. **Module 51 (Security) ↔ Module 52 (Data Privacy)**
+ - Security enforces privacy policies; privacy defines what security must protect
+
+7. **Module 53 (Disaster Recovery) ↔ Module 38 (Integration Hub)**
+ - DR depends on integration hub for backup orchestration; integration hub depends on DR for failover
 
 ---
 
@@ -1178,6 +1276,12 @@ Based on dependency analysis, here's a suggested implementation order:
 49. **Module 37** - Multi-Campus Management
 50. **Module 40** - Data Backup & Disaster Recovery
 
+### Phase 15: Security, Privacy & Global Readiness
+51. **Module 51** - Security & Access Control
+52. **Module 52** - Data Privacy & GDPR
+53. **Module 53** - Disaster Recovery & Business Continuity
+54. **Module 54** - Internationalization & Localization
+
 ---
 
 ## Critical Path Modules
@@ -1223,7 +1327,7 @@ These modules are dependencies for the most other modules:
 
 ### Integration Facilitators:
 - **Module 38** (Integration Hub) → Enables 30+ modules to connect with external systems
-- **Module 40** (Data Backup) → Protects data from all 50 modules
+- **Module 40** (Data Backup) → Protects data from all 54 modules
 
 ---
 
