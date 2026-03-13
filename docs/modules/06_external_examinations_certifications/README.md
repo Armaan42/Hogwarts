@@ -238,6 +238,42 @@ END FUNCTION
  - **June 2024:** Original marksheet collected from school
  - Handed over to Rohan's parents
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Student reaches\nClass 10/12"]
+        T2["Board exam registration\nperiod opens"]
+        T3["External exam\nresults published"]
+        T4["Certificate\nreceived from board"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Registration Data"]
+        D2["Student ID, name"]
+        D3["Date of birth,\ngender, category"]
+        D4["Father's name,\nmother's name"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO FEE MANAGEMENT MODULE
@@ -317,6 +353,42 @@ FUNCTION collect_board_exam_fee(student, board_registration):
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Board registration opens"]
+        T2["Student registers\nfor external exam"]
+        T3["Fee payment\ndeadline approaching"]
+        T4["Timing: Real-time\nfee collection, Mon..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nFEE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Board Exam Fees"]
+        D2["CBSE Class 10: ₹1,500"]
+        D3["CBSE Class 12: ₹1,800"]
+        D4["ICSE: ₹2,000"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFEE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FEE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → External Examinations)
@@ -337,6 +409,36 @@ END FUNCTION
 
 **TRIGGER:** Board registration period opens
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["STUDENT MANAGEMENT"]
+        S1["Board registration\nperiod opens"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nExternal Examinations\nCertifications"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Student profiles"]
+        D2["Attendance percentage"]
+        D3["Previous school details"]
+        D4["Category certificates"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nExternal Examinations\nCertifications\nRecords"]
+
+    IMPACT1["Auto-population"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Eligibility Check"]
+    IMPACT1 --> IMPACT2
+
+```
+
 ---
 
 ### FROM ASSESSMENT MODULE
@@ -356,6 +458,41 @@ END FUNCTION
  - Contributes to final board result
 
 **TRIGGER:** Board registration, Internal assessment completion
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["ASSESSMENT"]
+        S1["Board registration"]
+        S2["Internal assessment\ncompletion"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nExternal Examinations\nCertifications"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Internal assessment marks"]
+        D2["Practical exam marks"]
+        D3["Project marks"]
+        D4["Attendance in practicals"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nExternal Examinations\nCertifications\nRecords"]
+
+    IMPACT1["CBSE Internal Assessment"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Rohan's Physics\ninternal marks: 18/20"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Uploaded to CBSE\nportal along with re..."]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -493,6 +630,42 @@ FUNCTION store_board_certificate(student, board, class_level, certificate_file):
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Board result declared"]
+        T2["External exam\nscorecard received"]
+        T3["Migration\ncertificate issued"]
+        T4["Document request\nfor university appli..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nDOCUMENT & CERTIFICATE"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Board Certificates"]
+        D2["External Certifications"]
+        D3["Supporting Documents"]
+        D4["Data Volume"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nDOCUMENT & CERTIFICATE"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate DOCUMENT & CERTIFICATE"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 4. TO COMMUNICATION MODULE
@@ -571,6 +744,42 @@ FUNCTION send_board_registration_reminder(board, class_level, days_before_deadli
   
   RETURN {sent: pending_students.count}
 END FUNCTION
+```
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Board portal update"]
+        T2["Fee deadline approaching"]
+        T3["Result declared"]
+        T4["Document ready\nfor collection"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nCOMMUNICATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Registration Updates"]
+        D2["Exam Updates"]
+        D3["Result Updates"]
+        D4["External Exam Updates"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMMUNICATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMMUNICATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
 ```
 
 ---
@@ -688,6 +897,42 @@ FUNCTION analyze_board_performance(board, class_level, year):
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Board results declared"]
+        T2["External exam\nscores received"]
+        T3["Academic year ends"]
+        T4["Timing: Annual analysis,\nQuarterly up..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nANALYTICS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Performance Analytics"]
+        D2["Comparative Analysis"]
+        D3["Student Analytics"]
+        D4["External Exam Trends"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nANALYTICS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ANALYTICS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 6. TO ADMISSION & CRM MODULE
@@ -738,6 +983,42 @@ Board exam results used for admission to higher classes (Class 11 stream selecti
     - Statement of Purpose
   - Applications submitted successfully
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Class 10 results declared"]
+        T2["Class 12 results declared"]
+        T3["University\napplication deadline"]
+        T4["Timing: Real-time\nupon result declara..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nADMISSION & CRM"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Stream Selection\n(Class 11)"]
+        D2["University Applications"]
+        D3["Scholarship Eligibility"]
+        D4["Data Volume"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nADMISSION & CRM"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ADMISSION & CRM"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## ADDITIONAL INBOUND CONNECTIONS
@@ -765,6 +1046,38 @@ Board exam results used for admission to higher classes (Class 11 stream selecti
 
 **TRIGGER:** Board syllabus update, New academic year
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["CURRICULUM"]
+        S1["Board syllabus update"]
+        S2["New academic year"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nExternal Examinations\nCertifications"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Board syllabus"]
+        D2["Subject codes\nfor registration"]
+        D3["Practical\nexam requirements"]
+        D4["Internal assessment\nguidelines"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nExternal Examinations\nCertifications\nRecords"]
+
+    IMPACT1["Syllabus Alignment"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Practical Requirements"]
+    IMPACT1 --> IMPACT2
+
+```
+
 ---
 
 ### FROM TIMETABLE MODULE
@@ -788,6 +1101,37 @@ Board exam results used for admission to higher classes (Class 11 stream selecti
   - Other classes continue normal timetable
 
 **TRIGGER:** Board exam schedule released, Practical exam dates announced
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["TIMETABLE"]
+        S1["Board exam\nschedule released"]
+        S2["Practical exam\ndates announced"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nExternal Examinations\nCertifications"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Practical exam slots"]
+        D2["Board exam dates"]
+        D3["Exam center availability"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nExternal Examinations\nCertifications\nRecords"]
+
+    IMPACT1["Practical Exam Scheduling"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Board Exam Period"]
+    IMPACT1 --> IMPACT2
+
+```
 
 ---
 

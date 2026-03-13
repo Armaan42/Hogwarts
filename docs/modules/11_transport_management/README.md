@@ -226,6 +226,42 @@ END FUNCTION
  - Journey duration: 50 minutes
  - **Complete daily tracking:** 4 RFID scans, 4 parent notifications, GPS tracking during journeys
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["New Admission with\nTransport: Route a..."]
+        T2["Address Change:\nRoute reassignment if..."]
+        T3["Transport Enrollment:\nStudent added t..."]
+        T4["Transport Withdrawal:\nStudent removed..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Route Assignment"]
+        D2["Student address"]
+        D3["Distance from school"]
+        D4["Route number assigned"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO PARENT ENGAGEMENT PORTAL
@@ -373,6 +409,42 @@ END FUNCTION
  - **8:16 AM:** Notification: "Priya reached school at 8:16 AM"
  - **Mrs. Sharma:** Relieved, knows Priya safe at school
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Parent Login: Transport\ndashboard dis..."]
+        T2["Bus Approaching:\nNotification sent 10..."]
+        T3["RFID\nScan: Boarding/deboarding notifi..."]
+        T4["Bus Delay: Alert\nsent with reason and..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nPARENT ENGAGEMENT PORTAL"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Transport Dashboard"]
+        D2["Route assignment details"]
+        D3["Bus number and\ndriver information"]
+        D4["Pickup/drop\npoints and timings"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nPARENT ENGAGEMENT PORTAL"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate PARENT ENGAGEMENT PORTAL"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO FEE MANAGEMENT MODULE
@@ -502,6 +574,42 @@ END FUNCTION
  - **Total Paid:** ₹24,000 
  - **Service:** Active throughout year, no interruptions
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Transport Enrollment:\nFee added to st..."]
+        T2["Transport Withdrawal:\nPro-rata refund..."]
+        T3["Payment Overdue\n60 days: Transport ac..."]
+        T4["Payment Received:\nTransport access re..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nFEE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Transport Fee Calculation"]
+        D2["Route-based fee structure"]
+        D3["Distance-based fee tiers"]
+        D4["Annual fee amount"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFEE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FEE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 4. TO ATTENDANCE MANAGEMENT MODULE
@@ -616,6 +724,42 @@ END FUNCTION
  - School attendance: (Present)
  - Status: CONSISTENT, no issues
  - **Complete tracking:** Bus journey validated with school attendance
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Bus Boarding:\nRFID scan logged"]
+        T2["School Arrival:\nRFID scan at school gate"]
+        T3["Attendance Marking:\nCross-verificatio..."]
+        T4["Bus Delay: Late\narrival status update..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nATTENDANCE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Bus Boarding Logs"]
+        D2["Student boarded bus"]
+        D3["Student deboarded\nat school"]
+        D4["Timestamps for both"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nATTENDANCE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ATTENDANCE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -736,6 +880,42 @@ END FUNCTION
  - **2:05 PM:** Security scans QR, verifies father's ID, releases Aarav
  - **3:15 PM:** Bus Route 3 departs without Aarav (driver already aware)
  - **No confusion:** Driver doesn't wait for Aarav, bus departs on time
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Bus Arrival:\nGate entry logged"]
+        T2["Bus Departure:\nGate exit logged"]
+        T3["Parent Pickup Request:\nGate pass gene..."]
+        T4["Emergency: Headcount\nreconciliation"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSECURITY & VISITOR MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Bus Entry/Exit Logs"]
+        D2["Bus arrival\ntime at school gate"]
+        D3["Bus departure\ntime from school"]
+        D4["Driver identity\nverification"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSECURITY & VISITOR MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate SECURITY & VISITOR MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -864,6 +1044,42 @@ END FUNCTION
  - **June 1:** Bus back in operation
  - **Next Service Due:** September 1
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Service Due:\nMaintenance reminder"]
+        T2["Breakdown: Emergency\nrepair needed"]
+        T3["Inspection: Quarterly\nsafety inspection"]
+        T4["Fuel Refill: Fuel\nconsumption logged"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nMAINTENANCE & ASSET MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Vehicle Information"]
+        D2["Bus registration number"]
+        D3["Make, model, year"]
+        D4["Seating capacity"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nMAINTENANCE & ASSET MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate MAINTENANCE & ASSET MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 7. TO COMMUNICATION & NOTIFICATION MODULE
@@ -948,6 +1164,42 @@ END FUNCTION
  - Message: "EMERGENCY: Bus accident, all students safe, alternate bus arranged"
  - Delivery: All channels activated, 100% reach within 5 minutes
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Bus Approaching:\nGPS-based proximity ..."]
+        T2["RFID\nScan: Boarding/deboarding notifi..."]
+        T3["Delay Detected:\nImmediate alert"]
+        T4["Emergency: Multi-channel\nurgent alert"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nCOMMUNICATION & NOTIFICATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Notification Types"]
+        D2["Bus approaching"]
+        D3["Boarding/deboarding\nconfirmations"]
+        D4["Delay alerts"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMMUNICATION & NOTIFICATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMMUNICATION & NOTIFICATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 8. TO AI & PREDICTIVE ANALYTICS MODULE
@@ -1016,6 +1268,42 @@ END FUNCTION
  - **New Route Implemented:** Average time 50 mins, delay reduced to 5 mins
  - **Savings:** 10 mins per day × 200 school days = 2,000 mins/year saved
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Daily Journey Completion:\nData logged..."]
+        T2["Weekly Analytics:\nRoute efficiency re..."]
+        T3["Delay Pattern Detected:\nRoute optimiz..."]
+        T4["Fuel Consumption\nSpike: Maintenance a..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nAI & PREDICTIVE ANALYTICS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Route Efficiency Data"]
+        D2["Average journey\ntime per route"]
+        D3["Delay frequency\nand causes"]
+        D4["Fuel consumption per km"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nAI & PREDICTIVE ANALYTICS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate AI & PREDICTIVE ANALYTICS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → Transport Management)
@@ -1036,6 +1324,42 @@ END FUNCTION
 
 **TRIGGER:** Address change, admission, withdrawal
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["STUDENT MANAGEMENT"]
+        S1["Address change"]
+        S2["admission"]
+        S3["withdrawal"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+
+    SEND["SEND Data to\nTransport Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Address changes"]
+        D2["New admissions"]
+        D3["Withdrawals"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nTransport Management\nRecords"]
+
+    IMPACT1["Route reassignment\nwhen address changes"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["New students added\nto appropriate routes"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Withdrawn students\nremoved, refunds p..."]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM FEE MANAGEMENT MODULE
@@ -1053,6 +1377,38 @@ END FUNCTION
 - RFID card blocked/unblocked
 
 **TRIGGER:** Payment made/overdue
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["FEE MANAGEMENT"]
+        S1["Payment made/overdue"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nTransport Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Transport\nfee payment status"]
+        D2["Outstanding dues"]
+        D3["Payment confirmations"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nTransport Management\nRecords"]
+
+    IMPACT1["Service suspended\nif payment overdue ..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Access restored\nafter payment"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["RFID card\nblocked/unblocked"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -1072,6 +1428,40 @@ END FUNCTION
 
 **TRIGGER:** Attendance marked, mismatch detected
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["ATTENDANCE MANAGEMENT"]
+        S1["Attendance marked"]
+        S2["mismatch detected"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nTransport Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Daily school attendance"]
+        D2["Leave requests"]
+        D3["Absence records"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nTransport Management\nRecords"]
+
+    IMPACT1["Bus attendance reconciled\nwith school..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Mismatches investigated"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Alternate transport\nusage tracked"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM PARENT PORTAL
@@ -1089,6 +1479,38 @@ END FUNCTION
 - Route changes accommodated if possible
 
 **TRIGGER:** Parent request submitted
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["PARENT PORTAL"]
+        S1["Parent request submitted"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nTransport Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Transport\nenrollment requests"]
+        D2["Withdrawal requests"]
+        D3["Route change requests"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nTransport Management\nRecords"]
+
+    IMPACT1["Enrollment processed,\nroute assigned"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Withdrawal processed,\nrefund calculated"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Route changes accommodated\nif possible"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -1108,6 +1530,38 @@ END FUNCTION
 
 **TRIGGER:** Bus entry/exit at gate
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["SECURITY"]
+        S1["Bus entry/exit at gate"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nTransport Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Bus entry/exit times"]
+        D2["Driver verification logs"]
+        D3["Vehicle inspection\nresults"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nTransport Management\nRecords"]
+
+    IMPACT1["Bus movements tracked"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Driver identity verified"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Safety compliance ensured"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM WEATHER & TRAFFIC SERVICES (EXTERNAL API)
@@ -1125,6 +1579,38 @@ END FUNCTION
 - Proactive parent notifications
 
 **TRIGGER:** Weather/traffic alerts
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["WEATHER & TRAFFIC\nSERVICES (EXTERNAL ..."]
+        S1["Weather/traffic alerts"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nTransport Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Weather forecasts"]
+        D2["Traffic alerts"]
+        D3["Road closures"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nTransport Management\nRecords"]
+
+    IMPACT1["Delay predictions"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Route adjustments"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Proactive parent\nnotifications"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -1144,6 +1630,40 @@ END FUNCTION
 
 **TRIGGER:** Service due, breakdown
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["MAINTENANCE"]
+        S1["Service due"]
+        S2["breakdown"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nTransport Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Service schedules"]
+        D2["Breakdown reports"]
+        D3["Vehicle health status"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nTransport Management\nRecords"]
+
+    IMPACT1["Buses taken out\nof service for mainte..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Backup buses deployed"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Route adjustments\nif bus unavailable"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM EMERGENCY SERVICES (EXTERNAL)
@@ -1161,6 +1681,38 @@ END FUNCTION
 - Incident reports generated
 
 **TRIGGER:** Emergency reported
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["EMERGENCY SERVICES (EXTERNAL)"]
+        S1["Emergency reported"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nTransport Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Accident reports"]
+        D2["Ambulance dispatch\nconfirmations"]
+        D3["Police reports"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nTransport Management\nRecords"]
+
+    IMPACT1["Emergency\nprotocols activated"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Parents notified\nimmediately"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Incident\nreports generated"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 

@@ -176,6 +176,42 @@ END FUNCTION
  - **Daily Load:** 3-4 periods/day (balanced)
  - **Consecutive Periods:** Max 2 (meets constraint)
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Timetable Generation:\nTeacher assignm..."]
+        T2["Teacher Joins: New\nteacher added to t..."]
+        T3["Teacher Leaves:\nTimetable adjusted, c..."]
+        T4["Workload Review:\nPeriodic workload ba..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nTEACHER MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Teaching Assignments"]
+        D2["Teacher-subject-section\nmapping"]
+        D3["Periods allocated\nper teacher per week"]
+        D4["Grade levels assigned"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nTEACHER MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate TEACHER MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO STUDENT MANAGEMENT MODULE
@@ -271,6 +307,40 @@ END FUNCTION
  - Accessible 24/7 online
  - Updated in real-time if changes occur
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Timetable Published:\nStudents can acc..."]
+        T2["Timetable Updated:\nStudents notified ..."]
+        T3["Section Assignment:\nStudent linked to..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Student Timetable"]
+        D2["Period-wise\ndaily schedule"]
+        D3["Subject name and code"]
+        D4["Teacher name"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO PARENT PORTAL
@@ -310,6 +380,40 @@ FUNCTION parent_view_timetable(student):
  
  RETURN timetable
 END FUNCTION
+```
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Timetable published"]
+        T2["Schedule changes\n(teacher absence, ro..."]
+        T3["Parent requests timetable"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nPARENT PORTAL"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Child's complete\ntimetable"]
+        D2["Teacher contact\ninformation"]
+        D3["Classroom locations"]
+        D4["Real-time\nschedule updates"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nPARENT PORTAL"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate PARENT PORTAL"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
 ```
 
 ---
@@ -361,6 +465,40 @@ FUNCTION allocate_rooms(timetable):
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Timetable created"]
+        T2["Room maintenance\nscheduled"]
+        T3["Special event\nrequires room"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nCLASSROOM & FACILITIES"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Room allocations"]
+        D2["Lab schedules"]
+        D3["Special room bookings"]
+        D4["Utilization analytics"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCLASSROOM & FACILITIES"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate CLASSROOM & FACILITIES"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 5. TO SUBSTITUTE TEACHER MODULE
@@ -410,6 +548,40 @@ FUNCTION assign_substitute(absent_teacher, date):
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Teacher applies leave"]
+        T2["Teacher marked\nabsent (emergency)"]
+        T3["Substitute\nassignment needed"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nSUBSTITUTE TEACHER"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Teacher absence\nnotification"]
+        D2["Classes to be covered"]
+        D3["Available substitutes"]
+        D4["Substitute assignments"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSUBSTITUTE TEACHER"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate SUBSTITUTE TEACHER"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 6. TO EXAM SCHEDULING MODULE
@@ -434,6 +606,38 @@ Exam schedules must avoid regular class clashes. Exam halls allocated based on c
 - Halls: Rooms 201-210 (not used by Grade 6-8)
 - Invigilation: Teachers with free periods assigned
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Exam scheduled"]
+        T2["Invigilation\nduties assigned"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+
+    FETCH["FETCH Data for\nEXAM SCHEDULING"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Exam dates"]
+        D2["Exam halls"]
+        D3["Invigilation duties"]
+        D4["Exam duration and timing"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nEXAM SCHEDULING"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate EXAM SCHEDULING"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 7. TO ATTENDANCE MODULE
@@ -455,6 +659,37 @@ Period-wise attendance tracked based on timetable. Each period has specific teac
 - Mr. Verma marks attendance in app
 - System knows: Math, Grade 9A, 9:00-9:45 AM
 - Absent students flagged, parents notified
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Period starts"]
+        T2["Attendance marking time"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+
+    FETCH["FETCH Data for\nATTENDANCE"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Period schedule"]
+        D2["Attendance marking slots"]
+        D3["Teacher-student mapping"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nATTENDANCE"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ATTENDANCE"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -479,6 +714,40 @@ Timetable aligned with academic calendar. Holidays, events, exams integrated int
 - March 13: Sports Day - Special schedule
 - Regular timetable suspended, sports events scheduled
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Calendar updated"]
+        T2["Holiday declared"]
+        T3["Event scheduled"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nACADEMIC CALENDAR"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Working days"]
+        D2["Holidays"]
+        D3["Events"]
+        D4["Exam periods"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nACADEMIC CALENDAR"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ACADEMIC CALENDAR"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → Timetable)
@@ -500,6 +769,43 @@ Timetable aligned with academic calendar. Holidays, events, exams integrated int
 
 **TRIGGER:** Teacher joins, leaves, availability changes
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["TEACHER MANAGEMENT"]
+        S1["Teacher joins"]
+        S2["leaves"]
+        S3["availability changes"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+
+    SEND["SEND Data to\nTimetable Scheduling"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Teacher availability"]
+        D2["Leave applications"]
+        D3["Subject expertise"]
+        D4["Preferred teaching slots"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nTimetable Scheduling\nRecords"]
+
+    IMPACT1["Ms. Gupta on leave\n(3 days): Substitu..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Mr. Verma part-time\n(15 periods/week)..."]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["New teacher joins:\nAdded to timetable"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM STUDENT MANAGEMENT
@@ -518,6 +824,40 @@ Timetable aligned with academic calendar. Holidays, events, exams integrated int
 
 **TRIGGER:** Admissions complete, sections finalized
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["STUDENT MANAGEMENT"]
+        S1["Admissions complete"]
+        S2["sections finalized"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nTimetable Scheduling"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Grade-wise enrollment"]
+        D2["Section count"]
+        D3["Subject choices"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nTimetable Scheduling\nRecords"]
+
+    IMPACT1["Grade 9: 180 students"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Sections:\n5 (A, B, C, D, E)"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Timetable created\nfor 5 sections"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM ACADEMIC CALENDAR
@@ -535,6 +875,37 @@ Timetable aligned with academic calendar. Holidays, events, exams integrated int
 
 **TRIGGER:** Calendar published, events scheduled
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["ACADEMIC CALENDAR"]
+        S1["Calendar published"]
+        S2["events scheduled"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nTimetable Scheduling"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Holiday list"]
+        D2["Event dates"]
+        D3["Exam schedules"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nTimetable Scheduling\nRecords"]
+
+    IMPACT1["Diwali holidays:\nOct 20-25 - No classes"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Sports Day: Nov\n15 - Special schedule"]
+    IMPACT1 --> IMPACT2
+
+```
+
 ---
 
 ### FROM FACILITIES MODULE
@@ -550,6 +921,34 @@ Timetable aligned with academic calendar. Holidays, events, exams integrated int
 - Room 205 under repair: Grade 9A shifted to Room 210
 
 **TRIGGER:** Room unavailable, maintenance scheduled
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["FACILITIES"]
+        S1["Room unavailable"]
+        S2["maintenance scheduled"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nTimetable Scheduling"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Classroom availability"]
+        D2["Lab schedules"]
+        D3["Maintenance schedules"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nTimetable Scheduling\nRecords"]
+
+    IMPACT1["Room 205 under repair:\nGrade 9A shift..."]
+    UPDATE --> IMPACT1
+
+```
 
 ---
 
@@ -567,6 +966,35 @@ Timetable aligned with academic calendar. Holidays, events, exams integrated int
 - Timetable allocates exactly 6 periods each
 
 **TRIGGER:** Curriculum finalized
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["CURRICULUM"]
+        S1["Curriculum finalized"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nTimetable Scheduling"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Subject list"]
+        D2["Periods per week"]
+        D3["Lab requirements"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nTimetable Scheduling\nRecords"]
+
+    IMPACT1["Grade 9 curriculum:\nMath 6 periods, S..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Timetable allocates\nexactly 6 periods..."]
+    IMPACT1 --> IMPACT2
+
+```
 
 ---
 

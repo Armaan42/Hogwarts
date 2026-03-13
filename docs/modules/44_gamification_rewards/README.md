@@ -30,12 +30,71 @@
 **TRIGGER:** Student earns points/badge  
 **IMPACT:** Rohan's profile shows 1,250 points, 15 badges
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Student earns\npoints/badge"]
+    end
+
+    T1 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Total points"]
+        D2["badges earned"]
+        D3["leaderboard rank"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ### 2. TO COMMUNICATION
 
 **WHY:** Notify students of achievements, leaderboard updates.  
 **DATA FLOW:** Achievement notifications, weekly leaderboard  
 **TRIGGER:** Badge unlocked, rank improved  
 **IMPACT:** "Congratulations! You earned 'Perfect Attendance' badge"
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Badge unlocked"]
+        T2["rank improved"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+
+    FETCH["FETCH Data for\nCOMMUNICATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Achievement notifications"]
+        D2["weekly leaderboard"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMMUNICATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMMUNICATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -46,6 +105,32 @@
 **WHY:** Activities earn points (attendance, grades, good behavior).  
 **DATA RECEIVED:** Attendance marked, assignment submitted, behavior points  
 **IMPACT:** Student earns 10 points for 100% weekly attendance
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["ACADEMIC, ATTENDANCE, BEHAVIOR"]
+        S1["Activity Points\nEarned"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nGamification Rewards"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Attendance marked"]
+        D2["assignment submitted"]
+        D3["behavior points"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nGamification Rewards\nRecords"]
+
+    IMPACT1[" Student earns 10\npoints for 100% wee..."]
+    UPDATE --> IMPACT1
+
+```
 
 ---
 

@@ -156,6 +156,42 @@ Timeline:
 Result: Payment processed in 6 minutes, fully automated, zero manual intervention
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Parent initiates payment"]
+        T2["Payment gateway\nwebhook received"]
+        T3["Payment status changes"]
+        T4["Timing: Real-time\n(< 5 seconds)"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nFEE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Payment Initiation"]
+        D2["Payment Confirmation"]
+        D3["Webhook Data"]
+        D4["Data Volume"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFEE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FEE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO COMMUNICATION MODULE
@@ -260,6 +296,42 @@ FUNCTION send_sms_via_integration_hub(recipient, message, priority):
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Communication module\nrequests message..."]
+        T2["Delivery status\nwebhook received"]
+        T3["Message failed\n(retry needed)"]
+        T4["Timing: Real-time\nfor urgent, batched..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nCOMMUNICATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["SMS Messages"]
+        D2["Email Messages"]
+        D3["WhatsApp Messages"]
+        D4["Data Volume"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMMUNICATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMMUNICATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → Integration Hub)
@@ -284,6 +356,39 @@ Every module needs external integrations (payments, SMS, email, storage, etc.). 
 - **Reliability:** Automatic failover, retry logic
 
 **TRIGGER:** Any module needs external service
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["ALL 54 MODULES"]
+        S1["Any module needs\nexternal service"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nIntegration Hub"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Payment Requests"]
+        D2["SMS Requests"]
+        D3["Email Requests"]
+        D4["File Upload Requests"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nIntegration Hub\nRecords"]
+
+    IMPACT1["Centralized Security"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Rate Limiting"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Monitoring"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 

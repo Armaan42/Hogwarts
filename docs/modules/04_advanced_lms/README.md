@@ -219,6 +219,42 @@ END FUNCTION
  - Time spent: 42 hours
  - Certificate ID: CERT-PHY-2024-0123
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Student enrolls in course"]
+        T2["Assignment submitted"]
+        T3["Quiz completed"]
+        T4["Certificate earned"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Course Enrollment"]
+        D2["Student ID,\nname, grade, section"]
+        D3["Enrolled courses"]
+        D4["Enrollment date, status"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO ASSESSMENT & EXAMINATION MODULE
@@ -331,6 +367,42 @@ FUNCTION conduct_online_exam(exam, students):
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Quiz completed in LMS"]
+        T2["Assignment graded"]
+        T3["Online exam scheduled"]
+        T4["Exam results published"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nASSESSMENT & EXAMINATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Quiz & Assignment Scores"]
+        D2["Student ID, course, topic"]
+        D3["Quiz/assignment\ntitle, max marks, sco..."]
+        D4["Submission\ndate, time taken"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nASSESSMENT & EXAMINATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ASSESSMENT & EXAMINATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO TEACHER MANAGEMENT MODULE
@@ -428,6 +500,42 @@ FUNCTION calculate_teacher_workload(teacher, date_range):
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Teacher uploads content"]
+        T2["Assignment needs grading"]
+        T3["Student asks\nquestion in forum"]
+        T4["Course completion\nmilestone"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nTEACHER MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Course Creation\n& Management"]
+        D2["Teacher ID,\nsubject, grade"]
+        D3["Course content"]
+        D4["Content upload\ndates, versions"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nTEACHER MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate TEACHER MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → LMS)
@@ -453,6 +561,40 @@ END FUNCTION
 
 **TRIGGER:** Timetable published, Mid-year timetable changes
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["TIMETABLE"]
+        S1["Timetable published"]
+        S2["Mid-year\ntimetable changes"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nAdvanced Lms"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Student-subject-teacher\nmapping"]
+        D2["Class schedules"]
+        D3["Room assignments\nfor live classes"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAdvanced Lms\nRecords"]
+
+    IMPACT1["Auto-enrollment"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Timetable updated:\nRohan assigned to ..."]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["LMS auto-enrolls\nRohan in Physics course"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM CURRICULUM MODULE
@@ -476,6 +618,41 @@ END FUNCTION
  - Assignment: Real-world applications
 
 **TRIGGER:** Curriculum updated, New academic year
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["CURRICULUM"]
+        S1["Curriculum updated"]
+        S2["New academic year"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nAdvanced Lms"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Syllabus topics\nand chapters"]
+        D2["Learning\noutcomes per topic"]
+        D3["Textbook references"]
+        D4["Assessment standards"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAdvanced Lms\nRecords"]
+
+    IMPACT1["Content Alignment"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Curriculum: Grade\n10 Physics Chapter ..."]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["LMS course structure\nauto-generated"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -645,6 +822,42 @@ END FUNCTION
   - Parent portal sends SMS to Mrs. Sharma: "Priya submitted Chemistry assignment 'Organic Reactions' (on time)"
   - Email sent with assignment details and auto-graded score (if available)
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Assignment submitted"]
+        T2["Quiz completed"]
+        T3["Course milestone reached"]
+        T4["Low engagement detected"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nPARENT PORTAL"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Learning Progress"]
+        D2["Activity Logs"]
+        D3["Achievements"]
+        D4["Alerts"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nPARENT PORTAL"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate PARENT PORTAL"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 5. TO COMMUNICATION MODULE
@@ -729,6 +942,42 @@ FUNCTION send_assignment_deadline_reminder(assignment, hours_before):
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Teacher uploads content"]
+        T2["Assignment\ndeadline approaching"]
+        T3["Achievement unlocked"]
+        T4["Live class scheduled"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nCOMMUNICATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Course Notifications"]
+        D2["Deadline Reminders"]
+        D3["Achievement Notifications"]
+        D4["System Alerts"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMMUNICATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMMUNICATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 6. TO GAMIFICATION MODULE
@@ -777,6 +1026,42 @@ LMS activities (course completion, quiz scores, assignment submissions, forum pa
   - Badge unlocked: "Punctual Learner"
   - Notification sent: "Congratulations! You earned 'Punctual Learner' badge"
   - Badge displayed on student profile
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Learning\nactivity completed"]
+        T2["Achievement\nthreshold reached"]
+        T3["Leaderboard updated"]
+        T4["Timing: Real-time"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nGAMIFICATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Activity Points"]
+        D2["Badges"]
+        D3["Leaderboard"]
+        D4["Data Volume"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nGAMIFICATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate GAMIFICATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -890,6 +1175,42 @@ FUNCTION analyze_student_engagement(student, course, time_period):
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Any student activity"]
+        T2["Content uploaded"]
+        T3["System event"]
+        T4["Timing: Real-time\nstreaming"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nANALYTICS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Student Analytics"]
+        D2["Course Analytics"]
+        D3["Teacher Analytics"]
+        D4["Platform Analytics"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nANALYTICS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ANALYTICS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 8. TO LIBRARY MODULE
@@ -933,6 +1254,42 @@ LMS integrates with digital library for e-books, research papers, and reference 
   - E-book opens, reading progress tracked
   - Library notifies LMS: Student accessed resource (logged for analytics)
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Student clicks\nlibrary resource in LMS"]
+        T2["Teacher adds\nreading list to course"]
+        T3["Assignment\nrequires research"]
+        T4["Timing: Real-time"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nLIBRARY"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Resource Integration"]
+        D2["Reading Lists"]
+        D3["Access Tracking"]
+        D4["Data Volume"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nLIBRARY"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate LIBRARY"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## ADDITIONAL INBOUND CONNECTIONS
@@ -962,6 +1319,40 @@ LMS integrates with digital library for e-books, research papers, and reference 
 
 **TRIGGER:** Student admission, Section change, Withdrawal
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["STUDENT MANAGEMENT"]
+        S1["Student admission"]
+        S2["Section change"]
+        S3["Withdrawal"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+
+    SEND["SEND Data to\nAdvanced Lms"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["New student enrollments"]
+        D2["Section transfers"]
+        D3["Student withdrawals"]
+        D4["Profile updates"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAdvanced Lms\nRecords"]
+
+    IMPACT1["New Admission"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Withdrawal"]
+    IMPACT1 --> IMPACT2
+
+```
+
 ---
 
 ### FROM ASSESSMENT MODULE
@@ -983,6 +1374,35 @@ LMS integrates with digital library for e-books, research papers, and reference 
   - Students receive exam link 1 day before
 
 **TRIGGER:** Exam scheduled, Question paper ready
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["ASSESSMENT"]
+        S1["Exam scheduled"]
+        S2["Question paper ready"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nAdvanced Lms"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Exam schedules"]
+        D2["Question papers"]
+        D3["Assessment blueprints"]
+        D4["Grading rubrics"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAdvanced Lms\nRecords"]
+
+    IMPACT1["Online Exam Scheduling"]
+    UPDATE --> IMPACT1
+
+```
 
 ---
 

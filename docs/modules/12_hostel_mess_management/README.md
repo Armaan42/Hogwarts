@@ -229,6 +229,42 @@ END FUNCTION
  - Achievement: "Best Room Award" (cleanest room)
  - Character certificate: "Excellent residential conduct, responsible and cooperative"
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Admission as Boarder:\nHostel room all..."]
+        T2["Boarding Status\nChange: Day scholar →..."]
+        T3["Room Change: New\nroom assigned (confl..."]
+        T4["Dietary Change:\nMedical condition, re..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Boarding Status"]
+        D2["BOARDER"]
+        D3["DAY_SCHOLAR"]
+        D4["WEEKLY_BOARDER"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO FEE MANAGEMENT MODULE
@@ -389,6 +425,42 @@ END FUNCTION
  - **Day 65:** Parent pays ₹48,600 (Q3 + Q4)
  - Mess access restored same day
  - **Year-End:** All fees paid, no issues
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Boarding Enrollment:\nHostel + mess fe..."]
+        T2["Room Type Change:\nFee adjusted (singl..."]
+        T3["Dietary Change:\nMess fee adjusted (ve..."]
+        T4["Payment Overdue:\nService suspension w..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nFEE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Hostel Fee Structure"]
+        D2["Single room:\n₹1,20,000/year"]
+        D3["Double sharing:\n₹80,000/year"]
+        D4["Triple sharing:\n₹60,000/year"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFEE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FEE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -557,6 +629,42 @@ END FUNCTION
  - **Sunday 9 PM:** Night roll call
  - Aarav marked "PRESENT" 
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Night Roll Call:\nHostel attendance ma..."]
+        T2["Weekend Leave Request:\nApproved/rejected"]
+        T3["Student Missing:\nWarden alerted, pare..."]
+        T4["Late Return: Logged,\nparent notified"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nATTENDANCE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Hostel Attendance"]
+        D2["Night roll call"]
+        D3["Students\npresent in hostel"]
+        D4["Students\non approved leave"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nATTENDANCE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ATTENDANCE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 4. TO HEALTH & WELLNESS MODULE
@@ -703,6 +811,42 @@ END FUNCTION
  - **Nurse:** Administers inhaler, monitors for 30 mins
  - **Ananya recovers:** Returns to hostel, rests
  - **Parent notified:** "Asthma attack managed, Ananya fine now"
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Student Reports\nSick: Infirmary visit..."]
+        T2["Medical Emergency:\nAmbulance called, ..."]
+        T3["Chronic Condition:\nMess diet adjusted..."]
+        T4["Mental Health Concern:\nCounselor assi..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nHEALTH & WELLNESS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Medical Conditions"]
+        D2["Chronic conditions"]
+        D3["Allergies"]
+        D4["Current medications"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nHEALTH & WELLNESS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate HEALTH & WELLNESS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -879,6 +1023,42 @@ END FUNCTION
  - Saturday 6 PM: Video call with Aarav for 30 mins
  - **Mr. Sharma satisfied:** Child safe, eating well, happy in hostel
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Parent Login: Hostel/mess\ndashboard d..."]
+        T2["Night Roll Call:\nAttendance status up..."]
+        T3["Leave Request Submitted:\nConfirmation..."]
+        T4["Leave Approved/Rejected:\nNotification..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nPARENT ENGAGEMENT PORTAL"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Hostel Dashboard"]
+        D2["Room details"]
+        D3["Warden contact\ninformation"]
+        D4["Hostel attendance"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nPARENT ENGAGEMENT PORTAL"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate PARENT ENGAGEMENT PORTAL"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 6. TO SECURITY & VISITOR MANAGEMENT MODULE
@@ -1028,6 +1208,42 @@ END FUNCTION
  - **Mother meets Kavya:** 2-hour visit (10 AM - 12 PM)
  - **12 PM:** Mother exits, visit logged
  - **Kavya returns to room**
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Visitor Arrives:\nID verification, war..."]
+        T2["Student Checkout:\nGate pass verified"]
+        T3["Student Checkin:\nReturn logged"]
+        T4["Unauthorized\nExit: Alert triggered"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSECURITY & VISITOR MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Visitor Authorization"]
+        D2["Authorized visitors"]
+        D3["Visitor ID verification"]
+        D4["Visit purpose\nand duration"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSECURITY & VISITOR MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate SECURITY & VISITOR MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -1184,6 +1400,42 @@ END FUNCTION
  - Leadership: Organizes hostel events, mentors junior students
  - Character certificate: "Exceptional hostel leadership, role model for peers"
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Violation Reported:\nIncident logged, ..."]
+        T2["Repeated Violations:\nEscalated to pri..."]
+        T3["Responsibility Assigned:\nLeadership o..."]
+        T4["Conduct Review:\nTerm-end assessment"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nDISCIPLINE &\nBEHAVIOR MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Hostel Violations"]
+        D2["Curfew violations"]
+        D3["Room damage"]
+        D4["Noise complaints"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nDISCIPLINE &\nBEHAVIOR MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate DISCIPLINE &\nBEHAVIOR MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 8. TO INVENTORY & ASSET MANAGEMENT MODULE
@@ -1318,6 +1570,42 @@ END FUNCTION
  - **Repair:** Carpenter fixes hinge next day
  - **Asset updated:** Condition changed from "Good" to "Fair"
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Room Allocated:\nAssets assigned to room"]
+        T2["Asset Damaged: Damage\nassessment, cos..."]
+        T3["Asset Lost: Investigation,\nreplacement"]
+        T4["Maintenance Required:\nAsset serviced/..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nINVENTORY & ASSET MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Hostel Assets"]
+        D2["Furniture"]
+        D3["Electronics"]
+        D4["Laundry equipment"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nINVENTORY & ASSET MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate INVENTORY & ASSET MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → Hostel & Mess Management)
@@ -1339,6 +1627,43 @@ END FUNCTION
 
 **TRIGGER:** Admission, withdrawal, status change
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["STUDENT MANAGEMENT"]
+        S1["Admission"]
+        S2["withdrawal"]
+        S3["status change"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+
+    SEND["SEND Data to\nHostel\nMess Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["New admissions"]
+        D2["Withdrawals"]
+        D3["Grade promotions"]
+        D4["Status changes"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nHostel\nMess Management\nRecords"]
+
+    IMPACT1["New boarders\nallocated rooms"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Withdrawn students\nvacate, refunds pr..."]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Suspended students\nmay lose hostel pr..."]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM FEE MANAGEMENT MODULE
@@ -1356,6 +1681,38 @@ END FUNCTION
 - Access restored after payment
 
 **TRIGGER:** Payment made/overdue
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["FEE MANAGEMENT"]
+        S1["Payment made/overdue"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nHostel\nMess Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Hostel fee payment status"]
+        D2["Mess fee payment status"]
+        D3["Outstanding dues"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nHostel\nMess Management\nRecords"]
+
+    IMPACT1["Mess suspended if\npayment overdue 60 ..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Hostel eviction\nnotice if overdue 90 ..."]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Access restored\nafter payment"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -1376,6 +1733,41 @@ END FUNCTION
 
 **TRIGGER:** Medical condition diagnosed, emergency
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["HEALTH & WELLNESS"]
+        S1["Medical condition\ndiagnosed"]
+        S2["emergency"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nHostel\nMess Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Chronic conditions"]
+        D2["Allergies"]
+        D3["Medical emergencies"]
+        D4["Mental health concerns"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nHostel\nMess Management\nRecords"]
+
+    IMPACT1["Mess diet adjusted\nfor medical condit..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Warden alerted\nfor chronic conditions"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Emergency\nprotocols activated"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM PARENT PORTAL
@@ -1393,6 +1785,38 @@ END FUNCTION
 - Mess diet updated
 
 **TRIGGER:** Parent request submitted
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["PARENT PORTAL"]
+        S1["Parent request submitted"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nHostel\nMess Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Weekend leave requests"]
+        D2["Visitor appointment\nrequests"]
+        D3["Dietary preference\nchanges"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nHostel\nMess Management\nRecords"]
+
+    IMPACT1["Leave requests processed"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Visitor appointments\nscheduled"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Mess diet updated"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -1412,6 +1836,38 @@ END FUNCTION
 
 **TRIGGER:** Entry/exit at hostel gate
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["SECURITY"]
+        S1["Entry/exit at hostel gate"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nHostel\nMess Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Student\ncheckout/checkin logs"]
+        D2["Visitor entry/exit logs"]
+        D3["Unauthorized\nexit attempts"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nHostel\nMess Management\nRecords"]
+
+    IMPACT1["Hostel attendance\nvalidated"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Leave compliance tracked"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Security incidents logged"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM MAINTENANCE MODULE
@@ -1429,6 +1885,40 @@ END FUNCTION
 - Equipment replaced if needed
 
 **TRIGGER:** Maintenance due, breakdown reported
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["MAINTENANCE"]
+        S1["Maintenance due"]
+        S2["breakdown reported"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nHostel\nMess Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Maintenance schedules"]
+        D2["Repair requests"]
+        D3["Equipment breakdowns"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nHostel\nMess Management\nRecords"]
+
+    IMPACT1["Facilities maintained"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Repairs completed"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Equipment\nreplaced if needed"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 

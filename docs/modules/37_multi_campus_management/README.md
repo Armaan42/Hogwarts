@@ -495,6 +495,40 @@ Multi-Campus module needs to aggregate data from all campus-specific modules for
 - **Performance Comparison:** Benchmark campuses against each other
 - **Resource Optimization:** Identify resource gaps, surpluses
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Daily Sync: Automated\ndata sync at mi..."]
+        T2["Real-Time Updates:\nCritical data (adm..."]
+        T3["Monthly Consolidation:\nComprehensive ..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nALL CAMPUS MODULES"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Student Data"]
+        D2["Staff Data"]
+        D3["Financial Data"]
+        D4["Academic Data"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nALL CAMPUS MODULES"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ALL CAMPUS MODULES"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO STUDENT MANAGEMENT (ALL CAMPUSES)
@@ -564,6 +598,39 @@ FUNCTION ProcessInterCampusTransfer(studentID, sourceCampus, targetCampus):
   - Classes start at North Campus (25-Jun)
 - **Result:** Seamless transfer completed in 10 days
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Transfer Request\nSubmitted: Parent/st..."]
+        T2["Approval Granted:\nBoth principals app..."]
+        T3["Transfer Completed:\nStudent record up..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT\n(ALL CAMPUSES)"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Transfer Request"]
+        D2["Transfer Approval"]
+        D3["Transfer Execution"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT\n(ALL CAMPUSES)"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT\n(ALL CAMPUSES)"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO FINANCE MODULE (ALL CAMPUSES)
@@ -605,6 +672,39 @@ Centralized finance requires consolidated financial data from all campuses.
 - **Total Expenses:** ₹75 crores
 
 **Profit:** ₹5.1 crores (6.4% margin)
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Monthly Close: Consolidate\nfinancial ..."]
+        T2["Quarterly Review:\nGroup CFO reviews c..."]
+        T3["Annual Audit: External\nauditors revie..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nFINANCE MODULE (ALL CAMPUSES)"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Revenue Data"]
+        D2["Expense Data"]
+        D3["Budget Data"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFINANCE MODULE (ALL CAMPUSES)"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FINANCE MODULE (ALL CAMPUSES)"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 

@@ -291,6 +291,42 @@ END FUNCTION
  - Asthma well-controlled with inhaler
  - No other issues
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Admission: Medical\nrecords collected,..."]
+        T2["Infirmary Visit:\nHealth incident logg..."]
+        T3["Chronic Condition\nDiagnosed: Medical ..."]
+        T4["Emergency Hospitalization:\nIncident r..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Medical Profile"]
+        D2["Blood group"]
+        D3["Chronic conditions"]
+        D4["Allergies"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO PARENT ENGAGEMENT PORTAL
@@ -465,6 +501,42 @@ END FUNCTION
  - **Marks calendar:** Ensure Aarav available on April 15
  - **Satisfied:** Child's health well-monitored
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Infirmary Visit:\nParent notified imme..."]
+        T2["Emergency: Multi-channel\nurgent alert"]
+        T3["Vaccination Due:\nReminder sent 1 week..."]
+        T4["Health Screening\nScheduled: Notificat..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nPARENT ENGAGEMENT PORTAL"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Health Dashboard"]
+        D2["Medical profile"]
+        D3["Vaccination\nstatus and due dates"]
+        D4["Recent infirmary visits"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nPARENT ENGAGEMENT PORTAL"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate PARENT ENGAGEMENT PORTAL"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO ATTENDANCE MANAGEMENT MODULE
@@ -609,6 +681,42 @@ END FUNCTION
  - **Exam Eligibility:** Yes (95.2% > 75%)
  - **Medical leave:** Excluded from attendance calculation 
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Infirmary Rest:\nAttendance marked as ..."]
+        T2["Doctor Certificate\nSubmitted: Leave v..."]
+        T3["Hospitalization:\nMulti-day medical le..."]
+        T4["Chronic Condition:\nAttendance exempti..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nATTENDANCE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Medical Leave"]
+        D2["Infirmary rest"]
+        D3["Home rest"]
+        D4["Hospitalization"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nATTENDANCE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ATTENDANCE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 4. TO FEE MANAGEMENT MODULE
@@ -734,6 +842,42 @@ END FUNCTION
  - **April 10:** Insurance approves ₹60,000 (₹5,000 deductible)
  - **April 15:** ₹60,000 credited to parent's bank account
  - **Parent's net expense:** ₹5,000 (deductible)
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Admission: Health\ninsurance premium a..."]
+        T2["Medical Emergency:\nExpenses tracked f..."]
+        T3["Insurance Claim:\nReimbursement processed"]
+        T4["Medicine Dispensed:\nCost tracked (if ..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nFEE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Health Insurance Premium"]
+        D2["Annual premium"]
+        D3["Coverage details"]
+        D4["Claim process"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFEE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FEE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -881,6 +1025,42 @@ END FUNCTION
  - Sports restriction: 1 week no sports
  - **October (Week 2):** Ankle healed, returns to basketball
  - **March:** Completes basketball season, no further injuries
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Sports Season Start:\nFitness certific..."]
+        T2["Sports Injury: Treatment\nand recovery..."]
+        T3["Medical Condition\nDiagnosed: Sports r..."]
+        T4["Injury Recovery:\nReturn-to-play clear..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSPORTS & PHYSICAL EDUCATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Sports Fitness\nCertificate"]
+        D2["Annual medical check-up"]
+        D3["Fitness for\nsports participation"]
+        D4["Restrictions"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSPORTS & PHYSICAL EDUCATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate SPORTS & PHYSICAL EDUCATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -1035,6 +1215,42 @@ END FUNCTION
  - Aarav recovers, returns to room
  - Parent notified next morning: "Aarav had mild asthma attack, managed with inhaler"
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Boarder Admitted:\nHealth alerts sent ..."]
+        T2["Medicine Required:\nStock maintained i..."]
+        T3["Night Emergency:\nHostel nurse responds"]
+        T4["Chronic Condition:\nWarden briefed on ..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nHOSTEL MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Hostel Health Monitoring"]
+        D2["Chronic condition\nalerts to warden"]
+        D3["Medicine administration\nschedule"]
+        D4["Emergency protocols"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nHOSTEL MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate HOSTEL MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 7. TO ACADEMIC PERFORMANCE MODULE
@@ -1187,6 +1403,42 @@ END FUNCTION
  - Separate room: Small room, 1 invigilator
  - Breaks: 2 breaks taken (5 mins each)
  - **Result:** Ananya completes exam comfortably, scores 85%
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Medical Condition\nDiagnosed: Exam acc..."]
+        T2["Extended Illness:\nAcademic support ar..."]
+        T3["Mental Health Concern:\nCounseling + a..."]
+        T4["Exam\nSeason: Accommodations implemented"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nACADEMIC PERFORMANCE"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Exam Accommodations"]
+        D2["Extra time"]
+        D3["Separate room"]
+        D4["Scribe"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nACADEMIC PERFORMANCE"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ACADEMIC PERFORMANCE"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -1348,6 +1600,42 @@ END FUNCTION
  - All 3 recover fully (early treatment)
  - No school-wide outbreak
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Medical Emergency:\nMulti-channel urge..."]
+        T2["Vaccination\nDue: Reminder sent"]
+        T3["Health Screening\nScheduled: Notificat..."]
+        T4["Disease Outbreak:\nSchool-wide advisory"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nCOMMUNICATION & NOTIFICATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Emergency Alerts"]
+        D2["Medical emergency"]
+        D3["Disease outbreak"]
+        D4["Health advisory"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMMUNICATION & NOTIFICATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMMUNICATION & NOTIFICATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → Health & Wellness)
@@ -1368,6 +1656,40 @@ END FUNCTION
 
 **TRIGGER:** Admission, enrollment
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["STUDENT MANAGEMENT"]
+        S1["Admission"]
+        S2["enrollment"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nHealth Wellness"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["New admissions"]
+        D2["Student personal details"]
+        D3["Emergency contacts"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nHealth Wellness\nRecords"]
+
+    IMPACT1["Medical profiles\ncreated for new stud..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Vaccination verification\nduring admis..."]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Health screening\nscheduled"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM PARENT PORTAL
@@ -1387,6 +1709,41 @@ END FUNCTION
 
 **TRIGGER:** Parent uploads document, updates health info
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["PARENT PORTAL"]
+        S1["Parent uploads document"]
+        S2["updates health info"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nHealth Wellness"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Medical certificates"]
+        D2["Vaccination certificates"]
+        D3["Health condition updates"]
+        D4["Consent for\nmedical procedures"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nHealth Wellness\nRecords"]
+
+    IMPACT1["Medical records updated"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Leave validated"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Vaccinations\nmarked complete"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM SPORTS MODULE
@@ -1404,6 +1761,40 @@ END FUNCTION
 - Recovery monitored
 
 **TRIGGER:** Injury reported, fitness assessment needed
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["SPORTS"]
+        S1["Injury reported"]
+        S2["fitness assessment needed"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nHealth Wellness"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Injury reports"]
+        D2["Fitness assessment\nrequests"]
+        D3["Return-to-play\nclearance requests"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nHealth Wellness\nRecords"]
+
+    IMPACT1["Injuries treated\nand tracked"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Fitness certificates\nissued"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Recovery monitored"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -1423,6 +1814,40 @@ END FUNCTION
 
 **TRIGGER:** Boarder reports sick, medicine due
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["HOSTEL"]
+        S1["Boarder reports sick"]
+        S2["medicine due"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nHealth Wellness"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Night-time health issues"]
+        D2["Medicine\nadministration logs"]
+        D3["Chronic condition\nmonitoring"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nHealth Wellness\nRecords"]
+
+    IMPACT1["Health issues addressed"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Medicine\ncompliance tracked"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Warden supported\nin health management"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM ATTENDANCE MODULE
@@ -1439,6 +1864,39 @@ END FUNCTION
 - Leave validated
 
 **TRIGGER:** Medical leave applied, frequent absences
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["ATTENDANCE"]
+        S1["Medical leave applied"]
+        S2["frequent absences"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nHealth Wellness"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Leave applications"]
+        D2["Absence patterns"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nHealth Wellness\nRecords"]
+
+    IMPACT1["Medical certificates\nrequested"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Chronic conditions\ninvestigated"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Leave validated"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 

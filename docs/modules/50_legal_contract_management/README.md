@@ -160,6 +160,42 @@ Outcome:
 - No disputes in 1 year
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["New vendor onboarding"]
+        T2["Contract renewal\ndue (30 days before ..."]
+        T3["Contract\namendment request"]
+        T4["Vendor performance\nissue (penalty inv..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nPROCUREMENT\n& VENDOR MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Vendor contract templates"]
+        D2["Contract approval status"]
+        D3["Contract terms"]
+        D4["Renewal dates"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nPROCUREMENT\n& VENDOR MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate PROCUREMENT\n& VENDOR MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO HR MANAGEMENT MODULE
@@ -178,6 +214,42 @@ All employment contracts, offer letters, and HR policies must be legally complia
 **TRIGGER:** New hire, policy update, termination, legal dispute
 
 **IMPACT:** Legally compliant employment contracts, protected school interests
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["New hire"]
+        T2["policy update"]
+        T3["termination"]
+        T4["legal dispute"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nHR MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Employment\ncontract templates"]
+        D2["Offer letter templates"]
+        D3["HR policy documents"]
+        D4["Termination procedures"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nHR MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate HR MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -205,6 +277,40 @@ Board resolutions, policy decisions, and strategic plans must be legally documen
   - Policy implemented after legal clearance
 
 **TRIGGER:** Board meeting, resolution passed, policy approved
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["BOARD GOVERNANCE"]
+        S1["Board meeting"]
+        S2["resolution passed"]
+        S3["policy approved"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+
+    SEND["SEND Data to\nLegal Contract\nManagement"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Board resolutions"]
+        D2["Meeting minutes"]
+        D3["Policy approvals"]
+        D4["Strategic plans"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nLegal Contract\nManagement\nRecords"]
+
+    IMPACT1["Legal Documentation"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Compliance"]
+    IMPACT1 --> IMPACT2
+
+```
 
 ---
 

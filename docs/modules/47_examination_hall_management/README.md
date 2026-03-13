@@ -320,6 +320,42 @@ Success Metrics:
 Result: Exam conducted successfully, 178 students appeared, 2 re-exams scheduled.
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Exam scheduled\nin Assessment Module"]
+        T2["Seating arrangement\ngenerated"]
+        T3["Exam day\nattendance marked"]
+        T4["Answer sheets collected"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nASSESSMENT & EXAMS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Seating Arrangements"]
+        D2["Attendance Data"]
+        D3["Logistics Confirmation"]
+        D4["Data Volume"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nASSESSMENT & EXAMS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ASSESSMENT & EXAMS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO TEACHER MANAGEMENT MODULE
@@ -345,6 +381,40 @@ Invigilators (teachers) must be assigned for exam supervision. Duty allocation m
 - Workload balanced: No teacher overloaded
 - Compensation tracked: ₹500/duty = ₹5,000/teacher/year
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Exam scheduled"]
+        T2["Invigilators needed"]
+        T3["Teacher availability\nchecked"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nTEACHER MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Invigilator assignments"]
+        D2["Duty hours, compensation"]
+        D3["Availability constraints"]
+        D4["Data Volume"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nTEACHER MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate TEACHER MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → Examination Hall)
@@ -361,6 +431,30 @@ Invigilators (teachers) must be assigned for exam supervision. Duty allocation m
 **IMPACT:** Seating arrangements created based on exam schedule
 
 **TRIGGER:** Exam scheduled in Assessment Module
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["ASSESSMENT & EXAMS"]
+        S1["Exam scheduled\nin Assessment Module"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nExamination\nHall Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Exam schedule"]
+        D2["Student list, exam type"]
+        D3["Special requirements"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nExamination\nHall Management\nRecords"]
+
+    UPDATE --> DONE["Records\nUpdated"]
+```
 
 ---
 

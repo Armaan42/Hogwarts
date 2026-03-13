@@ -30,12 +30,69 @@
 **TRIGGER:** Notification requested  
 **IMPACT:** 150,000 messages/month sent via Integration Hub
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Notification requested"]
+    end
+
+    T1 --> FETCH
+
+    FETCH["FETCH Data for\nINTEGRATION HUB"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Message content"]
+        D2["recipient"]
+        D3["delivery status"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nINTEGRATION HUB"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate INTEGRATION HUB"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ### 2. TO STUDENT/PARENT MANAGEMENT
 
 **WHY:** Fetch recipient contact details for notifications.  
 **DATA FLOW:** Phone numbers, email addresses  
 **TRIGGER:** Message send requested  
 **IMPACT:** Accurate delivery to 3,600 parents, 1,800 students
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Message send requested"]
+    end
+
+    T1 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT/PARENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Phone numbers"]
+        D2["email addresses"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT/PARENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT/PARENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -46,6 +103,30 @@
 **WHY:** Every module sends notifications (fees, attendance, grades, events).  
 **DATA RECEIVED:** Notification requests from 50+ modules  
 **IMPACT:** Centralized communication hub for all school notifications
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["ALL MODULES"]
+        S1["Notification\nRequests Sent"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nUnified Communication\nEngine"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Notification requests\nfrom 50+ modules"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nUnified Communication\nEngine\nRecords"]
+
+    IMPACT1[" Centralized communication\nhub for al..."]
+    UPDATE --> IMPACT1
+
+```
 
 ---
 

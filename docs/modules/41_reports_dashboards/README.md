@@ -45,6 +45,36 @@ FUNCTION generate_annual_report():
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Report generation\nrequested"]
+    end
+
+    T1 --> FETCH
+
+    FETCH["FETCH Data for\nALL MODULES (DATA AGGREGATION)"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Student data"]
+        D2["fee data"]
+        D3["attendance"]
+        D4["grades"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nALL MODULES (DATA AGGREGATION)"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ALL MODULES (DATA AGGREGATION)"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → Reports)
@@ -56,6 +86,32 @@ END FUNCTION
 **DATA RECEIVED:** Real-time metrics, historical data, KPIs  
 **IMPACT:** Dashboards show live data from all modules  
 **TRIGGER:** Data changes in any module
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["ALL MODULES"]
+        S1["Data changes\nin any module"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nReports Dashboards"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Real-time metrics"]
+        D2["historical data"]
+        D3["KPIs"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nReports Dashboards\nRecords"]
+
+    IMPACT1[" Dashboards show\nlive data from all m..."]
+    UPDATE --> IMPACT1
+
+```
 
 ---
 

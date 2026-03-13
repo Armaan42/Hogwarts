@@ -198,6 +198,42 @@ END FUNCTION
   - Invoice: ₹8,500 + GST 18% = ₹10,030
   - Completion: 15-Jan-2026
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Utility Bill Received:\nRecord expense..."]
+        T2["Maintenance Work\nCompleted: Invoice r..."]
+        T3["Monthly Housekeeping:\nSalaries and su..."]
+        T4["Capital Project\nMilestone: Progress p..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nACCOUNTS & FINANCE"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Utility Expenses"]
+        D2["Maintenance Expenses"]
+        D3["Housekeeping Expenses"]
+        D4["Capital Expenditure"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nACCOUNTS & FINANCE"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ACCOUNTS & FINANCE"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO PROCUREMENT & VENDOR MODULE
@@ -289,6 +325,41 @@ END FUNCTION
   - Vendor: CleanPro Supplies
   - Delivery: Within 3 days
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Stock Below Threshold:\nAuto-generate ..."]
+        T2["Preventive Maintenance\nDue: Request v..."]
+        T3["Equipment Breakdown:\nEmergency servic..."]
+        T4["Contract Renewal:\nRenew AMC contracts"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nPROCUREMENT & VENDOR"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Purchase Requests"]
+        D2["Vendor Contracts"]
+        D3["Service Requests"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nPROCUREMENT & VENDOR"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate PROCUREMENT & VENDOR"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO TIMETABLE & SCHEDULING MODULE
@@ -334,6 +405,41 @@ Facility maintenance and cleaning must be scheduled around class timings to mini
   - Coordination: Timetable module confirms no summer classes
   - Execution: 5 technicians, 2 weeks to complete all rooms
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Maintenance Scheduled:\nCheck room ava..."]
+        T2["Emergency Repair:\nNotify timetable fo..."]
+        T3["Preventive Maintenance:\nSchedule duri..."]
+        T4["Deep Cleaning: Schedule\nduring exam p..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nTIMETABLE & SCHEDULING"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Class Schedules"]
+        D2["Maintenance Windows"]
+        D3["Room Booking"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nTIMETABLE & SCHEDULING"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate TIMETABLE & SCHEDULING"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 4. TO SECURITY & ACCESS CONTROL MODULE
@@ -370,6 +476,41 @@ Facilities staff and contractors need access to buildings and rooms for maintena
   - Track who accessed which rooms
   - Verify work completion
   - Investigate incidents
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Work Order Created:\nRequest access fo..."]
+        T2["Contractor Onboarding:\nTemporary acce..."]
+        T3["Emergency Repair:\nEmergency access gr..."]
+        T4["Work Completion:\nRevoke temporary access"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSECURITY & ACCESS CONTROL"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Access Requests"]
+        D2["Access Logs"]
+        D3["Emergency Access"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSECURITY & ACCESS CONTROL"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate SECURITY & ACCESS CONTROL"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -429,6 +570,39 @@ School events require facility setup (stage, seating, AV equipment, decorations)
     - Damage assessment: None
   - Total Facilities Staff: 8 persons
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Event Scheduled:\nFacility preparation..."]
+        T2["Event Day:\nSetup execution"]
+        T3["Event Completion:\nCleanup and restora..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nEVENTS & ACTIVITIES"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Event Requirements"]
+        D2["Facility Preparation"]
+        D3["Post-Event"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nEVENTS & ACTIVITIES"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate EVENTS & ACTIVITIES"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 6. TO HR & TEACHER MANAGEMENT MODULE
@@ -466,6 +640,41 @@ Housekeeping staff, maintenance technicians, and security guards are employees m
   - Well-trained staff
   - Consistent service quality
   - Quick issue resolution
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Staff Hiring: Onboard\nnew facilities ..."]
+        T2["Performance Review:\nQuarterly evaluation"]
+        T3["Training Required:\nSkill development ..."]
+        T4["Complaint Received:\nPerformance issue..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nHR & TEACHER MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Staff Information"]
+        D2["Work Schedules"]
+        D3["Performance"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nHR & TEACHER MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate HR & TEACHER MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -507,6 +716,41 @@ Facility conditions (cleanliness, air quality, temperature, lighting) directly i
   - Regular sanitization
   - Pest control
   - Water quality monitoring
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Health Complaint:\nInvestigate facilit..."]
+        T2["Outbreak: Deep cleaning\nand sanitization"]
+        T3["Inspection:\nEnvironmental audit"]
+        T4["Seasonal: AC maintenance\nbefore summe..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nHEALTH & WELLNESS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Environmental Monitoring"]
+        D2["Health Incidents"]
+        D3["Remediation"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nHEALTH & WELLNESS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate HEALTH & WELLNESS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 

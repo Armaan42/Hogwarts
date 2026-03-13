@@ -133,6 +133,40 @@ Result:
 - Other teachers save 2 hours (reuse plan) ✓
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Lesson Created:\nTeacher creates new l..."]
+        T2["Curriculum Updated:\nNew topics added ..."]
+        T3["Term Planning: Teachers\nplan lessons ..."]
+        T4["Audit Request: Admin\nreviews curricul..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nACADEMIC CURRICULUM"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Lesson Plans"]
+        D2["Curriculum Mapping"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nACADEMIC CURRICULUM"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ACADEMIC CURRICULUM"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO HR & STAFF MANAGEMENT MODULE
@@ -239,6 +273,40 @@ Result:
 - Mrs. Gupta recognized for collaboration ✓
 - Motivates other teachers to collaborate ✓
 - Data-driven, fair evaluation ✓
+```
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Monthly Report:\nCollaboration metrics..."]
+        T2["Appraisal Time:\nAnnual performance re..."]
+        T3["Award Nomination:\nTeacher nominated f..."]
+        T4["Promotion: Collaboration\nscore consid..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nHR & STAFF MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Collaboration Metrics"]
+        D2["Professional Development"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nHR & STAFF MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate HR & STAFF MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
 ```
 
 ---

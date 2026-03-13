@@ -151,6 +151,42 @@ END FUNCTION
  - Status: Alumni (from July 2024)
  - Career counselor: Ms. Mehta (10 sessions)
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Career assessment\ncompleted"]
+        T2["University application\nsubmitted"]
+        T3["Acceptance received"]
+        T4["Final university selected"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Career Profile"]
+        D2["Career interests"]
+        D3["Aptitude test results"]
+        D4["Personality assessment"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO ASSESSMENT & EXAMS MODULE
@@ -241,6 +277,40 @@ FUNCTION generate_university_transcript(student, grade_range):
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["University application\nrequires trans..."]
+        T2["Counselor needs\nperformance data"]
+        T3["Scholarship application"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nASSESSMENT & EXAMS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Academic Transcripts"]
+        D2["Grade 9-12 marks"]
+        D3["Board exam scores"]
+        D4["Subject-wise performance"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nASSESSMENT & EXAMS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ASSESSMENT & EXAMS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO DOCUMENT & CERTIFICATE MODULE
@@ -299,6 +369,40 @@ FUNCTION generate_recommendation_letter(student, recommender, university):
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["University application\ndocument request"]
+        T2["Scholarship application"]
+        T3["Visa documentation"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nDOCUMENT & CERTIFICATE"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Official transcripts"]
+        D2["Recommendation letters\nfrom teachers/..."]
+        D3["Character certificates"]
+        D4["Bonafide certificates"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nDOCUMENT & CERTIFICATE"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate DOCUMENT & CERTIFICATE"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 4. TO ALUMNI MODULE
@@ -324,6 +428,40 @@ Alumni mentorship programs connect current students with graduates. Alumni caree
  - Mentorship session scheduled
  - Arjun shares: Campus life, course difficulty, placement insights
  - Rohan gets insider perspective, strengthens application
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Student requests\nmentorship"]
+        T2["University-specific\nguidance needed"]
+        T3["Career pathway\nexploration"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nALUMNI"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Alumni career paths"]
+        D2["Alumni mentorship\navailability"]
+        D3["Alumni success stories"]
+        D4["University-specific\nalumni contacts"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nALUMNI"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ALUMNI"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -376,6 +514,42 @@ FUNCTION send_application_deadline_reminder(student, application, days_remaining
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Counseling\nsession scheduled"]
+        T2["Application\ndeadline approaching"]
+        T3["Acceptance received"]
+        T4["Workshop organized"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nCOMMUNICATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Counseling\nsession reminders"]
+        D2["Application\ndeadline alerts"]
+        D3["University acceptance\nnotifications"]
+        D4["Workshop/seminar\ninvitations"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMMUNICATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMMUNICATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 6. TO FEE MANAGEMENT MODULE
@@ -401,6 +575,40 @@ University application fees, entrance exam fees, counseling session fees tracked
  - TOEFL fee: $185 (₹15,355)
  - Total: ₹51,460
  - Fee module generates invoice, tracks payment
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["University application\nsubmitted"]
+        T2["Entrance\nexam registration"]
+        T3["Counseling session booked"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nFEE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Application fees"]
+        D2["Entrance exam fees"]
+        D3["Counseling session fees"]
+        D4["Document processing fees"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFEE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FEE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -430,6 +638,40 @@ Entrance exam scores (JEE, NEET, SAT, ACT, IELTS, TOEFL) are critical for univer
  - UC Berkeley (1330-1530) - Target
  - Purdue (1190-1430) - Safety
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Exam registration"]
+        T2["Score released"]
+        T3["University requires score"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nEXTERNAL EXAMINATIONS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Exam registration details"]
+        D2["Exam scores and ranks"]
+        D3["Percentiles"]
+        D4["Score reports"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nEXTERNAL EXAMINATIONS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate EXTERNAL EXAMINATIONS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 8. TO PARENT PORTAL
@@ -458,6 +700,42 @@ Parents track child's career journey: counseling sessions, university applicatio
  - Upcoming deadlines: Stanford (March 20), Cornell (March 25)
  - Parent can view all details, track progress
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Career assessment\ncompleted"]
+        T2["Application\nstatus updated"]
+        T3["Counseling\nsession conducted"]
+        T4["Acceptance received"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nPARENT PORTAL"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Career assessment results"]
+        D2["University\napplication status"]
+        D3["Counseling session notes"]
+        D4["Acceptance/rejection\nupdates"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nPARENT PORTAL"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate PARENT PORTAL"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → Career Guidance)
@@ -481,6 +759,43 @@ Parents track child's career journey: counseling sessions, university applicatio
 
 **TRIGGER:** Student enrollment, stream selection, profile update
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["STUDENT MANAGEMENT"]
+        S1["Student enrollment"]
+        S2["stream selection"]
+        S3["profile update"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+
+    SEND["SEND Data to\nCareer Guidance\nUniversity"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Student demographics"]
+        D2["Academic interests"]
+        D3["Stream selection"]
+        D4["Extracurricular\nactivities"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nCareer Guidance\nUniversity\nRecords"]
+
+    IMPACT1["Priya (Grade\n11, Science PCB)"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Stream: Science\nPCB → Career path: Me..."]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Extracurriculars:\nScience club presid..."]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM ASSESSMENT MODULE
@@ -501,6 +816,41 @@ Parents track child's career journey: counseling sessions, university applicatio
 
 **TRIGGER:** Exam results published, transcript requested
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["ASSESSMENT"]
+        S1["Exam results published"]
+        S2["transcript requested"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nCareer Guidance\nUniversity"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Grade-wise marks"]
+        D2["Board exam scores"]
+        D3["Subject\nstrengths/weaknesses"]
+        D4["Class rank, percentile"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nCareer Guidance\nUniversity\nRecords"]
+
+    IMPACT1["Rohan (Grade 12)"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Performance: 95%\n(Math 98%, Physics 9..."]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Rank: 2/180"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM EXTERNAL EXAMINATIONS
@@ -520,6 +870,39 @@ Parents track child's career journey: counseling sessions, university applicatio
  - Application strategy adjusted based on score
 
 **TRIGGER:** Exam score released
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["EXTERNAL EXAMINATIONS"]
+        S1["Exam score released"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nCareer Guidance\nUniversity"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["JEE Main/Advanced scores"]
+        D2["NEET scores"]
+        D3["SAT/ACT scores"]
+        D4["IELTS/TOEFL scores"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nCareer Guidance\nUniversity\nRecords"]
+
+    IMPACT1["Aarav's SAT score: 1480"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Career module updates\nuniversity reco..."]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["MIT (reach), UC\nBerkeley (target), Pu..."]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -1077,6 +1460,42 @@ FUNCTION predict_university_acceptance(student, university):
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Application submitted"]
+        T2["Acceptance received"]
+        T3["Scholarship awarded"]
+        T4["Academic year ends"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nANALYTICS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Acceptance Rate Analytics"]
+        D2["Scholarship Analytics"]
+        D3["Counselor Performance"]
+        D4["Predictive Modeling"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nANALYTICS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ANALYTICS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 10. TO LMS MODULE
@@ -1117,6 +1536,42 @@ Career preparation courses delivered via LMS. University application workshops. 
   - Completion rate: 95%
   - Student feedback: 4.6/5
   - Result: Improved essay quality, higher acceptance rates
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Student enrolls\nin career prep course"]
+        T2["Course completed"]
+        T3["Assessment taken"]
+        T4["Timing: Real-time"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nLMS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Career Preparation\nCourses"]
+        D2["Test Prep Courses"]
+        D3["Course Completion"]
+        D4["Data Volume"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nLMS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate LMS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 

@@ -166,6 +166,42 @@ Outcome:
 - Financial discipline maintained
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Annual budget\nmeeting (June)"]
+        T2["Quarterly\nfinancial review"]
+        T3["Major expense\nproposal (>₹10L)"]
+        T4["Fee revision proposal"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nFINANCE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Budget approvals"]
+        D2["Capital expenditure\napprovals"]
+        D3["Fee structure changes"]
+        D4["Salary revisions"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFINANCE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FINANCE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO HR MANAGEMENT MODULE
@@ -183,6 +219,40 @@ Board approves key HR policies, senior appointments, salary structures, and empl
 **TRIGGER:** Senior position vacancy, policy revision, salary review
 
 **IMPACT:** Principal appointment approved, new HR policy implemented
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Senior position vacancy"]
+        T2["policy revision"]
+        T3["salary review"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nHR MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Senior appointments"]
+        D2["Salary structure\napprovals"]
+        D3["HR policies"]
+        D4["Termination approvals"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nHR MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate HR MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -213,6 +283,40 @@ Finance module provides financial reports, audit findings, and budget performanc
   - Follow-up in next meeting
 
 **TRIGGER:** Month-end close, quarter-end, annual audit completion
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["FINANCE MANAGEMENT"]
+        S1["Month-end close"]
+        S2["quarter-end"]
+        S3["annual audit completion"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+
+    SEND["SEND Data to\nBoard Governance"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Monthly financial\nstatements"]
+        D2["Quarterly\nfinancial reports"]
+        D3["Annual audit reports"]
+        D4["Budget vs actual analysis"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nBoard Governance\nRecords"]
+
+    IMPACT1["Financial Oversight"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Audit Compliance"]
+    IMPACT1 --> IMPACT2
+
+```
 
 ---
 

@@ -305,12 +305,69 @@ Dec | 40,000 kWh | ₹3.2L
 **TRIGGER:** Daily automated readings  
 **IMPACT:** Monthly report shows 20% energy reduction
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Daily automated readings"]
+    end
+
+    T1 --> FETCH
+
+    FETCH["FETCH Data for\nFACILITIES MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Energy meters"]
+        D2["water meters"]
+        D3["waste collection data"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFACILITIES MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FACILITIES MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ### 2. TO FINANCE MODULE
 
 **WHY:** Budget allocation for green initiatives, cost savings tracking.  
 **DATA FLOW:** Green initiative costs, savings from solar/LED  
 **TRIGGER:** Monthly budget review  
 **IMPACT:** ₹5L annual savings from solar panels
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Monthly budget review"]
+    end
+
+    T1 --> FETCH
+
+    FETCH["FETCH Data for\nFINANCE"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Green initiative costs"]
+        D2["savings from solar/LED"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFINANCE"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FINANCE"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -321,6 +378,31 @@ Dec | 40,000 kWh | ₹3.2L
 **WHY:** Facility upgrades (solar panels, LED lights) tracked.  
 **DATA RECEIVED:** Installation dates, equipment specs  
 **IMPACT:** Solar capacity: 300kW, LED conversion: 100%
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["FACILITIES"]
+        S1["Facility Upgrade\nCompleted"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nSustainability\nGreen Initiatives"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Installation dates"]
+        D2["equipment specs"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nSustainability\nGreen Initiatives\nRecords"]
+
+    IMPACT1[" Solar capacity:\n300kW, LED conversio..."]
+    UPDATE --> IMPACT1
+
+```
 
 ---
 

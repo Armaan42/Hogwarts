@@ -191,6 +191,41 @@ Arts participation is part of student records. Arts module sends participation d
   - College applications benefit
   - Well-rounded development
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Program Enrollment:\nUpdate student re..."]
+        T2["Performance:\nLog participation"]
+        T3["Achievement: Add\nto student achievements"]
+        T4["Portfolio Update:\nAdd artwork, perfor..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Activity Participation"]
+        D2["Achievements"]
+        D3["Skill Development"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO EVENTS MODULE
@@ -216,6 +251,39 @@ Cultural events and performances are managed by Events module. Arts module sends
 - **Exhibition Planned:** Add to events calendar
 - **Rehearsal:** Book venue
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Performance Scheduled:\nCreate event"]
+        T2["Exhibition Planned:\nAdd to events cal..."]
+        T3["Rehearsal: Book venue"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nEVENTS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Annual Function"]
+        D2["Cultural Festivals"]
+        D3["Exhibitions"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nEVENTS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate EVENTS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO COMMUNICATION MODULE
@@ -240,6 +308,39 @@ Arts events need communication. Arts module sends announcements, invitations via
 - **Performance Scheduled:** Send invitations
 - **Auditions Open:** Announce to students
 - **Awards Won:** Share achievements
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Performance Scheduled:\nSend invitations"]
+        T2["Auditions Open:\nAnnounce to students"]
+        T3["Awards Won:\nShare achievements"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nCOMMUNICATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Performance Invitations"]
+        D2["Audition Announcements"]
+        D3["Achievement Announcements"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMMUNICATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMMUNICATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 

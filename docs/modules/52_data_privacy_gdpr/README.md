@@ -280,6 +280,42 @@ END FUNCTION
   - Response: "Data must be retained until 2026-03-15 (legal requirement)"
   - After 7 years: Data automatically anonymized/deleted
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Admission: Collect\nconsent for data p..."]
+        T2["Data Subject Access\nRequest: Student/..."]
+        T3["Erasure Request:\nWithdrawn student re..."]
+        T4["Data Breach: Notify\naffected students..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Consent Records"]
+        D2["Data Subject\nRights Requests"]
+        D3["Data Retention Policies"]
+        D4["Privacy Notices"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO HR & TEACHER MANAGEMENT MODULE
@@ -364,6 +400,41 @@ END FUNCTION
   - After 6 months (if not hired): Application data deleted
   - If hired: Data retained during employment + 7 years post-resignation
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Hiring: Collect\nconsent for backgroun..."]
+        T2["Employee SAR: Teacher\nrequests all HR..."]
+        T3["Resignation: Start\nretention countdown"]
+        T4["Retention Expiry:\nAuto-delete former ..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nHR & TEACHER MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Employee Consent"]
+        D2["Employee Rights"]
+        D3["Data Retention"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nHR & TEACHER MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate HR & TEACHER MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO FEE MANAGEMENT MODULE
@@ -433,6 +504,39 @@ END FUNCTION
   - Bank account: XXXX1234 (encrypted in database)
   - Payment history visible to Mr. Sharma only
   - After 7 years: Payment record anonymized (amount retained for stats, personal details deleted)
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Payment: Record\nwith encryption"]
+        T2["SAR: Export\npayment history"]
+        T3["Retention Expiry:\nDelete old payment ..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nFEE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Payment Data"]
+        D2["Consent"]
+        D3["Data Retention"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFEE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FEE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -537,6 +641,41 @@ END FUNCTION
   - School nurse accesses medical record
   - Sees: Asthma diagnosis, inhaler location, emergency contact
   - Audit log: "Medical data accessed by nurse.sharma@hogwarts.edu.in, Reason: Emergency"
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Health Record Creation:\nObtain explic..."]
+        T2["Medical Emergency:\nLog access to heal..."]
+        T3["SAR: Export health\nrecords (with extr..."]
+        T4["Retention Expiry:\nDelete medical reco..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nHEALTH & WELLNESS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Medical Data"]
+        D2["Consent"]
+        D3["Access Control"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nHEALTH & WELLNESS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate HEALTH & WELLNESS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 

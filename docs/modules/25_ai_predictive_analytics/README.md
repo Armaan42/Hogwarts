@@ -235,6 +235,41 @@ END FUNCTION
   - Tutoring started: 20-Jan-2026
   - **Result (3 months later):** GPA improved to 2.7, attendance 88%, dropout risk reduced to MEDIUM
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Weekly Analysis:\nBatch prediction for..."]
+        T2["Real-time Alert:\nHigh dropout risk de..."]
+        T3["Exam Approaching:\nPerformance predict..."]
+        T4["Intervention Needed:\nCounselor notified"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Performance Predictions"]
+        D2["Dropout Risk Scores"]
+        D3["Learning Recommendations"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO ACADEMIC & CURRICULUM MODULE
@@ -289,6 +324,39 @@ AI analyzes curriculum effectiveness, identifies difficult topics, and recommend
 - **Implementation:** Next academic year
 - **Result:** Failure rate reduced to 18%
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["End of Unit: Analyze\ntopic performance"]
+        T2["Exam Results:\nIdentify weak areas"]
+        T3["Curriculum Review:\nAnnual analysis"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nACADEMIC & CURRICULUM"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Topic Difficulty Analysis"]
+        D2["Curriculum Effectiveness"]
+        D3["Teacher Performance"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nACADEMIC & CURRICULUM"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ACADEMIC & CURRICULUM"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO HR & TEACHER MANAGEMENT MODULE
@@ -328,6 +396,39 @@ AI analyzes teacher performance, identifies training needs, and predicts staffin
   - Personalized professional development
   - Peer learning opportunities
   - Career path guidance
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Quarterly Review:\nTeacher performance..."]
+        T2["Annual Planning:\nStaffing forecast"]
+        T3["Performance Issues:\nTraining recommen..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nHR & TEACHER MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Teacher Performance\nAnalytics"]
+        D2["Staffing Predictions"]
+        D3["Training Recommendations"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nHR & TEACHER MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate HR & TEACHER MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -379,6 +480,39 @@ AI predicts enrollment trends, identifies high-potential leads, and optimizes ad
   - Lead A: 85% enrollment probability (high income, sibling, nearby)
   - Lead B: 45% enrollment probability (far location, price-sensitive)
   - **Strategy:** Prioritize Lead A, offer scholarship to Lead B
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Admission Season:\nLead scoring"]
+        T2["Annual Planning:\nEnrollment forecast"]
+        T3["Marketing Campaign:\nROI analysis"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nADMISSIONS & CRM"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Enrollment Forecasting"]
+        D2["Lead Scoring"]
+        D3["Marketing Optimization"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nADMISSIONS & CRM"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ADMISSIONS & CRM"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -479,6 +613,39 @@ END FUNCTION
     4. Escalate to principal if no response in 3 days
 - **Outcome:** Family accepted installment plan, paid in full over 3 months
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Fee Due: Predict\npayment probability"]
+        T2["Payment Overdue:\nEscalate based on ri..."]
+        T3["New Admission:\nRecommend payment plan"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nFEE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Payment Behavior\nPrediction"]
+        D2["Optimal Payment Plan"]
+        D3["Collection Optimization"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFEE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FEE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 6. TO HEALTH & WELLNESS MODULE
@@ -528,6 +695,39 @@ AI predicts disease outbreaks, identifies health trends, and provides early warn
     4. Monitor for 5 days
   - Outcome: 3 more cases detected early, isolated, outbreak contained
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Illness Spike:\nPredict outbreak"]
+        T2["Chronic Condition:\nMonitor adherence"]
+        T3["Behavioral Changes:\nFlag mental healt..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nHEALTH & WELLNESS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Disease Outbreak\nPrediction"]
+        D2["Student Health Risk"]
+        D3["Mental Health Indicators"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nHEALTH & WELLNESS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate HEALTH & WELLNESS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 7. TO BEHAVIOR & DISCIPLINE MODULE
@@ -566,6 +766,39 @@ AI identifies behavior patterns, predicts discipline issues, and detects bullyin
   - Victims supported early
   - Bullies counseled
   - Safer school environment
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Behavior Change:\nFlag for counseling"]
+        T2["Repeated Incidents:\nPredict escalation"]
+        T3["Social Isolation:\nDetect bullying"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nBEHAVIOR & DISCIPLINE"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Behavior Pattern Analysis"]
+        D2["Bullying Detection"]
+        D3["Conflict Prediction"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nBEHAVIOR & DISCIPLINE"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate BEHAVIOR & DISCIPLINE"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 

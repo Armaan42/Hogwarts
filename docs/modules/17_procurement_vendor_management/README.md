@@ -178,6 +178,42 @@ END FUNCTION
  - **Jan 20:** Payment processed: ₹8,750 to PaperWorld
  - **Edge Case:** If 5 reams damaged → Rejected, Return note created, Only 45 reams accepted
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Stock level ≤ reorder\nlevel (automate..."]
+        T2["Manual PR from\ndepartment head"]
+        T3["Scheduled bulk procurement\n(quarterly..."]
+        T4["Timing: Real-time\nfor urgent items, B..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nINVENTORY & ASSET MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Purchase Requisitions\n(Inventory → Pr..."]
+        D2["Item name, category,\nspecification"]
+        D3["Quantity required,\nreorder quantity"]
+        D4["Current stock\nlevel, reorder level"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nINVENTORY & ASSET MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate INVENTORY & ASSET MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO ACCOUNTS & FINANCE MODULE
@@ -291,6 +327,42 @@ END FUNCTION
  - Approved: Additional ₹3 lakh allocated
  - PO issued: ₹8 lakh
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["PO approved and issued"]
+        T2["GRN created\n(goods received)"]
+        T3["Payment due\ndate approaching"]
+        T4["Timing: Real-time\nfor PO, Batch GRN p..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nACCOUNTS & FINANCE"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Purchase Orders"]
+        D2["PO number, date, vendor"]
+        D3["Line items"]
+        D4["Total PO value"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nACCOUNTS & FINANCE"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ACCOUNTS & FINANCE"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO VENDOR DATABASE MODULE
@@ -386,6 +458,42 @@ FUNCTION update_vendor_performance(vendor, po):
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["RFQ creation\n(vendor lookup)"]
+        T2["GRN processing\n(performance update)"]
+        T3["Monthly vendor review"]
+        T4["Timing: Real-time\nfor RFQ, Batch perf..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nVENDOR DATABASE"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Vendor Information\n(Vendor DB → Procu..."]
+        D2["Vendor name,\nregistration number"]
+        D3["Category"]
+        D4["Contact details,\nbank account"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nVENDOR DATABASE"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate VENDOR DATABASE"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → Procurement)
@@ -409,6 +517,41 @@ END FUNCTION
 
 **TRIGGER:** Stock ≤ reorder level, Manual PR from department
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["INVENTORY"]
+        S1["Stock ≤ reorder level"]
+        S2["Manual PR from department"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nProcurement\nVendor Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Purchase requisitions"]
+        D2["Item specifications,\nquantities"]
+        D3["Urgency levels"]
+        D4["Budget codes"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nProcurement\nVendor Management\nRecords"]
+
+    IMPACT1["Automated Reordering"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["500+ automated PRs/month"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["95% conversion to POs"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM ACCOUNTS MODULE
@@ -429,6 +572,43 @@ END FUNCTION
 
 **TRIGGER:** Budget approved, Payment due, Financial year start
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["ACCOUNTS"]
+        S1["Budget approved"]
+        S2["Payment due"]
+        S3["Financial year start"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+
+    SEND["SEND Data to\nProcurement\nVendor Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Annual budget allocation\nper department"]
+        D2["Budget codes and limits"]
+        D3["Payment approval status"]
+        D4["Vendor payment schedules"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nProcurement\nVendor Management\nRecords"]
+
+    IMPACT1["Budget Control"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Annual procurement\nbudget: ₹18 crore"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Monthly tracking\nprevents overspending"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM FACILITIES MODULE
@@ -447,6 +627,42 @@ END FUNCTION
  - 99% uptime for critical facilities
 
 **TRIGGER:** Scheduled maintenance, Breakdown, Contract renewal
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["FACILITIES"]
+        S1["Scheduled maintenance"]
+        S2["Breakdown"]
+        S3["Contract renewal"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+
+    SEND["SEND Data to\nProcurement\nVendor Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Maintenance\npart requirements"]
+        D2["Service contracts"]
+        D3["Urgent repair needs"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nProcurement\nVendor Management\nRecords"]
+
+    IMPACT1["Maintenance Support"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["200+ maintenance PRs/year"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["24-hour turnaround\nfor urgent items"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -839,6 +1055,42 @@ FUNCTION send_rfq_to_vendors(rfq, vendors):
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["RFQ created"]
+        T2["PO issued"]
+        T3["Approval required"]
+        T4["Goods delivered"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nCOMMUNICATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["RFQ Notifications"]
+        D2["PO Confirmations"]
+        D3["Approval Workflows"]
+        D4["Delivery Updates"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMMUNICATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMMUNICATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 5. TO ANALYTICS MODULE
@@ -894,6 +1146,42 @@ Procurement data analyzed for spend optimization, vendor performance trends, cat
   - Reason: New science batches (Grade 11, 12)
   - Recommendation: Negotiate annual contract for bulk discount
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["PO created"]
+        T2["GRN processed"]
+        T3["Payment made"]
+        T4["Month end"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nANALYTICS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Spend Analytics"]
+        D2["Vendor Performance"]
+        D3["Budget Analytics"]
+        D4["Procurement Efficiency"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nANALYTICS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ANALYTICS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 6. TO COMPLIANCE & AUDIT MODULE
@@ -942,6 +1230,42 @@ Procurement processes must comply with board policies, government regulations (G
   - Input tax credit: ₹18 lakh/month
   - All vendor GST numbers verified
   - Zero compliance issues
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["PO created"]
+        T2["Approval granted"]
+        T3["Payment processed"]
+        T4["Audit scheduled"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nCOMPLIANCE & AUDIT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Procurement\nPolicy Compliance"]
+        D2["Tax Compliance"]
+        D3["Audit Trail"]
+        D4["Regulatory Compliance"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMPLIANCE & AUDIT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMPLIANCE & AUDIT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 

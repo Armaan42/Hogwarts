@@ -280,6 +280,42 @@ END FUNCTION
  - **April 10:** ID card generated and dispatched
  - **April 15:** Classes begin, Priya attends first day
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Admission Confirmed:\nFee payment rece..."]
+        T2["Enrollment Complete:\nStudent record c..."]
+        T3["Section Assignment:\nStudent allocated..."]
+        T4["Portal Access: Parent\nand student log..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Personal Information"]
+        D2["Full Name"]
+        D3["Date of Birth"]
+        D4["Gender"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO FEE MANAGEMENT MODULE
@@ -515,6 +551,42 @@ END FUNCTION
  - Priya's annual fee: ₹1,50,000 → ₹1,35,000 (10% sibling discount)
  - Aarav's annual fee: ₹1,20,000 → ₹1,08,000 (10% sibling discount)
  - **Total family saving:** ₹27,000/year
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Registration Fee\nPaid: Application fo..."]
+        T2["Admission Offer\nMade: Fee payment lin..."]
+        T3["Admission Fee Paid:\nSeat confirmed, s..."]
+        T4["Payment Deadline\nMissed: Seat release..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nFEE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Admission Fee Structure"]
+        D2["Registration fee: ₹10,000"]
+        D3["Admission fee: ₹40,000"]
+        D4["Security/Caution\ndeposit: ₹10,000"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFEE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FEE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -826,6 +898,42 @@ END FUNCTION
  - **April 10:** Orientation attended
  - **April 15:** First day of school, Rohan joins Grade 9, Section A
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Inquiry Submitted:\nInstant acknowledg..."]
+        T2["Application Submitted:\nConfirmation +..."]
+        T3["Test Scheduled:\nAdmit card sent 7 day..."]
+        T4["Interview Scheduled:\nNotification sen..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nCOMMUNICATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Inquiry Stage"]
+        D2["Inquiry acknowledgment"]
+        D3["School information\nbrochure"]
+        D4["Open house invitation"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMMUNICATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMMUNICATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 4. TO ASSESSMENT MODULE
@@ -1013,6 +1121,42 @@ END FUNCTION
  - **Priya:** 263/300 (87.67%), Percentile 92nd → Direct offer
  - **Aarav:** 245/300 (81.67%), Percentile 78th → Interview required
  - **Rohan:** 195/300 (65%), Percentile 35th → Not shortlisted
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Test Scheduled:\nApplicants notified, ..."]
+        T2["Test Conducted:\nAnswer sheets collect..."]
+        T3["Results Published:\nScores sent to app..."]
+        T4["Cutoff Announced:\nAdmission offers ma..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nASSESSMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Entrance Test Schedule"]
+        D2["Test date, time, venue"]
+        D3["Test duration"]
+        D4["Subjects tested"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nASSESSMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ASSESSMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -1248,6 +1392,42 @@ END FUNCTION
  - First day: April 15
  - Download: School handbook, fee schedule, uniform details
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Application Submitted:\nDashboard acti..."]
+        T2["Test Results Published:\nScores displayed"]
+        T3["Admission Decision:\nOffer/Waitlist/Re..."]
+        T4["Payment Received:\nStatus updated to '..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nPARENT PORTAL"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Application Dashboard"]
+        D2["Application status"]
+        D3["Application\nnumber and date"]
+        D4["Applied grade\nand category"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nPARENT PORTAL"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate PARENT PORTAL"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 6. TO TIMETABLE MODULE
@@ -1375,6 +1555,40 @@ END FUNCTION
  - 7 students (60-70% scores)
  - Ensures balanced class performance
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Admission Season\nEnd: Final admission..."]
+        T2["Section Capacity\nExceeded: New sectio..."]
+        T3["Student Enrolled:\nSection assignment ..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nTIMETABLE"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Grade-wise\nAdmission Count"]
+        D2["Total admissions\nper grade"]
+        D3["Section capacity"]
+        D4["Number of\nsections required"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nTIMETABLE"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate TIMETABLE"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 7. TO TRANSPORT MODULE
@@ -1461,6 +1675,40 @@ END FUNCTION
  - Transport fee: ₹18,000/year
  - RFID card: #TR-2024-0567
  - First day: Bus arrives at 7:25 AM, Aarav boards with RFID
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Admission Confirmed:\nTransport enroll..."]
+        T2["Address Provided:\nRoute assignment ca..."]
+        T3["Transport Enrolled:\nRFID card issued"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nTRANSPORT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Transport\nEnrollment Request"]
+        D2["Student residential\naddress"]
+        D3["Distance from school"]
+        D4["Transport required"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nTRANSPORT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate TRANSPORT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -1607,6 +1855,40 @@ END FUNCTION
  - Boarding discount (10%): -₹10,800
  - **Total: ₹2,47,200/year**
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Admission Confirmed:\nHostel allocatio..."]
+        T2["Boarding Requested:\nRoom assigned"]
+        T3["Mess Enrolled:\nMeal card issued"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nHOSTEL"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Boarding Request"]
+        D2["Student requires hostel"]
+        D3["Room preference"]
+        D4["Dietary preference"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nHOSTEL"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate HOSTEL"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → Admissions)
@@ -1630,6 +1912,41 @@ END FUNCTION
 
 **TRIGGER:** Lead captured online, event registration
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["MARKETING & WEBSITE"]
+        S1["Lead captured online"]
+        S2["event registration"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nAdmissions Crm"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Website inquiry forms"]
+        D2["Open house registrations"]
+        D3["Ad campaign leads"]
+        D4["School tour requests"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAdmissions Crm\nRecords"]
+
+    IMPACT1["2,000 inquiries\ngenerated per admissi..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["60% convert to\napplications (1,200)"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["40% of applications\nget admission (480)"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM STUDENT MANAGEMENT
@@ -1649,6 +1966,38 @@ END FUNCTION
 
 **TRIGGER:** Application submitted with sibling reference
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["STUDENT MANAGEMENT"]
+        S1["Application submitted\nwith sibling re..."]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nAdmissions Crm"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Current students list"]
+        D2["Sibling relationships"]
+        D3["Alumni database"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAdmissions Crm\nRecords"]
+
+    IMPACT1["Priya (current Grade\n9) has brother A..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Sibling preference:\nPriority admissio..."]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Both siblings get\n10% annual fee disc..."]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM FEE MANAGEMENT
@@ -1667,6 +2016,40 @@ END FUNCTION
 - Student record creation triggered
 
 **TRIGGER:** Payment received, receipt generated
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["FEE MANAGEMENT"]
+        S1["Payment received"]
+        S2["receipt generated"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nAdmissions Crm"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Payment status"]
+        D2["Payment receipts"]
+        D3["Transaction IDs"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAdmissions Crm\nRecords"]
+
+    IMPACT1["Admission offered\nto Rohan, deadline ..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Payment received March 18"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Admission auto-confirmed"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 
@@ -1688,6 +2071,39 @@ END FUNCTION
 
 **TRIGGER:** Test results published
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["ASSESSMENT"]
+        S1["Test results published"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nAdmissions Crm"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Test scores"]
+        D2["Percentile rankings"]
+        D3["Cutoff marks"]
+        D4["Merit list"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAdmissions Crm\nRecords"]
+
+    IMPACT1["Cutoff: 70% (210/300)"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Aarav: 245/300\n(82%) → Shortlisted"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Rohan: 195/300\n(65%) → Not shortlisted"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM PARENT PORTAL
@@ -1707,6 +2123,41 @@ END FUNCTION
 - Document verification automated
 
 **TRIGGER:** Application submitted, document uploaded
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["PARENT PORTAL"]
+        S1["Application submitted"]
+        S2["document uploaded"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Data to\nAdmissions Crm"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Online application forms"]
+        D2["Document uploads"]
+        D3["Payment confirmations"]
+        D4["Communication preferences"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAdmissions Crm\nRecords"]
+
+    IMPACT1["1,200 applications\nsubmitted online (..."]
+    UPDATE --> IMPACT1
+
+    IMPACT2["1,000 complete\nwith all documents (83%)"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["200 incomplete,\nreminders sent (17%)"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 

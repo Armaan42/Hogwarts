@@ -303,6 +303,38 @@ Alumni donations need to be tracked and managed. Alumni module sends donation da
   - 80G certificates for tax deductions
   - Audit trail
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Donation Made: Log\ndonation, send to ..."]
+        T2["Tax Receipt Requested:\nGenerate 80G c..."]
+        T3["Annual Report: Include\ndonor recognition"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nDONATIONS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Donation Information"]
+        D2["Tax Receipt"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nDONATIONS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate DONATIONS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO COMMUNICATION MODULE
@@ -329,6 +361,39 @@ Alumni need regular communication for engagement. Alumni module sends communicat
 - **Event Created:** Send invitations to relevant alumni
 - **Alumni Birthday:** Send birthday wishes
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Newsletter Schedule:\nSend monthly new..."]
+        T2["Event Created: Send\ninvitations to re..."]
+        T3["Alumni Birthday:\nSend birthday wishes"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nCOMMUNICATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Newsletters"]
+        D2["Event Invitations"]
+        D3["Personalized Messages"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMMUNICATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMMUNICATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO STUDENT MANAGEMENT
@@ -350,6 +415,38 @@ Mentorship program connects alumni with current students. Alumni module sends me
 - **Mentorship Match:** Notify student, update student record
 - **Career Talk Scheduled:** Add to student calendar
 - **Mentorship Completed:** Update student achievements
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Mentorship Match:\nNotify student, upd..."]
+        T2["Career Talk Scheduled:\nAdd to student..."]
+        T3["Mentorship Completed:\nUpdate student ..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Mentorship Matches"]
+        D2["Career Talks"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 

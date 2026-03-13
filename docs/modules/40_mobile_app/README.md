@@ -41,6 +41,38 @@ FUNCTION load_mobile_dashboard(student_id):
 END FUNCTION
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["App opened"]
+        T2["pull-to-refresh"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Student profile"]
+        D2["attendance %"]
+        D3["grades"]
+        D4["achievements"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO ATTENDANCE MODULE
@@ -50,6 +82,36 @@ END FUNCTION
 **DATA FLOW:** QR code data, timestamp, location, student ID  
 **TRIGGER:** Student scans QR code  
 **IMPACT:** Attendance marked automatically, parent notified
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Student scans QR code"]
+    end
+
+    T1 --> FETCH
+
+    FETCH["FETCH Data for\nATTENDANCE"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["QR code data"]
+        D2["timestamp"]
+        D3["location"]
+        D4["student ID"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nATTENDANCE"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ATTENDANCE"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -62,6 +124,32 @@ END FUNCTION
 **DATA RECEIVED:** Notification title, body, action URL  
 **IMPACT:** Student receives "Assignment due tomorrow" notification  
 **TRIGGER:** Communication module sends notification
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["COMMUNICATION"]
+        S1["Communication module\nsends notification"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nMobile App"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Notification title"]
+        D2["body"]
+        D3["action URL"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nMobile App\nRecords"]
+
+    IMPACT1[" Student receives\n'Assignment due tom..."]
+    UPDATE --> IMPACT1
+
+```
 
 ---
 

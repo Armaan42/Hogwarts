@@ -150,6 +150,42 @@ Outcome:
 - System working as designed
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["New student enrollment\n(dietary prefe..."]
+        T2["Student updates\ndietary preference (b..."]
+        T3["Allergy discovered\n(parent reports nu..."]
+        T4["Meal purchase (wallet\nbalance updated)"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Student dietary\npreferences"]
+        D2["Allergy information"]
+        D3["Medical dietary\nrestrictions"]
+        D4["Meal consumption history"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO FEE MANAGEMENT MODULE
@@ -280,6 +316,42 @@ Month-End (Nov 30):
 - Accounting reconciliation: Perfect match ✓
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Parent recharges\nwallet via parent po..."]
+        T2["Parent pays\ncash at school office"]
+        T3["Parent subscribes\nto meal plan"]
+        T4["Meal plan renewal\n(monthly auto-debit)"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nFEE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Wallet recharge amount"]
+        D2["Payment method"]
+        D3["Transaction ID"]
+        D4["Parent ID"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFEE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FEE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → Canteen)
@@ -373,6 +445,43 @@ Outcome:
 - Health improving (HbA1c reduced from 8.5 to 7.2 in 3 months)
 ```
 
+```mermaid
+flowchart TD
+    subgraph SOURCE["HEALTH & WELLNESS"]
+        S1["Annual health checkup"]
+        S2["medical condition\ndiagnosed"]
+        S3["nutritionist consultation"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+
+    SEND["SEND Data to\nCanteen Nutrition"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Medical conditions"]
+        D2["BMI data"]
+        D3["Nutritionist diet plans"]
+        D4["Food allergies"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nCanteen Nutrition\nRecords"]
+
+    IMPACT1["Customized Meal Plans"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Portion Control"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Menu Restrictions"]
+    IMPACT2 --> IMPACT3
+
+```
+
 ---
 
 ### FROM ATTENDANCE MODULE
@@ -460,6 +569,43 @@ Annual Impact:
 - Savings per day: ₹17,000
 - Annual savings: ₹8.5L
 - Waste reduction: 75%
+```
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["ATTENDANCE"]
+        S1["Daily attendance\nmarked (9:00 AM)"]
+        S2["field trip scheduled"]
+        S3["holiday declared"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+
+    SEND["SEND Data to\nCanteen Nutrition"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Daily attendance count"]
+        D2["Absentee list"]
+        D3["Half-day information"]
+        D4["Field trip data"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nCanteen Nutrition\nRecords"]
+
+    IMPACT1["Accurate Meal Planning"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Waste Reduction"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Cost Optimization"]
+    IMPACT2 --> IMPACT3
+
 ```
 
 ---

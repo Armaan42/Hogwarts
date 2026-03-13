@@ -122,6 +122,38 @@ END FUNCTION
 - **Hours Logged:** 12 hours (2 extra hours)
 - **Recognition:** Certificate of Appreciation + Volunteer of the Month
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Event Created: Show\nvolunteer opportu..."]
+        T2["Parent Signs Up:\nRegister volunteer f..."]
+        T3["Event Day: Track\nvolunteer attendance"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nEVENTS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Volunteer Sign-Ups"]
+        D2["Event RSVPs"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nEVENTS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate EVENTS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO COMMUNICATION MODULE
@@ -161,6 +193,38 @@ Parent Engagement module needs to communicate with parents for PTM reminders, vo
 
 ---
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["PTM Scheduled: Send\nconfirmation and ..."]
+        T2["Volunteer Opportunity\nPosted: Notify ..."]
+        T3["Program Announced:\nSend invitations"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nCOMMUNICATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["PTM Reminders"]
+        D2["Volunteer Opportunities"]
+        D3["Program Invitations"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMMUNICATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMMUNICATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 

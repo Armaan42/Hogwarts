@@ -250,6 +250,42 @@ October 15, 2024 - Review Results:
 Success! Rohan back on track.
 ```
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Daily analytics\nrun (2 AM)"]
+        T2["Real-time alert\ntriggers (attendance ..."]
+        T3["Weekly performance review"]
+        T4["Monthly intervention\neffectiveness an..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["At-Risk Student Alerts"]
+        D2["Performance Predictions"]
+        D3["Intervention\nRecommendations"]
+        D4["Data Volume"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO TEACHER MANAGEMENT MODULE
@@ -278,6 +314,40 @@ Analytics measures teacher effectiveness, identifies training needs, correlates 
 - Recommendation: Share best practices with other Math teachers
 - HR: Performance bonus awarded
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Monthly teacher\neffectiveness analysis"]
+        T2["Quarterly performance\nreview period"]
+        T3["Annual appraisal cycle"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nTEACHER MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Teacher effectiveness\nscores"]
+        D2["Student outcome\ncorrelations"]
+        D3["Class performance\ncomparisons"]
+        D4["Training recommendations"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nTEACHER MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate TEACHER MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → Analytics)
@@ -300,6 +370,39 @@ Analytics aggregates data from every module to provide comprehensive insights. E
 - Holistic decision support
 
 **TRIGGER:** Any data change in any module
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["ALL 54 MODULES"]
+        S1["Any data change\nin any module"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Data to\nAnalytics Insights"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Student data"]
+        D2["Financial data"]
+        D3["Operational data"]
+        D4["Engagement data"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE\nAnalytics Insights\nRecords"]
+
+    IMPACT1["Comprehensive\nschool-wide analytics"]
+    UPDATE --> IMPACT1
+
+    IMPACT2["Cross-module\ncorrelation analysis"]
+    IMPACT1 --> IMPACT2
+
+    IMPACT3["Holistic decision support"]
+    IMPACT2 --> IMPACT3
+
+```
 
 ---
 

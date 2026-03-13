@@ -143,6 +143,39 @@ END FUNCTION
   - Signed by: Principal (digital signature)
 - **Delivery:** PDF emailed to parent, physical copy ready for pickup
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Certificate Request:\nStudent/parent r..."]
+        T2["Graduation: Bulk\nTC generation for gr..."]
+        T3["Transfer: Student\nleaving school mid-..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Student Information"]
+        D2["Academic Information"]
+        D3["Fee Status"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO ACADEMIC MODULE
@@ -177,6 +210,38 @@ Academic records are required for certificates like Study Certificate, Character
   - Universities can verify transcripts
   - Scholarship providers trust certificates
   - Embassies accept bonafide certificates
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["University Application:\nStudent needs..."]
+        T2["Scholarship Application:\nStudy certif..."]
+        T3["Visa Application:\nBonafide certificat..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nACADEMIC"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Academic Records"]
+        D2["Curriculum Information"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nACADEMIC"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ACADEMIC"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -222,6 +287,38 @@ Fee clearance is mandatory for issuing Transfer Certificates and No Dues Certifi
 - **Message:** "Please clear outstanding dues of ₹5,000"
 - **Action:** Parent pays ₹5,000 on 01-Apr-2026
 - **TC Generated:** 01-Apr-2026 (after fee clearance)
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["TC Request:\nCheck fee clearance"]
+        T2["Graduation:\nVerify all fees paid"]
+        T3["No Dues Request:\nGenerate fee clearan..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nFEE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Fee Clearance Check"]
+        D2["No Dues Certificate"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFEE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FEE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 

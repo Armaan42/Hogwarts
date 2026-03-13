@@ -183,6 +183,42 @@ END FUNCTION
   - Date Format: DD/MM/YYYY (e.g., 15/01/2026)
   - Number Format: ١٢٣٬٤٥٦ (Arabic numerals)
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Admission: Capture\nlanguage preferenc..."]
+        T2["Language Change:\nStudent/parent switc..."]
+        T3["Report Generation:\nTranslate report c..."]
+        T4["Certificate Issuance:\nGenerate biling..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Language Preferences"]
+        D2["Regional Data"]
+        D3["Name Formatting"]
+        D4["Translated Content"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO FEE MANAGEMENT MODULE
@@ -300,6 +336,42 @@ END FUNCTION
   - Format: $5,000.00
   - Invoice Language: English
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Fee Structure Setup:\nDefine fees in m..."]
+        T2["Invoice Generation:\nConvert to studen..."]
+        T3["Payment Processing:\nUse regional paym..."]
+        T4["Currency Fluctuation:\nUpdate exchange..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nFEE MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Currency Settings"]
+        D2["Regional Tax"]
+        D3["Payment Methods"]
+        D4["Localized Invoices"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nFEE MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate FEE MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO COMMUNICATION MODULE
@@ -375,6 +447,41 @@ END FUNCTION
   - Tamil: "அன்புள்ள பெற்றோர், கட்டணம் செலுத்த வேண்டிய தேதி 15 ஜனவரி 2026."
   - Arabic: "عزيزي ولي الأمر، الرسوم المستحقة في 15 يناير 2026."
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Broadcast Message:\nTranslate to all r..."]
+        T2["Individual Message:\nUse recipient's p..."]
+        T3["Emergency Alert:\nSend in all language..."]
+        T4["Report Card Notification:\nTranslate s..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nCOMMUNICATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Message Templates"]
+        D2["Recipient Preferences"]
+        D3["Content Translation"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMMUNICATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMMUNICATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 4. TO EXAM & ASSESSMENT MODULE
@@ -424,6 +531,41 @@ International schools follow different curricula (CBSE, ICSE, IB, IGCSE, America
   - Exam: Questions in Hindi, answers in Hindi
   - Result: 85% (Grade A1)
   - Certificate: Bilingual (English + Hindi)
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Exam Creation: Create\nmulti-language ..."]
+        T2["Exam Day: Student\nselects language pr..."]
+        T3["Result Declaration:\nConvert to region..."]
+        T4["Certificate Issuance:\nGenerate biling..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nEXAM & ASSESSMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Question Papers"]
+        D2["Grading Systems"]
+        D3["Certificates"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nEXAM & ASSESSMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate EXAM & ASSESSMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 

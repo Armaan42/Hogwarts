@@ -147,6 +147,41 @@ END FUNCTION
   - School 80G No: AAATH1234PF20214
   - Issued: 22-Jan-2026
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Donation Received:\nRecord revenue in ..."]
+        T2["80G Certificate\nRequest: Generate and..."]
+        T3["Year-End: Annual\n80G return filing"]
+        T4["Corpus Fund Utilization:\nRequires boa..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nACCOUNTS & FINANCE"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Donation Details"]
+        D2["Accounting Entries"]
+        D3["80G Certificate"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nACCOUNTS & FINANCE"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ACCOUNTS & FINANCE"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO ALUMNI MODULE
@@ -199,6 +234,41 @@ Alumni are the most significant donor base for schools. Alumni module maintains 
   - Top Donor: Mr. Amit Verma (₹15,00,000)
   - Recognition: "Class of 2000 Scholarship Fund" established
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Alumni Donation:\nLink to alumni record"]
+        T2["Class Reunion: Launch\nreunion giving ..."]
+        T3["Milestone Year:\nSpecial appeal to mil..."]
+        T4["Major Gift: Update\ndonor category, re..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nALUMNI"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Alumni Donor Data"]
+        D2["Campaign Targeting"]
+        D3["Recognition"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nALUMNI"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate ALUMNI"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO STUDENT MANAGEMENT MODULE
@@ -242,6 +312,38 @@ Many donations are designated for student scholarships. Student Management modul
   - Criteria: Economically weaker section (EWS), merit (>75%)
   - Recipients (2025-26): 10 Grade 9-12 students
   - Impact: Enabled 10 students to continue education
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Scholarship Fund\nCreated: New donatio..."]
+        T2["Scholarship Award:\nDeduct from fund b..."]
+        T3["Annual Review: Renew\nor discontinue s..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Scholarship Fund Data"]
+        D2["Scholarship Awards"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -290,6 +392,40 @@ Donor communication is critical for stewardship and retention. Communication mod
   - Month 6: Invitation to annual donor appreciation dinner
   - Month 12: Annual report with financial statements
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Donation Received:\nSend thank you wit..."]
+        T2["Quarter-End:\nSend impact report"]
+        T3["Campaign Milestone:\nUpdate on progress"]
+        T4["Fundraising Event:\nSend invitations"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nCOMMUNICATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Donor Communication"]
+        D2["Segmentation"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMMUNICATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMMUNICATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 5. TO EVENTS & ACTIVITIES MODULE
@@ -336,6 +472,40 @@ Fundraising events (galas, auctions, walkathons) are major revenue sources. Even
   - Event Expenses: ₹25,00,000
   - **Net Revenue:** ₹90,00,000
   - **ROI:** 360% (₹3.60 raised per ₹1 spent)
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Event Registration:\nTicket purchase =..."]
+        T2["Sponsorship Secured:\nRecord as donation"]
+        T3["Auction Item Sold:\nRecord winning bid"]
+        T4["Event Completion:\nReconcile total raised"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nEVENTS & ACTIVITIES"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Event Fundraising"]
+        D2["Donor Attribution"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nEVENTS & ACTIVITIES"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate EVENTS & ACTIVITIES"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -461,6 +631,41 @@ END FUNCTION
   - Acceptance Letter: Sent 16-Feb-2026
   - Facility Naming: "Tech Corp Innovation Hub" inaugurated 15-Aug-2027
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Major Gift Received:\nRequires board a..."]
+        T2["Naming Rights Proposal:\nBoard approva..."]
+        T3["Corpus Fund Use:\nBoard resolution req..."]
+        T4["New Campaign Launch:\nBoard authorization"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nBOARD & GOVERNANCE"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Board Approval Requests"]
+        D2["Board Resolutions"]
+        D3["Reporting to Board"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nBOARD & GOVERNANCE"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate BOARD & GOVERNANCE"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 7. TO REPORTS & DASHBOARDS MODULE
@@ -524,6 +729,41 @@ Fundraising data needs to be visualized and reported for management, board, and 
     - Scholarship Fund: ₹2,00,00,000 (730 donors)
   - **Top Donor:** Tech Corp India (₹2,00,00,000)
   - **80G Certificates:** 1,180 issued
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Monthly Close: Generate\nmonthly fundr..."]
+        T2["Campaign Milestone:\nUpdate campaign d..."]
+        T3["Board Meeting: Prepare\nboard presenta..."]
+        T4["Donor Request: Generate\ndonor giving ..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nREPORTS & DASHBOARDS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Fundraising Metrics"]
+        D2["Donor Analytics"]
+        D3["Campaign Reports"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nREPORTS & DASHBOARDS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate REPORTS & DASHBOARDS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
@@ -692,6 +932,41 @@ END FUNCTION
   - 80G Certificate: Sent 14:32 (automated)
   - Donor Wall: "Priya Sharma - ₹25,000" added to campaign page
   - Thank You Call: Development team calls within 24 hours
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Online Donation:\nProcess payment, sen..."]
+        T2["Campaign Launch:\nCreate campaign land..."]
+        T3["Donor Login:\nDisplay giving history"]
+        T4["Tax Season: Donors\ndownload 80G certi..."]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Data for\nWEBSITE & USER PORTALS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Online Donation Forms"]
+        D2["Campaign Pages"]
+        D3["Donor Portal"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nWEBSITE & USER PORTALS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate WEBSITE & USER PORTALS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 

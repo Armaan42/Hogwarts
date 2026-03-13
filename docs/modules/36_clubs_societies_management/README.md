@@ -146,6 +146,39 @@ Club participation is part of student records. Clubs module sends membership, le
 - **College Applications:** Leadership, achievements benefit
 - **Skill Development:** Documented participation
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Student Joins Club:\nUpdate student re..."]
+        T2["Leadership Election:\nAdd leadership role"]
+        T3["Achievement:\nLog in student profile"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nSTUDENT MANAGEMENT"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Membership Data"]
+        D2["Leadership Positions"]
+        D3["Achievements"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nSTUDENT MANAGEMENT"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate STUDENT MANAGEMENT"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 2. TO EVENTS MODULE
@@ -167,6 +200,38 @@ Club events need coordination. Clubs module sends event details to Events module
 - **Meeting Scheduled:** Book venue
 - **Competition:** Register event
 
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Event Planned:\nCreate in Events module"]
+        T2["Meeting Scheduled:\nBook venue"]
+        T3["Competition:\nRegister event"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nEVENTS"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Club Events"]
+        D2["Inter-Club Events"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nEVENTS"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate EVENTS"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
+
 ---
 
 ### 3. TO COMMUNICATION MODULE
@@ -187,6 +252,39 @@ Clubs need to communicate with members. Clubs module sends announcements via Com
 - **Meeting Scheduled:** Send reminder (1 day before)
 - **Event Planned:** Send invitation
 - **Achievement:** Announce to school
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Meeting Scheduled:\nSend reminder (1 d..."]
+        T2["Event Planned:\nSend invitation"]
+        T3["Achievement:\nAnnounce to school"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+
+    FETCH["FETCH Data for\nCOMMUNICATION"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Meeting Reminders"]
+        D2["Event Invitations"]
+        D3["Announcements"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> VALIDATE{"Data\nValid?"}
+
+    VALIDATE -- Yes --> SEND["Send to\nCOMMUNICATION"]
+    VALIDATE -- No --> ERROR["Log Error &\nRetry/Alert"]
+
+    SEND --> PROCESS["Process &\nUpdate COMMUNICATION"]
+
+    PROCESS --> NOTIFY["Notify\nStakeholders"]
+```
 
 ---
 
