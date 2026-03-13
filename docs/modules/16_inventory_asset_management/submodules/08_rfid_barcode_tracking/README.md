@@ -104,7 +104,7 @@ CREATE TABLE rfid_barcode_tracking (
     priority ENUM('HIGH', 'MEDIUM', 'LOW') DEFAULT 'MEDIUM',
     
     -- Associations
-    student_id BIGINT,
+    asset_id BIGINT,
     staff_id BIGINT,
     department VARCHAR(100),
     academic_year VARCHAR(9),
@@ -133,7 +133,7 @@ CREATE TABLE rfid_barcode_tracking (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     
     INDEX idx_status (status),
-    INDEX idx_student (student_id),
+    INDEX idx_asset (asset_id),
     INDEX idx_staff (staff_id),
     INDEX idx_academic_year (academic_year)
 );
