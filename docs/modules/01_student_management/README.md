@@ -187,6 +187,52 @@ Grade 9 has 150 students:
 - Need 2 Hindi sections, 2 Sanskrit sections, 1.5 French sections (round up to 2)
 - Timetable AI ensures no clashes: when Section A has Hindi Period 3, French/Sanskrit students have their language periods simultaneously
 
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Annual Section\nAllocation (Jun/Jul)"]
+        T2["Elective Subject\nSelection (Mar-Apr)"]
+        T3["Mid-Year Admission"]
+        T4["Student Transfer\nBetween Sections"]
+        T5["Student Withdrawal"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+    T5 --> FETCH
+
+    FETCH["FETCH Student Data\nfrom Student Management"]
+
+    subgraph DATA["DATA SENT TO TIMETABLE"]
+        direction LR
+        D1["Student Counts:\nTotal per Grade,\nPer Section"]
+        D2["Section Assignments:\nStudent → Section\nMapping"]
+        D3["Elective Choices:\nLanguage Options,\nOptional Subjects,\nStream Selection"]
+        D4["Special Needs:\nIEP Schedules,\nResource Room Time,\nTherapy Slots"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> CALC["CALCULATE\nSection & Period\nRequirements"]
+
+    CALC --> SEC{"Sections\nNeeded?"}
+
+    SEC --> SECPLAN["Sections = CEILING\n(students / max_strength)\ne.g., 180 students ÷ 30\n= 6 sections"]
+
+    SECPLAN --> ELECTIVE{"Elective\nGroups?"}
+
+    ELECTIVE --> GROUP["Group Students\nby Elective Choice\ne.g., 60 Hindi, 50 Sanskrit,\n40 French"]
+
+    GROUP --> WORKLOAD["Calculate Teacher\nWorkload\ne.g., 6 sections × 5 periods\n= 30 Math periods/week"]
+
+    WORKLOAD --> GENERATE["GENERATE\nTimetable\n(No Clashes)"]
+
+    GENERATE --> OUTPUT["OUTPUT:\n- Class Timetables\n- Teacher Schedules\n- Room Allocations\n- Elective Groupings"]
+```
+
 ---
 
 ### 3. TO ATTENDANCE MANAGEMENT MODULE
@@ -256,6 +302,49 @@ END FUNCTION
 - Student Priya (Roll 15) has approved medical leave March 10-15
 - Student Arjun (Roll 28) withdrew on March 8
 - On March 12: Attendance roster shows 30 students unmarked, Priya as "AL", Arjun not in roster
+
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Daily: Fresh\nRosters Generated"]
+        T2["Period-wise: Subject\nAttendance Windows"]
+        T3["Real-time: New\nAdmission Added"]
+        T4["Real-time: Student\nWithdrawal"]
+        T5["Leave Approval"]
+    end
+
+    T1 --> ROSTER
+    T2 --> ROSTER
+    T3 --> ROSTER
+    T4 --> ROSTER
+    T5 --> ROSTER
+
+    ROSTER["GENERATE Attendance\nRoster for Date/Section/Period"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Active Student List:\nEnrolled, Not Withdrawn"]
+        D2["Section-wise\nStudent Mapping"]
+        D3["Enrollment Status:\nACTIVE, SUSPENDED,\nWITHDRAWN, ON_LEAVE"]
+        D4["Leave Requests:\nMedical, Family,\nSports Events"]
+        D5["Student Photos:\nFor Biometric\nFace Recognition"]
+    end
+
+    ROSTER --> DATA
+
+    DATA --> CHECK{"Check Each\nStudent Status"}
+
+    CHECK -- "ACTIVE" --> UNMARKED["Add to Roster\nStatus: UNMARKED"]
+    CHECK -- "ON_LEAVE" --> AUTHLEAVE["Add to Roster\nStatus: AUTHORIZED_LEAVE"]
+    CHECK -- "WITHDRAWN" --> EXCLUDE["Exclude from\nRoster"]
+    CHECK -- "SUSPENDED" --> EXCLUDE
+
+    UNMARKED --> FINAL["FINAL ROSTER\nReady for Teacher"]
+    AUTHLEAVE --> FINAL
+
+    FINAL --> BIOMETRIC["Sync Biometric\nSystem with\nActive Student Photos"]
+```
 
 ---
 
@@ -344,6 +433,53 @@ END FUNCTION
 - Emergency Contacts: Mother 98xxx (primary), Father 97xxx (secondary)
 - Recent History: No recent illnesses
 - Nurse gives paracetamol (safe, no allergies), calls mother, monitors for 30 minutes
+
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Infirmary Visit:\nStudent Reports Sick"]
+        T2["Medical Emergency:\nInjury, Sudden Illness"]
+        T3["Annual Health\nCheckup"]
+        T4["Sports Physical\nClearance"]
+        T5["Medication\nAdministration"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+    T5 --> FETCH
+
+    FETCH["FETCH Student\nMedical Profile"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Medical History:\nChronic Conditions,\nPast Surgeries,\nAllergies, Blood Group,\nVaccinations"]
+        D2["Emergency Contacts:\nPrimary & Secondary,\nHospital Preference"]
+        D3["Ongoing Treatments:\nMedications, Dietary\nRestrictions, Physical\nLimitations"]
+        D4["Insurance Info:\nPolicy Number,\nProvider, Coverage"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> ALERT{"Check for\nCritical Alerts"}
+
+    ALERT -- "Allergies Found" --> ALLERGY["ALLERGY ALERT\nDisplay All Known\nAllergies Before\nMedication"]
+    ALERT -- "Chronic Condition" --> CHRONIC["CONDITION WARNING\nShow Diagnosis &\nCurrent Medications"]
+    ALERT -- "No Alerts" --> PROCEED["Proceed with\nStandard Care"]
+
+    ALLERGY --> SEVERITY{"Severity\nLevel?"}
+    CHRONIC --> SEVERITY
+
+    SEVERITY -- "HIGH" --> EMERGENCY["Display Emergency\nContacts in Priority\nOrder - Auto-notify\nParents via SMS"]
+    SEVERITY -- "LOW/MEDIUM" --> TREAT["Provide Treatment\nLog in Health Record"]
+
+    PROCEED --> TREAT
+    EMERGENCY --> TREAT
+
+    TREAT --> LOG["LOG Visit:\nSymptoms, Treatment,\nMedication Given,\nOutcome"]
+```
 
 ---
 
@@ -434,6 +570,51 @@ END FUNCTION
 - Assigned to Bus Route B
 - Pickup Time: 7:25 AM (calculated based on distance to school)
 - Parent receives: "Your child assigned to Bus Route B, Driver: Mr. Sharma (98xxx), Pickup: 7:25 AM"
+
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["New Admission\nwith Transport"]
+        T2["Address Change:\nFamily Relocates"]
+        T3["Transport Enrollment\nChange (Mid-Year)"]
+        T4["Route Optimization\nCycle (Annual/Quarterly)"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Transport-Related\nStudent Data"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Residential Address:\nGPS Coordinates,\nLandmark, Pincode"]
+        D2["Transport Status:\nENROLLED,\nNOT_ENROLLED,\nTEMPORARY"]
+        D3["Route Preferences:\nPickup Point,\nPickup Time,\nDrop Point"]
+        D4["Parent Contacts:\nMobile for GPS Alerts,\nWhatsApp for\nNotifications"]
+        D5["Special Needs:\nWheelchair Access,\nMotion Sickness,\nSibling on Same Bus"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> CLUSTER["Geographic Clustering\nof Student Addresses"]
+
+    CLUSTER --> ROUTE{"Students in\nCluster > 40?"}
+
+    ROUTE -- Yes --> SPLIT["Split into\nMultiple Routes"]
+    ROUTE -- No --> CREATE["Create Single\nBus Route"]
+
+    SPLIT --> ASSIGN["Assign Bus\n(Capacity Based)"]
+    CREATE --> ASSIGN
+
+    ASSIGN --> PICKUP["Calculate Pickup/Drop\nTimes Based on\nDistance to School"]
+
+    PICKUP --> NOTIFY["NOTIFY Parents:\n- Bus Route Assignment\n- Driver Details\n- Pickup Time\n- RFID Card Issued"]
+
+    NOTIFY --> TRACK["Enable GPS Tracking\n& Boarding/Deboarding\nAlerts for Parents"]
+```
 
 ---
 
@@ -529,6 +710,53 @@ END FUNCTION
 - Mess Enrollment: Vegetarian meals, Peanut allergy flagged in kitchen
 - Warden: Ms. Sharma (Floor 3 warden), Contact: 98xxx
 - Parent receives: "Priya allocated Room 305, Roommates: Sneha, Divya. Warden: Ms. Sharma (98xxx)"
+
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["New Boarding\nAdmission"]
+        T2["Day Scholar to\nBoarder Conversion"]
+        T3["Room Change\nRequest"]
+        T4["Dietary Change"]
+        T5["Hostel Leave\nRequest"]
+    end
+
+    T1 --> CHECK
+    T2 --> CHECK
+    T3 --> CHECK
+    T4 --> CHECK
+    T5 --> CHECK
+
+    CHECK{"Student is\nBoarder?"}
+    CHECK -- No --> REJECT["Not Eligible\nfor Hostel"]
+    CHECK -- Yes --> FETCH["FETCH Hostel-Related\nStudent Data"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Boarding Status:\nBOARDER,\nWEEKLY_BOARDER,\nDAY_SCHOLAR"]
+        D2["Room Preferences:\nSingle/Shared,\nRoommate Requests,\nFloor Preference"]
+        D3["Dietary Info:\nVeg/Non-Veg/Vegan,\nAllergies, Religious\nRestrictions, Medical Diet"]
+        D4["Parent Consent:\nOvernight Stays,\nWeekend Outings,\nLeave Rules"]
+        D5["Guardian in City:\nLocal Guardian\nDetails"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> BLOCK["Find Appropriate\nHostel Block\n(Grade + Gender Based)"]
+
+    BLOCK --> ROOM{"Room with\nPreferred Roommate\nAvailable?"}
+
+    ROOM -- Yes --> PREFERRED["Assign Preferred\nRoom + Bed"]
+    ROOM -- No --> AVAILABLE["Assign First\nAvailable Room"]
+
+    PREFERRED --> MESS["Enroll in Mess\nwith Dietary\nPreferences Tagged"]
+    AVAILABLE --> MESS
+
+    MESS --> WARDEN["Assign Floor\nWarden"]
+
+    WARDEN --> NOTIFY["NOTIFY:\n- Parent: Room Details,\n  Warden Contact\n- Warden: New Student\n- Kitchen: Dietary Needs"]
+```
 
 ---
 
@@ -632,6 +860,69 @@ END FUNCTION
 - If Ananya wins 50% scholarship in next academic year:
 - Her fee: ₹1,20,000 (Grade 8 base) _ 50% scholarship = ₹60,000 _ 90% (sibling discount) = ₹54,000/year
 
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["New Admission"]
+        T2["Annual Grade\nPromotion"]
+        T3["Scholarship\nAward/Renewal"]
+        T4["Sibling\nAdmission"]
+        T5["Mid-Year\nAdmission"]
+        T6["Concession\nApproval"]
+    end
+
+    T1 --> CALC
+    T2 --> CALC
+    T3 --> CALC
+    T4 --> CALC
+    T5 --> CALC
+    T6 --> CALC
+
+    CALC["CALCULATE\nIndividualized Fees"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Grade/Class:\nDetermines Base\nFee Structure"]
+        D2["Fee Category:\nREGULAR, SCHOLARSHIP,\nSTAFF_WARD, SIBLING,\nEWS, NRI, SPORTS"]
+        D3["Sibling Mapping:\n2nd Child = 10%,\n3rd Child = 15%\nDiscount"]
+        D4["Scholarship %:\n25%, 50%, 75%,\nor 100% Waiver"]
+        D5["Enrollment Date:\nFor Pro-rata\nCalculation"]
+    end
+
+    CALC --> DATA
+
+    DATA --> BASE["Get Base Fee\nfor Grade"]
+
+    BASE --> SCHOL{"Scholarship\nApplies?"}
+
+    SCHOL -- Yes --> DISCOUNT1["Apply Scholarship\nDiscount %"]
+    SCHOL -- No --> SIBLING{"Sibling\nDiscount?"}
+
+    DISCOUNT1 --> SIBLING
+
+    SIBLING -- "2nd Child" --> DISC10["Apply 10%\nSibling Discount"]
+    SIBLING -- "3rd Child" --> DISC15["Apply 15%\nSibling Discount"]
+    SIBLING -- No --> CATEGORY{"Special\nCategory?"}
+
+    DISC10 --> CATEGORY
+    DISC15 --> CATEGORY
+
+    CATEGORY -- "STAFF_WARD" --> STAFF["50% Staff\nDiscount"]
+    CATEGORY -- "NRI" --> NRI["50% Premium\nAdded"]
+    CATEGORY -- None --> PRORATE{"Mid-Year\nAdmission?"}
+
+    STAFF --> PRORATE
+    NRI --> PRORATE
+
+    PRORATE -- Yes --> PRO["Pro-rata:\n(Fee / 12) x Months\nRemaining"]
+    PRORATE -- No --> INVOICE["Generate Invoice"]
+
+    PRO --> INVOICE
+
+    INVOICE --> OUTPUT["OUTPUT:\n- Quarterly Invoices\n- Payment Plan\n- Fee Ledger\n- Late Fee Rules"]
+```
+
 ---
 
 ### 8. TO LMS (LEARNING MANAGEMENT SYSTEM)
@@ -720,6 +1011,55 @@ END FUNCTION
 - When Priya opens Chemistry course:
 - Sees Chapter 1-5 (completed), Chapter 6 (in progress 40%), Chapter 7-12 (locked until Chapter 6 done)
 - Each chapter has: Video Lectures, Notes PDF, Practice Questions, Quiz
+
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Course Enrollment\n(Start of Term)"]
+        T2["Section Assignment"]
+        T3["Subject Choice\nFinalized"]
+        T4["Performance-Based\nGrouping"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Student\nAcademic Profile"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Section Assignment:\nDetermines Course\nAccess"]
+        D2["Enrolled Subjects:\nCore + Elective\n+ Stream-specific"]
+        D3["Performance Level:\nAdvanced, Regular,\nor Remedial"]
+        D4["Learning Style:\nVisual, Auditory,\nKinesthetic"]
+        D5["Past Performance:\nFor AI Co-pilot\nRecommendations"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> CORE["Load Core Courses\nfor Student Grade"]
+
+    CORE --> ELECTIVE["Add Elective Courses\nBased on Choices"]
+
+    ELECTIVE --> STREAM{"Grade 11-12?"}
+
+    STREAM -- Yes --> STREAMC["Add Stream-specific\nCourses (Science/\nCommerce/Arts)"]
+    STREAM -- No --> PERF{"Performance\nLevel?"}
+
+    STREAMC --> PERF
+
+    PERF -- "ADVANCED" --> ENRICH["Add Enrichment\nModules"]
+    PERF -- "REMEDIAL" --> REMEDIAL["Add Remedial\nContent"]
+    PERF -- "REGULAR" --> DASHBOARD["Generate Personalized\nLMS Dashboard"]
+
+    ENRICH --> DASHBOARD
+    REMEDIAL --> DASHBOARD
+
+    DASHBOARD --> OUTPUT["OUTPUT:\n- Course List (8-10 courses)\n- Progress Tracking\n- AI Co-pilot Suggestions\n- Assignment Deadlines\n  Aligned to Timetable"]
+```
 
 ---
 
@@ -831,6 +1171,56 @@ END FUNCTION
 - **Progress Monitoring:** Reading fluency tested monthly, spelling test biweekly
 - All teachers receive alert: "Arjun has dyslexia, provide 1.5x time, use Dyslexie font"
 - Exam department ensures Arjun gets separate room with extra 30 mins for all tests
+
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Screening Test:\nNew Admissions"]
+        T2["Teacher Referral:\nLearning Struggles\nObserved"]
+        T3["Parent Request:\nExternal Diagnosis\nShared"]
+        T4["Annual IEP\nReview"]
+    end
+
+    T1 --> ASSESS
+    T2 --> ASSESS
+    T3 --> ASSESS
+    T4 --> ASSESS
+
+    ASSESS["ASSESS Student\nfor Special Needs"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Special Needs Flag:\nIEP Required"]
+        D2["Diagnosis:\nDyslexia, ADHD,\nAutism, Dyscalculia\n+ Severity Level"]
+        D3["Parental Consent:\nTesting Permission,\nIEP Approval,\nModified Curriculum"]
+        D4["Previous IEP:\nFrom Prior School\n(if transfer)"]
+        D5["Support Team:\nResource Teacher,\nCounselor,\nTherapists"]
+    end
+
+    ASSESS --> DATA
+
+    DATA --> LEVEL["Assess Current\nAcademic Level"]
+
+    LEVEL --> GOALS["Create Realistic\nIEP Goals"]
+
+    GOALS --> ACCOM{"Diagnosis\nType?"}
+
+    ACCOM -- "DYSLEXIA" --> DYS["Accommodations:\n- 1.5x Time\n- Audiobooks\n- Dyslexie Font 14pt"]
+    ACCOM -- "ADHD" --> ADHD["Accommodations:\n- Front Row Seating\n- Frequent Breaks\n- 30% Less Homework"]
+    ACCOM -- "OTHER" --> OTHER["Custom\nAccommodations\nBased on Diagnosis"]
+
+    DYS --> THERAPY{"Therapy\nNeeded?"}
+    ADHD --> THERAPY
+    OTHER --> THERAPY
+
+    THERAPY -- Yes --> SCHEDULE["Schedule Therapy\nSessions (2x/week)\nSpeech/Occupational/\nBehavioral"]
+    THERAPY -- No --> NOTIFY["NOTIFY All\nStakeholders"]
+
+    SCHEDULE --> NOTIFY
+
+    NOTIFY --> OUTPUT["OUTPUT:\n- IEP Document\n- Teacher Alerts\n- Resource Room Schedule\n- Progress Monitoring Plan\n- Quarterly Parent Reports"]
+```
 
 ---
 
@@ -946,6 +1336,56 @@ END FUNCTION
 - Behavioral score: 75/100 (was 95/100)
 - Follow-up: 4 counseling sessions scheduled, parents must attend 1st session
 
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Incident Reported\nby Teacher/Staff"]
+        T2["AI Detection:\nAttendance Drop +\nGrade Decline"]
+        T3["Parent Complaint:\nBullying Report"]
+        T4["Positive Behavior:\nMerit Points Awarded"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Student Profile\nfor Incident Linking"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Student Profile:\nID, Photo,\nClass/Section"]
+        D2["Behavioral History:\nPast Incidents,\nSeverity Patterns"]
+        D3["Parent Contacts:\nFor Incident\nNotifications"]
+        D4["Counseling Records:\nPrevious Sessions,\nImprovement Plans"]
+        D5["Peer Relationships:\nSiblings, Friend Groups\n(Bullying Context)"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> INCIDENT["Record Incident:\nType, Severity,\nDescription, Reporter"]
+
+    INCIDENT --> HISTORY["Check Behavioral\nHistory (Last 90 Days)"]
+
+    HISTORY --> SEVERITY{"Severity Level\nor 3+ Incidents?"}
+
+    SEVERITY -- "MAJOR or >=3" --> PARENT["Parent Conference\nRequired + Assign\nCounselor"]
+    SEVERITY -- "MODERATE" --> DETENTION["Detention +\nWarning Letter\nto Parents"]
+    SEVERITY -- "MINOR" --> WARNING["Verbal Warning\n+ Log"]
+
+    PARENT --> PATTERN{"Pattern\nDetected?"}
+    DETENTION --> PATTERN
+    WARNING --> PATTERN
+
+    PATTERN -- "Repeated Aggression" --> ANGER["Trigger Anger\nManagement Program"]
+    PATTERN -- No --> SCORE["Update Behavioral\nScore (Deduct\nSeverity Points)"]
+
+    ANGER --> SCORE
+
+    SCORE --> OUTPUT["OUTPUT:\n- Incident Record\n- Disciplinary Action\n- Parent Notification\n- Counseling Referral\n- Updated Score"]
+```
+
 ---
 
 ### 11. TO LIBRARY MANAGEMENT MODULE
@@ -1001,6 +1441,52 @@ END FUNCTION
 **EXAMPLE:**
 Student Aarav (Grade 6) borrows "Harry Potter", due in 14 days. After 21 days, fine = ₹14 (₹2/day × 7 days overdue). Fine added to fee account, cannot borrow new books until cleared.
 
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Book Checkout"]
+        T2["Book Return"]
+        T3["Book Reservation"]
+        T4["Fine Generation\n(Overdue Books)"]
+        T5["Lost Book Report"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+    T5 --> FETCH
+
+    FETCH["FETCH Student\nLibrary Profile"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Student ID:\nFor Book Checkout"]
+        D2["Enrollment Status:\nACTIVE Can Borrow,\nOthers Cannot"]
+        D3["Grade Level:\nBorrowing Limits,\nAge-appropriate Content"]
+        D4["Reading Level\nAssessment"]
+        D5["Subject Enrollment:\nAcademic Resource\nAllocation"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> STATUS{"Student\nStatus?"}
+
+    STATUS -- "Not ACTIVE" --> BLOCK1["Cannot Borrow:\nOnly Active Students"]
+    STATUS -- "ACTIVE" --> LIMIT{"Borrowing\nLimit Reached?"}
+
+    LIMIT -- Yes --> BLOCK2["Cannot Borrow:\nReturn Books First"]
+    LIMIT -- No --> FINES{"Outstanding\nFines > 100?"}
+
+    FINES -- Yes --> BLOCK3["Cannot Borrow:\nClear Fines First"]
+    FINES -- No --> CHECKOUT["Book Checked Out"]
+
+    CHECKOUT --> UPDATE["Update:\n- Borrowing History\n- Reading Analytics\n- SMS to Parent"]
+
+    UPDATE --> AI["AI Recommendations:\nSuggest Books Based\non Reading Patterns"]
+```
+
 ---
 
 ### 12. TO SECURITY & VISITOR MANAGEMENT MODULE
@@ -1051,6 +1537,51 @@ END FUNCTION
 **EXAMPLE:**
 Kavya has dentist appointment. Mother requests gate pass at 11 AM. Teacher approves. QR code sent to mother. At 1:45 PM, mother shows QR at gate, guard scans, verifies ID, Kavya exits. Logged: "Kavya exited 1:47 PM with mother for dental appointment."
 
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Daily Entry/Exit"]
+        T2["Early Dismissal\nRequest"]
+        T3["Late Arrival"]
+        T4["Unauthorized\nExit Attempt"]
+        T5["Emergency\nEvacuation"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+    T5 --> FETCH
+
+    FETCH["FETCH Student\nSecurity Profile"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Student Photo:\nFace Recognition,\nVisual ID"]
+        D2["Class, Section,\nRoll Number"]
+        D3["Parent Authorization:\nApproved Pickup\nPersons"]
+        D4["Timetable:\nNormal Dismissal\nTime"]
+        D5["Transport/Hostel\nStatus: Special\nExit Rules"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> REQUEST{"Gate Pass\nRequest?"}
+
+    REQUEST -- Yes --> AUTH{"Requester in\nAuthorized\nPickup List?"}
+    REQUEST -- No --> ENTRY["Log Entry/Exit\nwith Photo Capture"]
+
+    AUTH -- No --> DENY["Unauthorized\nPerson - Alert\nSent to Parents"]
+    AUTH -- Yes --> PASS["Generate Digital\nGate Pass with\nQR Code"]
+
+    PASS --> NOTIFY["Notify Security,\nClass Teacher,\nSMS to Parent"]
+
+    NOTIFY --> EXIT["Student Exits:\nGuard Scans QR,\nVerifies ID,\nLogs Exit Time"]
+
+    ENTRY --> HEADCOUNT["Emergency Mode:\nReconcile Headcount\nvs Active Students"]
+```
+
 ---
 
 ### 13. TO CONSENT & COMPLIANCE MODULE
@@ -1100,6 +1631,53 @@ END FUNCTION
 
 **EXAMPLE:**
 Field trip to India Gate for 60 Grade 7 students. Deadline: March 20. By deadline: 52 approved, 3 denied, 5 no response. 52 students go on trip, 8 stay at school with alternate activity.
+
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Field Trip\nPlanned"]
+        T2["Medical Procedure\nNeeded"]
+        T3["Photo/Video\nUsage"]
+        T4["Sports Event\nParticipation"]
+        T5["Data Collection\n(Privacy Regulations)"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+    T5 --> FETCH
+
+    FETCH["FETCH Student\nConsent Data"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Parent Contact:\nEmail, Mobile\nfor Consent Forms"]
+        D2["Guardian Status:\nLegal Guardian\nWho Can Consent"]
+        D3["Medical Info:\nFor Medical\nConsent"]
+        D4["Photo/Video\nRelease\nPreferences"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> SEND["Send Digital\nConsent Forms\n(Email + SMS + App)"]
+
+    SEND --> REMINDER["Schedule Reminder\n(Deadline - 2 Days)"]
+
+    REMINDER --> DEADLINE{"Deadline\nReached?"}
+
+    DEADLINE --> TALLY["Tally Responses"]
+
+    TALLY --> APPROVED["APPROVED\nStudents Participate"]
+    TALLY --> DENIED["DENIED\nStudents Excluded"]
+    TALLY --> NORESP["NO RESPONSE\nStudents Excluded\n(Default: No Consent)"]
+
+    DENIED --> ALT["Arrange Alternate\nSupervision for\nExcluded Students"]
+    NORESP --> ALT
+
+    APPROVED --> AUDIT["Maintain Audit Trail\nfor Legal Compliance"]
+```
 
 ---
 
@@ -1155,6 +1733,55 @@ END FUNCTION
 **EXAMPLE:**
 Riya needs TC as family relocating. System checks: ₹5,000 dues pending, 1 library book not returned. Blocks TC. After clearing, TC generated with all academic details, QR code for verification. Cannot issue duplicate.
 
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Bonafide Certificate\nRequest"]
+        T2["Transfer Certificate\nRequest"]
+        T3["Character Certificate\nRequest"]
+        T4["Marksheet/Report\nCard Generation"]
+        T5["Course Completion\nCertificate"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+    T5 --> FETCH
+
+    FETCH["FETCH Student\nRecord Data"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Personal Details:\nName, Parents,\nDOB, Admission No."]
+        D2["Academic Records:\nGrades Studied,\nCurrent Class,\nSubjects"]
+        D3["Attendance Data:\nTotal Days,\nDays Present, %"]
+        D4["Character Assessment:\nConduct Rating,\nAchievements"]
+        D5["Reason for Leaving:\n(For Transfer\nCertificate)"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> TYPE{"Certificate\nType?"}
+
+    TYPE -- "Transfer\nCertificate" --> TCCHECK{"Student\nWithdrawn?"}
+
+    TCCHECK -- No --> TCDENY["TC Only for\nWithdrawn Students"]
+    TCCHECK -- Yes --> DUES{"Outstanding\nDues?"}
+
+    DUES -- Yes --> BLOCK["Block TC:\nClear Dues First"]
+    DUES -- No --> GENERATE["Generate Certificate"]
+
+    TYPE -- "Other Types" --> GENERATE
+
+    GENERATE --> SECURE["Add Digital Signature\n+ School Seal\n+ QR Code"]
+
+    SECURE --> BLOCKCHAIN["Store on\nBlockchain\n(Tamper-proof)"]
+
+    BLOCKCHAIN --> DELIVER["Email to Parent\n+ Log Issuance\n+ Audit Trail"]
+```
+
 ---
 
 ### 15. TO AI & PREDICTIVE ANALYTICS MODULE
@@ -1203,6 +1830,48 @@ END FUNCTION
 
 **EXAMPLE:**
 Rohan (Grade 9): Attendance dropped 85%→68%, grades declining, fee delays, 3 disciplinary incidents. AI: 78% dropout risk (CRITICAL). Auto-triggers: counselor assigned, parent meeting, remedial classes, fee waiver application, transport subsidy. After 2 months: risk reduced to 35%.
+
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Continuous:\nReal-time Data Feed"]
+        T2["Weekly:\nRisk Assessment"]
+        T3["Term-End:\nAnalysis"]
+        T4["Alert: Risk Score\nExceeds Threshold"]
+    end
+
+    T1 --> FEED
+    T2 --> FEED
+    T3 --> FEED
+    T4 --> FEED
+
+    FEED["FEED Student Data\nto ML Models"]
+
+    subgraph DATA["DATA FEATURES SENT"]
+        direction LR
+        D1["Demographics:\nAge, Gender,\nSocioeconomic Status,\nParent Education"]
+        D2["Admission Data:\nTest Scores,\nPrevious School\nGrades"]
+        D3["Enrollment History:\nGrade Repetition,\nSchool Changes"]
+        D4["Current Standing:\nGrade, Stream,\nPerformance Level"]
+    end
+
+    FEED --> DATA
+
+    DATA --> MODEL["ML Model\nProcesses Features"]
+
+    MODEL --> PREDICT["Calculate Dropout\nProbability & Risk\nFactors"]
+
+    PREDICT --> RISK{"Risk\nLevel?"}
+
+    RISK -- "CRITICAL (>70%)" --> URGENT["URGENT:\n- Alert Counselor\n- Schedule Parent Meeting\n- Assign Mentor Teacher"]
+    RISK -- "HIGH (40-70%)" --> WATCH["WATCHLIST:\n- Monitor Weekly\n- Remedial Classes\n- Fee Waiver Check"]
+    RISK -- "LOW (<40%)" --> NORMAL["NORMAL:\n- Continue Monitoring\n- Standard Reports"]
+
+    URGENT --> OUTPUT["OUTPUT:\n- Risk Score & Factors\n- Performance Forecast\n- Cohort Analysis\n- Intervention Plan"]
+    WATCH --> OUTPUT
+    NORMAL --> OUTPUT
+```
 
 ---
 
@@ -1255,6 +1924,48 @@ END FUNCTION
 **EXAMPLE:**
 Mr. Sharma logs in at 8 PM. Sees Aarav (Grade 6): Today present , Math test 82/100, Field trip consent pending, ₹12,000 dues. Ananya (Grade 9): 100% attendance, Selected for debate competition. Approves consent, pays fee online, messages English teacher for book recommendations.
 
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Parent Login\n(Daily Access)"]
+        T2["New Update:\nReport Card, Achievement"]
+        T3["Action Required:\nConsent, Fee Due"]
+        T4["Emergency:\nIncident, Health Alert"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Student Data\nfor Parent View"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Student Profile:\nName, Class,\nRoll, Photo"]
+        D2["Academics:\nReport Cards,\nTerm Progress,\nTeacher Comments"]
+        D3["Attendance:\nMonthly &\nSubject-wise\nSummary"]
+        D4["Achievements:\nCertificates,\nCompetition Results"]
+        D5["Behavioral:\nMerit Points,\nIncidents"]
+        D6["Timetable:\nWeekly Schedule,\nExam Dates"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> CHILDREN{"Multiple\nChildren?"}
+
+    CHILDREN -- Yes --> MULTI["Show Dashboard\nfor Each Child"]
+    CHILDREN -- No --> SINGLE["Show Single\nChild Dashboard"]
+
+    MULTI --> DASH["PARENT DASHBOARD"]
+    SINGLE --> DASH
+
+    DASH --> STATS["Quick Stats:\n- Today Attendance\n- Latest Grade\n- Next Exam\n- Fee Status\n- Pending Actions"]
+
+    STATS --> ACTIONS["Available Actions:\n- Approve Consent\n- Pay Fees Online\n- Message Teacher\n- Download Report Card\n- View Achievements"]
+```
+
 ---
 
 ### 17. TO CAREER GUIDANCE & UNIVERSITY COUNSELING
@@ -1302,6 +2013,47 @@ END FUNCTION
 
 **EXAMPLE:**
 Kavya (Grade 11, PCB, aspiring doctor): Profile shows 96% marks, Biology Olympiad winner, 200 hospital volunteer hours. System recommends: AIIMS, Johns Hopkins, Oxford Medicine. Grade 12: Applies to 11 universities. Tracker shows deadlines, recommendation letters status. Result: Accepted to Johns Hopkins with $15,000 scholarship.
+
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Grade 9 Entry:\nCareer Exploration"]
+        T2["Grade 10 Completion:\nStream Selection"]
+        T3["Grade 11 Start:\nCollege Planning"]
+        T4["Grade 12:\nApplication Support"]
+    end
+
+    T1 --> CHECK
+    T2 --> CHECK
+    T3 --> CHECK
+    T4 --> CHECK
+
+    CHECK{"Student\nGrade >= 9?"}
+
+    CHECK -- No --> INELIGIBLE["Career Counseling\nStarts from Grade 9"]
+    CHECK -- Yes --> FETCH["BUILD Career\nCounseling Profile"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Academic Profile:\nGrade-wise Marks,\nStream, Subjects,\nClass Rank"]
+        D2["Aptitude Data:\nCareer Tests,\nInterest Inventory"]
+        D3["Extra-curricular:\nSports, Leadership,\nCommunity Service"]
+        D4["Projects:\nScience Fair,\nIndependent Study,\nResearch"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> AI["AI University\nMatching Engine"]
+
+    AI --> MATCH["Generate University\nRecommendations:\n- Reach Schools\n- Target Schools\n- Safety Schools"]
+
+    MATCH --> CAREER["Suggest Career\nPathways Based\non Profile"]
+
+    CAREER --> TRACK["Application Tracker:\n- University List\n- Deadlines\n- Recommendation\n  Letter Status\n- Scholarship Matches"]
+
+    TRACK --> OUTPUT["OUTPUT:\n- Personalized Pathways\n- 47+ Eligible Scholarships\n- Application Timeline\n- Interview Prep Resources"]
+```
 
 ---
 
@@ -1355,6 +2107,52 @@ END FUNCTION
 **EXAMPLE:**
 Priya completes Grade 12 (92%), admitted to IIT Delhi. Converted to alumni: Batch 2025, alumni email created. 2029: Joins Google. 2030: Mentors 10 CS students. 2035: 10-year reunion, donates ₹25,000. 2045: Daughter applies, gets legacy preference, admitted.
 
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Grade 12 Completion\n(Auto-Conversion)"]
+        T2["University Admission\n(Profile Update)"]
+        T3["Career Milestone\n(Job/Promotion)"]
+        T4["Reunion Year\n(5/10/15 Year)"]
+        T5["Child Admission\n(Legacy Student)"]
+    end
+
+    T1 --> CHECK
+    T2 --> UPDATE
+    T3 --> UPDATE
+    T4 --> ENGAGE
+    T5 --> LEGACY
+
+    CHECK{"Grade 12\nPassed?"}
+
+    CHECK -- No --> BLOCK["Only Grade 12\nPass Students\nConvert to Alumni"]
+    CHECK -- Yes --> CONVERT["CONVERT Student\nto Alumni"]
+
+    subgraph DATA["DATA TRANSFERRED"]
+        direction LR
+        D1["Graduation Details:\nPass-out Year,\nFinal Grade, Stream,\nAwards"]
+        D2["Contact Info:\nPersonal Email,\nMobile, LinkedIn"]
+        D3["University/Career:\nAdmitted University,\nCourse, Employer"]
+        D4["Family Legacy:\nAlumni Children\nEnrollment"]
+        D5["Engagement:\nDonation History,\nEvent Attendance"]
+    end
+
+    CONVERT --> DATA
+
+    DATA --> CREATE["Create Alumni Record:\n- Alumni Email\n- Portal Access\n- Batch Group"]
+
+    CREATE --> SEND["Send Welcome Email\nwith Alumni Benefits"]
+
+    UPDATE --> PROFILE["Update Alumni\nProfile (Career,\nContact)"]
+
+    ENGAGE --> REUNION["Organize Reunion:\nInvite Batch Members"]
+
+    LEGACY --> PREFERENCE["Apply Legacy\nPreference (10% Bonus)\nfor Alumni Child"]
+
+    SEND --> NETWORK["Alumni Network:\n- Mentorship Program\n- Donation Portal\n- Career Directory\n- Event Invitations"]
+```
+
 ---
 
 ### 19. TO ASSESSMENT & EXAMS MODULE
@@ -1402,6 +2200,51 @@ END FUNCTION
 
 **EXAMPLE:**
 Mid-term exams for Grade 9A (35 students). System generates roster, allocates Hall 1 Seats 1-35. Arjun (dyslexia) gets Hall 2 with extra 30 mins. Rohan (₹50,000 dues) blocked from exam until fee paid.
+
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Exam Schedule\nCreation"]
+        T2["Result\nPublication"]
+        T3["Admit Card\nGeneration"]
+        T4["Revaluation\nRequest"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Student\nExam Data"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Student Enrollment:\nWho Takes Which\nExams"]
+        D2["Section/Subject\nMapping: Exam\nSchedules per Section"]
+        D3["Special Accommodations:\nIEP Students Get\nExtra Time"]
+        D4["Fee Clearance:\nBlocks Admit Card\nif Dues Pending"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> ROSTER["Generate Exam\nRoster by Section"]
+
+    ROSTER --> EACH{"For Each\nStudent"}
+
+    EACH --> IEP{"Has IEP?"}
+
+    IEP -- Yes --> SEPARATE["Allocate Separate\nRoom + Extra Time"]
+    IEP -- No --> FEES{"Outstanding\nFees > Threshold?"}
+
+    FEES -- Yes --> BLOCKADMIT["Block Admit Card\nNotify Parent:\nClear Dues"]
+    FEES -- No --> ALLOCATE["Allocate Seat\nin Exam Hall"]
+
+    SEPARATE --> ADMIT["Generate\nAdmit Card"]
+    ALLOCATE --> ADMIT
+
+    ADMIT --> OUTPUT["OUTPUT:\n- Exam Rosters\n- Seat Allocations\n- Admit Cards\n- Results to Student Records"]
+```
 
 ---
 
@@ -1451,6 +2294,53 @@ END FUNCTION
 **EXAMPLE:**
 Annual Sports Day: 200 students register for 15 events. Priya wins 100m race (Gold), 200m (Silver). Achievements added to portfolio. House points: Red House +20. Certificate auto-generated. Parent receives: "Priya won Gold in 100m race!"
 
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Event Registration\nOpens"]
+        T2["Event Completion"]
+        T3["Awards Announced"]
+        T4["Certificate\nIssuance"]
+    end
+
+    T1 --> FETCH
+    T2 --> RECORD
+    T3 --> RECORD
+    T4 --> RECORD
+
+    FETCH["FETCH Student Data\nfor Event Registration"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Student Registration:\nEvent Sign-ups"]
+        D2["Participation\nRecords"]
+        D3["Awards &\nAchievements"]
+        D4["Certificates\nEarned"]
+    end
+
+    FETCH --> CONSENT{"Parent Consent\nRequired?"}
+
+    CONSENT -- Yes --> CONCHECK{"Consent\nReceived?"}
+    CONSENT -- No --> CAPACITY{"Event\nCapacity Full?"}
+
+    CONCHECK -- No --> DENY["Cannot Register:\nParent Consent Required"]
+    CONCHECK -- Yes --> CAPACITY
+
+    CAPACITY -- Yes --> WAITLIST["Add to Waitlist"]
+    CAPACITY -- No --> REGISTER["Register Student\nNotify Parent"]
+
+    RECORD --> DATA
+
+    DATA --> PORTFOLIO["Update Digital\nPortfolio:\n- Achievements\n- Certificates\n- House Points"]
+
+    PORTFOLIO --> NOTIFY["NOTIFY Parent:\nAchievement Details"]
+
+    REGISTER --> PARTICIPATE["Student Participates\nin Event"]
+
+    PARTICIPATE --> PORTFOLIO
+```
+
 ---
 
 ### 21. TO CANTEEN & MEAL MANAGEMENT MODULE
@@ -1499,6 +2389,48 @@ END FUNCTION
 
 **EXAMPLE:**
 Aarav (peanut allergy) tries to buy peanut butter sandwich. System blocks: "Contains peanuts - allergen detected." Aarav buys veggie sandwich instead. Daily summary to parent: "Canteen spending: ₹85 (sandwich ₹40, juice ₹25, snacks ₹20)."
+
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Meal Plan\nPurchase"]
+        T2["Daily Meal\nConsumption"]
+        T3["Dietary Restriction\nUpdate"]
+        T4["Canteen Credit\nTop-up"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Student\nCanteen Profile"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Student ID:\nFor RFID\nMeal Card"]
+        D2["Dietary Restrictions:\nAllergies, Religious,\nMedical Diets"]
+        D3["Meal Plan:\nDaily Lunch,\nSnacks Enrollment"]
+        D4["Boarding Status:\nBoarders Auto-enrolled\nin Mess"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> PURCHASE{"Student\nPurchasing?"}
+
+    PURCHASE --> ALLERGEN{"Item Contains\nStudent Allergen?"}
+
+    ALLERGEN -- Yes --> BLOCK["BLOCKED:\nAllergen Detected!\n(e.g., Peanuts)"]
+    ALLERGEN -- No --> BALANCE{"Sufficient\nBalance?"}
+
+    BALANCE -- No --> INSUFFICIENT["Insufficient\nBalance: Top-up\nRequired"]
+    BALANCE -- Yes --> APPROVE["Purchase Approved\nDeduct Balance"]
+
+    APPROVE --> LOG["Log Purchase:\nItem, Price, Time"]
+
+    LOG --> SUMMARY["Daily Summary\nto Parent:\nItems Purchased,\nTotal Spending"]
+```
 
 ---
 
@@ -1550,6 +2482,52 @@ END FUNCTION
 **EXAMPLE:**
 Rohan wants to join basketball team. System checks: Medical clearance valid until Dec 2024 , No heart conditions . Enrolled in team. Tournament registration: Inter-school championship. Rohan scores 25 points, team wins. Achievement added: "Basketball Champion 2024."
 
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Sports Team\nSelection"]
+        T2["Tournament\nRegistration"]
+        T3["Medical Clearance\nSubmission"]
+        T4["Achievement\nRecording"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Student\nSports Profile"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Sports Enrollment:\nWhich Sports\nStudent Plays"]
+        D2["Medical Clearance:\nStatus & Expiry"]
+        D3["Physical Fitness\nData"]
+        D4["Tournament\nParticipation\nHistory"]
+        D5["Sports\nAchievements"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> COMPETITIVE{"Competitive\nSport?"}
+
+    COMPETITIVE -- Yes --> CLEARANCE{"Medical\nClearance\nValid?"}
+    COMPETITIVE -- No --> RESTRICTION{"Medical\nRestriction?"}
+
+    CLEARANCE -- No --> BLOCK["Cannot Participate:\nMedical Clearance\nRequired"]
+    CLEARANCE -- Yes --> RESTRICTION
+
+    RESTRICTION -- Yes --> DENY["Medical Restriction:\nCondition Prevents\nParticipation"]
+    RESTRICTION -- No --> ENROLL["Enroll in Sport\nAdd to Team Roster"]
+
+    ENROLL --> NOTIFY["Notify Coach\n& Parent"]
+
+    NOTIFY --> TRACK["Track:\n- Tournament Results\n- Achievements\n- Injuries to Health Module"]
+
+    TRACK --> PORTFOLIO["Add to Student\nPortfolio for\nCollege Applications"]
+```
+
 ---
 
 ### 23. TO COUNSELING & MENTAL HEALTH MODULE
@@ -1600,6 +2578,54 @@ END FUNCTION
 **EXAMPLE:**
 Priya (Grade 10) shows signs of exam stress: crying in class, grades dropping. Teacher refers to counselor. 5 sessions scheduled. Counselor teaches stress management techniques. After 2 months: grades improve, stress levels normal. Parent informed (with Priya's consent).
 
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Counseling Request\n(Self-Referral)"]
+        T2["Teacher/Parent\nReferral"]
+        T3["Behavioral Incident\n(Auto-Referral)"]
+        T4["Crisis Situation"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Student\nCounseling Data"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Counseling\nReferrals:\nTeacher/Parent/\nSelf-Referral"]
+        D2["Session\nHistory"]
+        D3["Mental Health\nAssessments"]
+        D4["Crisis Alerts:\nSuicide Risk,\nSevere Depression"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> ASSESS{"Crisis\nKeywords\nDetected?"}
+
+    ASSESS -- "Yes: suicide,\nself-harm" --> URGENT["URGENT PRIORITY\nAlert Counselor +\nPrincipal + Parent\nIMMEDIATELY"]
+    ASSESS -- No --> ROUTINE["ROUTINE PRIORITY\nSchedule Session\nWithin 1 Week"]
+
+    URGENT --> SESSION24["Schedule Session\nWithin 24 Hours"]
+
+    SESSION24 --> SESSIONS["Counseling Sessions\n(Confidential)"]
+    ROUTINE --> SESSIONS
+
+    SESSIONS --> PROGRESS["Track Progress\nAcross Sessions"]
+
+    PROGRESS --> CONSENT{"Non-Crisis:\nStudent Consent\nto Inform Parent?"}
+
+    CONSENT -- Yes --> PARENTNOTIFY["Notify Parent\nof Progress"]
+    CONSENT -- No --> CONFIDENTIAL["Keep Records\nConfidential"]
+
+    PARENTNOTIFY --> RECORD["Maintain Confidential\nCounseling Records\n+ Intervention Outcomes"]
+    CONFIDENTIAL --> RECORD
+```
+
 ---
 
 ### 24. TO COMMUNICATION & NOTIFICATION MODULE
@@ -1648,6 +2674,49 @@ END FUNCTION
 
 **EXAMPLE:**
 School announces: "Parent-Teacher Meeting on March 15." Sent to all parents via email + SMS + app. Grade 12 parents get additional message: "College Counseling Fair on March 20." Bus Route 5 parents: "Bus delayed 30 mins due to traffic."
+
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["School-wide\nAnnouncement"]
+        T2["Grade/Section\nSpecific Notice"]
+        T3["Individual\nStudent Alert"]
+        T4["Emergency\nBroadcast"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Student\nContact &\nSegmentation Data"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Contact Details:\nParent Email,\nMobile, WhatsApp"]
+        D2["Segmentation:\nGrade, Section,\nTransport Route,\nHostel Block"]
+        D3["Communication\nPreferences:\nEmail, SMS,\nApp Notifications"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> TARGET{"Target\nGroup?"}
+
+    TARGET -- "ALL" --> ALL["All Students\nParents"]
+    TARGET -- "GRADE" --> GRADE["Filter by\nSpecific Grade"]
+    TARGET -- "SECTION" --> SECTION["Filter by\nSpecific Section"]
+    TARGET -- "BUS_ROUTE" --> BUS["Filter by\nTransport Route"]
+    TARGET -- "INDIVIDUAL" --> INDIVIDUAL["Single Student\nParents"]
+
+    ALL --> SEND["SEND via Preferred\nChannels:\nEmail + SMS + App"]
+    GRADE --> SEND
+    SECTION --> SEND
+    BUS --> SEND
+    INDIVIDUAL --> SEND
+
+    SEND --> TRACK["Track Delivery:\n- Sent\n- Delivered\n- Read\n- Failed (Retry)"]
+```
 
 ---
 
@@ -1707,6 +2776,49 @@ END FUNCTION
 **EXAMPLE:**
 Grade 10 Math exam: 180 students. System allocates: Hall 1 (60 students, Roll 1-60), Hall 2 (60, Roll 61-120), Hall 3 (55, Roll 121-175). 5 IEP students → Hall 4 (separate, extra 30 mins). 3 students with ₹50,000+ dues → Admit cards blocked.
 
+
+```mermaid
+flowchart TD
+    subgraph TRIGGERS["TRIGGER EVENTS"]
+        T1["Exam Schedule\nFinalized"]
+        T2["Seating Plan\nGeneration"]
+        T3["Admit Card\nPrinting"]
+        T4["Last-minute\nAccommodation Request"]
+    end
+
+    T1 --> FETCH
+    T2 --> FETCH
+    T3 --> FETCH
+    T4 --> FETCH
+
+    FETCH["FETCH Student\nExam Enrollment Data"]
+
+    subgraph DATA["DATA SENT"]
+        direction LR
+        D1["Subject Enrollment:\nWho Takes\nWhich Exam"]
+        D2["Roll Numbers:\nFor Seating\nOrder"]
+        D3["Special Accommodations:\nIEP, Medical\nNeeds"]
+        D4["Fee Clearance:\nBlocks Admit Card\nif Dues Pending"]
+    end
+
+    FETCH --> DATA
+
+    DATA --> PROCESS["Process Each\nStudent"]
+
+    PROCESS --> FEES{"Outstanding\nFees > Threshold?"}
+
+    FEES -- Yes --> BLOCKADMIT["Block Admit Card\nNotify Parent:\nClear Dues to Get\nAdmit Card"]
+    FEES -- No --> IEP{"Has IEP /\nMedical Needs?"}
+
+    IEP -- Yes --> SPECIAL["Allocate Separate\nRoom with:\n- Extra Time\n- Special Seating\n- Assistive Tools"]
+    IEP -- No --> REGULAR["Allocate Main Hall\nSeat (By Roll Number)"]
+
+    SPECIAL --> ADMIT["Generate Admit Card\nwith Seat Number"]
+    REGULAR --> ADMIT
+
+    ADMIT --> OUTPUT["OUTPUT:\n- Hall-wise Seating Plans\n- Admit Cards with QR\n- Special Room List\n- Fee Defaulters Report"]
+```
+
 ---
 
 ## INBOUND CONNECTIONS (Other Modules → Student Management)
@@ -1730,6 +2842,44 @@ Grade 10 Math exam: 180 students. System allocates: Hall 1 (60 students, Roll 1-
 
 **TRIGGER:** Result publication, annual promotion
 
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["ASSESSMENT & EXAMS MODULE"]
+        S1["Result Publication"]
+        S2["Annual Promotion"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Results to\nStudent Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Term Marks &\nFinal Grades"]
+        D2["Rank &\nPercentile"]
+        D3["Promotion/\nDetention Status"]
+        D4["Subject-wise\nPerformance"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE Student\nAcademic Record"]
+
+    UPDATE --> TRANSCRIPT["Update Academic\nTranscripts"]
+
+    TRANSCRIPT --> REPORT["Generate Report\nCards"]
+
+    REPORT --> PROMOTE{"Promoted?"}
+
+    PROMOTE -- Yes --> NEXT["Record Promotion\nto Next Grade"]
+    PROMOTE -- No --> DETAIN["Record Detention\nin Current Grade"]
+
+    NEXT --> HISTORY["Historical Performance\nAvailable for\nAnalytics & Reports"]
+    DETAIN --> HISTORY
+```
+
 ---
 
 ### FROM EVENTS & ACTIVITIES MODULE
@@ -1751,6 +2901,38 @@ Grade 10 Math exam: 180 students. System allocates: Hall 1 (60 students, Roll 1-
 - Achievement notifications to parents
 
 **TRIGGER:** Event completion, awards announced
+
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["EVENTS & ACTIVITIES MODULE"]
+        S1["Event Completion"]
+        S2["Awards Announced"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Achievement Data\nto Student Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Awards Won &\nCompetition Ranks"]
+        D2["Participation\nCertificates"]
+        D3["House Points\nEarned"]
+        D4["Leadership\nRoles"]
+    end
+
+    SEND --> DATA
+
+    DATA --> PORTFOLIO["Enrich Digital\nPortfolio"]
+
+    PORTFOLIO --> MERIT["Add Merit Points\nto Student Record"]
+
+    MERIT --> COLLEGE["Update College\nApplication Materials"]
+
+    COLLEGE --> NOTIFY["Achievement\nNotification\nto Parents"]
+```
 
 ---
 
@@ -1774,6 +2956,45 @@ Grade 10 Math exam: 180 students. System allocates: Hall 1 (60 students, Roll 1-
 
 **TRIGGER:** Payment made/defaulted, scholarship awarded
 
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["FEE MANAGEMENT MODULE"]
+        S1["Payment Made/\nDefaulted"]
+        S2["Scholarship\nAwarded"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Fee Status\nto Student Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Payment Status:\nPaid/Pending/\nOverdue"]
+        D2["Outstanding\nDues Amount"]
+        D3["Payment\nHistory"]
+        D4["Scholarship\nStatus Changes"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE Student\nFee Profile"]
+
+    UPDATE --> CHECK{"Dues\nPending?"}
+
+    CHECK -- Yes --> RESTRICT["Restrict Services:\n- Block TC Issuance\n- Block Admit Card\n- Flag in System"]
+    CHECK -- No --> CLEAR["All Services\nAvailable"]
+
+    CLEAR --> SCHOLARSHIP{"Scholarship\nChange?"}
+    RESTRICT --> SCHOLARSHIP
+
+    SCHOLARSHIP -- Yes --> APPLY["Apply Scholarship\nDiscount to\nStudent Profile"]
+    SCHOLARSHIP -- No --> DONE["Fee Status\nUpdated"]
+
+    APPLY --> DONE
+```
+
 ---
 
 ### FROM DISCIPLINE & BEHAVIOR MODULE
@@ -1795,6 +3016,43 @@ Grade 10 Math exam: 180 students. System allocates: Hall 1 (60 students, Roll 1-
 - Pattern detection for interventions
 
 **TRIGGER:** Incident reported, merit points awarded
+
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["DISCIPLINE & BEHAVIOR MODULE"]
+        S1["Incident Reported"]
+        S2["Merit Points\nAwarded"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Behavioral Data\nto Student Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Incident\nReports"]
+        D2["Disciplinary\nActions Taken"]
+        D3["Merit Points\nAwarded/Deducted"]
+        D4["Behavioral Score\nUpdates"]
+    end
+
+    SEND --> DATA
+
+    DATA --> RECORD["UPDATE Student\nPermanent Record"]
+
+    RECORD --> CERT["Character Certificates\nReflect Conduct"]
+
+    CERT --> TC["Transfer Certificates\nInclude Behavioral\nRemarks"]
+
+    TC --> PATTERN{"Pattern\nDetected?"}
+
+    PATTERN -- Yes --> COUNSEL["Trigger Counseling\nReferral"]
+    PATTERN -- No --> DONE["Behavioral Record\nUpdated"]
+
+    COUNSEL --> DONE
+```
 
 ---
 
@@ -1819,6 +3077,43 @@ Grade 10 Math exam: 180 students. System allocates: Hall 1 (60 students, Roll 1-
 
 **TRIGGER:** Medical incident, health checkup, vaccination
 
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["HEALTH & WELLNESS MODULE"]
+        S1["Medical Incident"]
+        S2["Health Checkup"]
+        S3["Vaccination"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+
+    SEND["SEND Health Data\nto Student Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Infirmary\nVisits"]
+        D2["Injuries &\nIllnesses"]
+        D3["Medication\nAdministered"]
+        D4["Medical Clearance\nUpdates"]
+        D5["Vaccination\nRecords"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE Student\nHealth History"]
+
+    UPDATE --> SPORTS["Update Sports\nParticipation\nClearance"]
+
+    SPORTS --> EMERGENCY["Verify Emergency\nContact Information"]
+
+    EMERGENCY --> CHRONIC["Update Chronic\nCondition Alerts"]
+
+    CHRONIC --> PROFILE["Holistic Health\nProfile Maintained"]
+```
+
 ---
 
 ### FROM LIBRARY MANAGEMENT MODULE
@@ -1840,6 +3135,45 @@ Grade 10 Math exam: 180 students. System allocates: Hall 1 (60 students, Roll 1-
 - Book recommendations personalized
 
 **TRIGGER:** Book checkout/return, fine generated
+
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["LIBRARY MANAGEMENT MODULE"]
+        S1["Book Checkout/\nReturn"]
+        S2["Fine Generated"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Library Data\nto Student Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Books Borrowed\n& Returned"]
+        D2["Overdue\nFines"]
+        D3["Lost Book\nCharges"]
+        D4["Reading\nAnalytics"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE Student\nLibrary Record"]
+
+    UPDATE --> TCCHECK{"Books Not\nReturned?"}
+
+    TCCHECK -- Yes --> BLOCK["Block TC Issuance\nUntil Books Returned"]
+    TCCHECK -- No --> FINES{"Fines\nPending?"}
+
+    FINES -- Yes --> ADDFEE["Add Fines to\nStudent Fee Account"]
+    FINES -- No --> READING["Update Reading\nHabits & Analytics"]
+
+    BLOCK --> READING
+    ADDFEE --> READING
+
+    READING --> RECOMMEND["Personalized Book\nRecommendations"]
+```
 
 ---
 
@@ -1863,6 +3197,40 @@ Grade 10 Math exam: 180 students. System allocates: Hall 1 (60 students, Roll 1-
 
 **TRIGGER:** Route change, enrollment/withdrawal from transport
 
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["TRANSPORT MANAGEMENT MODULE"]
+        S1["Route Change"]
+        S2["Enrollment/Withdrawal\nfrom Transport"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Transport Data\nto Student Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Route Assignment\nChanges"]
+        D2["Boarding/Deboarding\nLogs"]
+        D3["Transport Fee\nStatus"]
+        D4["GPS Tracking\nConsent"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE Student\nTransport Profile"]
+
+    UPDATE --> STATUS["Update Transport\nStatus in Record"]
+
+    STATUS --> NOTIFY["Configure Parent\nNotifications for\nNew Route"]
+
+    NOTIFY --> VERIFY["Verify Emergency\nContact Information"]
+
+    VERIFY --> OPTIMIZE["Route Optimization\nData Refreshed"]
+```
+
 ---
 
 ### FROM HOSTEL & MESS MANAGEMENT MODULE
@@ -1884,6 +3252,42 @@ Grade 10 Math exam: 180 students. System allocates: Hall 1 (60 students, Roll 1-
 - Weekend leave patterns tracked
 
 **TRIGGER:** Room change, dietary update, leave request
+
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["HOSTEL & MESS MODULE"]
+        S1["Room Change"]
+        S2["Dietary Update"]
+        S3["Leave Request"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+    S3 --> SEND
+
+    SEND["SEND Hostel Data\nto Student Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Room Allocation\nChanges"]
+        D2["Mess Enrollment\nStatus"]
+        D3["Dietary Preference\nUpdates"]
+        D4["Hostel Leave\nRecords"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE Student\nBoarding Profile"]
+
+    UPDATE --> BOARDING["Update Boarding\nStatus in Record"]
+
+    BOARDING --> DIETARY["Sync Dietary\nRestrictions"]
+
+    DIETARY --> EMERGENCY["Verify Hostel\nEmergency Contact"]
+
+    EMERGENCY --> LEAVE["Track Weekend\nLeave Patterns"]
+```
 
 ---
 
@@ -1907,6 +3311,38 @@ Grade 10 Math exam: 180 students. System allocates: Hall 1 (60 students, Roll 1-
 
 **TRIGGER:** Counseling session completed, crisis intervention
 
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["COUNSELING MODULE"]
+        S1["Session Completed"]
+        S2["Crisis Intervention"]
+    end
+
+    S1 --> SEND
+    S2 --> SEND
+
+    SEND["SEND Counseling Data\nto Student Management\n(CONFIDENTIAL)"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Session\nAttendance"]
+        D2["Progress Notes\n(Confidential)"]
+        D3["Intervention\nOutcomes"]
+        D4["Referral\nCompletions"]
+    end
+
+    SEND --> DATA
+
+    DATA --> UPDATE["UPDATE Student\nSupport Services\nRecord"]
+
+    UPDATE --> PROGRESS["Track Progress\nAcross Sessions"]
+
+    PROGRESS --> CRISIS["Document Crisis\nInterventions"]
+
+    CRISIS --> HOLISTIC["Maintain Holistic\nStudent Profile\n(Confidential)"]
+```
+
 ---
 
 ### FROM ALUMNI MODULE
@@ -1926,6 +3362,41 @@ Grade 10 Math exam: 180 students. System allocates: Hall 1 (60 students, Roll 1-
 - Sibling discounts combined with legacy benefits
 
 **TRIGGER:** Alumni's child applies/enrolls
+
+
+```mermaid
+flowchart TD
+    subgraph SOURCE["ALUMNI MODULE"]
+        S1["Alumni Child\nApplies/Enrolls"]
+    end
+
+    S1 --> SEND
+
+    SEND["SEND Alumni Data\nto Student Management"]
+
+    subgraph DATA["DATA RECEIVED"]
+        direction LR
+        D1["Alumni Parent\nIdentification"]
+        D2["Legacy Student\nFlag"]
+        D3["Alumni Engagement\nHistory"]
+    end
+
+    SEND --> DATA
+
+    DATA --> CHECK{"Alumni Parent\nVerified?"}
+
+    CHECK -- Yes --> LEGACY["Apply Legacy\nPreference in\nAdmissions"]
+    CHECK -- No --> STANDARD["Standard\nAdmission Process"]
+
+    LEGACY --> MAP["Map Alumni-Student\nRelationship"]
+
+    MAP --> BENEFITS{"Sibling\nDiscounts\nApplicable?"}
+
+    BENEFITS -- Yes --> COMBINE["Combine Sibling\nDiscounts with\nLegacy Benefits"]
+    BENEFITS -- No --> RECORD["Record Legacy\nStatus"]
+
+    COMBINE --> RECORD
+```
 
 ---
 
